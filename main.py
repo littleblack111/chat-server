@@ -1,4 +1,5 @@
 import socket
+from os import path
 from sys import exit
 import threading
 
@@ -6,6 +7,8 @@ HOST = '0.0.0.0'  # listen on both loopback and local IP address
 PORT = 8000
 
 VERSOIN = "1.1" # Implemented blocking swear/curse words and removed invalid/inapropriate names
+
+HOME = path.expanduser('~')
 
 swearList = ['fuck', 'shit', 'bitch', 'ass', 'nigg']
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,12 +20,12 @@ clients = []
 names = []
 
 def broadcast(message):
-    #with open("../logs/chat.log", "a") as log_file:
-    #    log_file.write(message.decode())
     for client in clients:
         client.send(message)
-    with open("chat.log", "a") as log_file:
+    with open(f"{HOME}/scripts/logs/chat.log", "a") as log_file:
         log_file.write(message.decode())
+    #with open("chat.log", "a") as log_file:
+        #log_file.write(message.decode())
 
 
 def handle_client(client_socket, client_address):
@@ -65,12 +68,12 @@ def handle_client(client_socket, client_address):
     names.append(name)
     #broadcast(f'{client_address} has joined the chat\n'.encode())
     broadcast(f'{name} has joined the chat\n'.encode())
-    #with open("../logs/chat.log", "r") as log_file:
-    #    log_contents = log_file.read()
-    #    client_socket.send(log_contents.encode())
-    with open("chat.log", "r") as log_file:
+    with open(f"{HOME}/scripts/logs/chat.log", "r") as log_file:
         log_contents = log_file.read()
         client_socket.send(log_contents.encode())
+    #with open("chat.log", "r") as log_file:
+    #    log_contents = log_file.read()
+    #    client_socket.send(log_contents.encode())
 
     while True:
         try:
@@ -140,7 +143,9 @@ def accept_connections():
 
 try:
     if __name__ == '__main__':
-        with open("chat.log", "w") as log_file:
+        #with open("chat.log", "w") as log_file:
+        #    log_file.truncate(0)
+        with open(f"{HOME}/scripts/logs/chat.log", "w") as log_file:
             log_file.truncate(0)
         try:
             server_thread = threading.Thread(target=accept_connections)
