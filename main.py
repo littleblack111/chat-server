@@ -9,8 +9,7 @@ import threading
 HOST = '0.0.0.0'  # listen on both loopback and local IP address
 PORT = 8000
 
-VERSOIN = "1.1" # Implemented blocking swear/curse words and removed invalid/inapropriate names
-
+VERSOIN = "1.2" # Implemented mute, unmute and tempmute, added userlist
 HOME = path.expanduser('~')
 
 swearList = ['fuck', 'shit', 'bitch', 'nigg']
