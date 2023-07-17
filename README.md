@@ -12,7 +12,7 @@ This is a very common, simple and leightweight private chat esrver(PCS)
 
 # Setup
 
-Run `curl -fsSL https://github.com/littleblack111/chat-server/raw/main/setup.sh`
+Run `curl -fsSL https://github.com/littleblack111/chat-server/raw/main/setup.sh` to install it.
 
 
 

@@ -13,7 +13,7 @@ VERSOIN = "1.1" # Implemented blocking swear/curse words and removed invalid/ina
 
 HOME = path.expanduser('~')
 
-swearList = ['fuck', 'shit', 'bitch', 'ass', 'nigg']
+swearList = ['fuck', 'shit', 'bitch', 'nigg']
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((HOST, PORT))
 print(f"Server binded on {HOST} with port {PORT}")
@@ -21,14 +21,81 @@ server_socket.listen()
 
 clients = []
 names = []
+userlist = []
+cmdlist = ['list', 'kick', 'mute', 'unmute', 'tmpmute', 'tempmute']
+sweart1 = []
+sweart2 = []
+muted = []
+
+def stop(self):
+    client_thread.join()
+    server_thread.join()
+    self.running = False
+    socket.socket(socket.AF_INET, 
+                  socket.SOCK_STREAM).connect( (self.hostname, self.port))
+    self.socket.close()
 
 def broadcast(message):
     for client in clients:
         client.send(message)
     with open(f"{HOME}/scripts/logs/chat.log", "a") as log_file:
-        log_file.write(message.decode())
+        try:
+            log_file.write(message.decode())
+        except AttributeError:
+            log_file.write(message)
     #with open("chat.log", "a") as log_file:
         #log_file.write(message.decode())
+
+def kick(address, kuname, client_socket):
+    global faddress
+    for c in clients:
+        c_address = c.getpeername()[0]
+        if c_address == address:
+            c.send("You have been kicked\n".encode())
+            clients.remove(c)
+            c.close()
+            names.remove(kuname)
+            userlist.remove(kuname)
+            if faddress:
+                address = userlist[userlist.index(address)-1]
+                userlist.remove(address)
+                faddress = False
+            try:
+                muted.remove(kuname)
+            except ValueError:
+                pass
+            client_socket.send(f"Kicked client at {address} Succefully\n".encode())
+            try:
+                broadcast(f"{address} is kicked")
+            except:
+                pass
+            return
+        elif c_address != address and address in userlist:
+            for u in userlist:
+                if address == u:
+                    address = userlist[userlist.index(u)-1]
+                    faddress = True
+                    continue
+        else:
+            client_socket.send(f"No client found at {address}\n".encode())
+
+
+def mute(mname: str):
+    muted.append(mname)
+
+def unmute(umname: str):
+    muted.remove(umname)
+    try:
+        tplaceholdertmp.cancel()
+    except:
+        pass
+
+def tempmute(mname: str, time: int):
+    global tplaceholdertmp
+    mute(mname)
+    #threading.Timer(time*60, unmute(name))
+    tplaceholdertmp = threading.Timer(time*60, unmute, mname).start()
+
 
 
 def handle_client(client_socket, client_address):
@@ -39,26 +106,30 @@ def handle_client(client_socket, client_address):
         client_socket.close()
         return
     clients.append(client_socket)
+    userlist.append(client_address[0])
     client_socket.send("Name: ".encode())
     try:
         name = client_socket.recv(1024).decode().replace("\n", "")
         if name:
             if name == "" or " " in name or SwearOrNot(name):
-                for c in clients:
-                    c.send("Your name have problems\n".encode())
-                    clients.remove(c)
-                    c.close()
-                    return
+                client_socket.send("Your name have problems\n".encode())
+                print(f"{client_address}'s name contains problem")
+                clients.remove(client_socket)
+                client_socket.close()
+                return
             for n in names:
-                if n == name: # need test
-                    for c in clients:
-                        snames = " ".join(names)
-                        c.send(f"Username taken, use an unused name, current names: {snames}\n".encode())
-                        clients.remove(c)
-                        c.close()
+                if n == name:
+                    snames = " ".join(names)
+                    client_socket.send(f"Username taken, use an unused name, current names: {snames}\n".encode())
+                    print(f'{client_address} is trying to use a taken name - {name}')
+                    clients.remove(client_socket)
+                    client_socket.close()
                     return
+            userlist.insert(userlist.index(client_address[0])+1, name)
+            print(userlist)
+            print(userlist[userlist.index(name)])
         else:
-            raise Exception('Client disconnected without registering')
+            raise Exception(f"Client '{client_address}' disconnected without registering")
     except Exception as e:
         print(e)
         clients.remove(client_socket)
@@ -70,10 +141,10 @@ def handle_client(client_socket, client_address):
 
     names.append(name)
     #broadcast(f'{client_address} has joined the chat\n'.encode())
-    broadcast(f'{name} has joined the chat\n'.encode())
     with open(f"{HOME}/scripts/logs/chat.log", "r") as log_file:
         log_contents = log_file.read()
         client_socket.send(log_contents.encode())
+    broadcast(f'{name} has joined the chat\n'.encode())
     #with open("chat.log", "r") as log_file:
     #    log_contents = log_file.read()
     #    client_socket.send(log_contents.encode())
@@ -81,42 +152,55 @@ def handle_client(client_socket, client_address):
     while True:
         try:
             message = client_socket.recv(1024)
-            if message:
+            if message and name not in muted:
                 rmsg = message.decode()
-                if client_address[0] == "127.0.0.1" and rmsg.startswith("$") or client_address[0] == "192.168.1.16" and rmsg.startswith("$"):
+                if rmsg.startswith("$"): #or client_address[0] == "192.168.1.16" and rmsg.startswith("$"):
                     command = rmsg[1:].strip()
                     #command_parts = message[1:].strip().split()
-                    print(f"Command spawned: {command}")
+                    print(f"Command spawned by {client_address},({name}): {command}")
                     if command == "list":
                         client_socket.send("Connected clients:\n".encode())
                         for c in clients:
                             c_address = c.getpeername()[0]
                             client_socket.send(f"{c_address}\n".encode())
-                    elif "kick" in command and len(command.split()) == 2:
-                        kick_address = command.split()[1]
-                        if kick_address != "127.0.0.1":# and client_address[0] != "192.168.1.16":
-                            for c in clients:
-                                c_address = c.getpeername()[0]
-                                if c_address == kick_address:
-                                    c.send("You have been kicked\n".encode())
-                                    clients.remove(c)
-                                    c.close()
-                                    client_socket.send(f"Kicked client at {kick_address} Succefully\n".encode())
-                                    break
-                                else:
-                                    client_socket.send(f"No client found at {kick_address}".encode())
-                    else:
-                        client_socket.send("Unknown command or syntax \n".encode())
-
-                if message.decode() != "":
+                    if client_address[0] == "127.0.0.1":
+                        if "kick" in command and len(command.split()) == 2:
+                            kick_address = command.split()[1]
+                            if kick_address != "127.0.0.1": # and client_address[0] != "192.168.1.16":
+                                kick(kick_address, userlist[userlist.index(kick_address)+1], client_socket)
+                        elif "mute" in command and len(command.split()) == 2:
+                            mute_name = command.split()[1]
+                            if mute_name != "127.0.0.1":
+                                mute(mute_name)
+                        elif "unmute" in command and len(command.split()) == 2:
+                            unmute_name = command.split()[1]
+                            if unmute_name in muted:
+                                print(unmute_name)
+                                unmute(unmute_name)
+                        elif command not in cmdlist:
+                            client_socket.send("Unknown command or syntax \n".encode())
+                            print(f"{client_address},({name}) send an unknown command: {command}")
+                if message.decode() != "" or message.decode() != " ":
                     #broadcast(f'{client_address}: {message.decode()}'.encode())
-                    if SwearOrNot(message.decode()):
+                    if SwearOrNot(message.decode()) and client_address[0] != "127.0.0.1":
                         broadcast(f'{name}: {len(message.decode())*"#"}\n'.encode())
+                        if name not in sweart1 and name not in sweart2 and client_address[0] != "127.0.0.1":
+                            sweart1.append(name)
+                            print("t1")
+                        elif name not in sweart2 and name in sweart1 and client_address[0] != "127.0.0.1":
+                            sweart2.append(name)
+                            sweart1.remove(name)
+                            print("t2")
+                        elif name not in sweart1 and name in sweart2 and client_address[0] != "127.0.0.1":
+                            tempmute(name, 15)
+                            print("tmpmute")
                     else:
                         broadcast(f'{name}: {message.decode()}'.encode())
                     print(f'{client_address}({name}): {message.decode()}')
+            elif message and name in muted:
+                client_socket.send("You have been muted\n".encode())
             else:
-                raise Exception('Client disconnected')
+                raise Exception(f'Client {name} disconnected')
         except Exception as e:
             print(e)
             clients.remove(client_socket)
@@ -124,6 +208,13 @@ def handle_client(client_socket, client_address):
             #broadcast(f'{client_address} has left the chat\n'.encode())
             broadcast(f'{name} has left the chat\n'.encode())
             client_socket.close()
+            names.remove(name)
+            userlist.remove(name)
+            userlist.remove(client_address[0])
+            try:
+                muted.remove(name)
+            except ValueError:
+                pass
             return
 
 def SwearOrNot(var):
@@ -134,6 +225,7 @@ def SwearOrNot(var):
 
 
 def accept_connections():
+    global client_thread
     while True:
         try:
             client_socket, client_address = server_socket.accept()
@@ -141,6 +233,7 @@ def accept_connections():
             client_thread.start()
         except KeyboardInterrupt:
             print("Closing server...")
+            #broadcast("Closing server...")
             #client_thread.join()
             exit()
 
@@ -157,6 +250,7 @@ try:
             #handle_client(client_socket, client_address)
         except KeyboardInterrupt:
             print("Closing server...")
+            #broadcast("Closing server...")
             #client_thread.join()
             exit()
 
@@ -168,13 +262,16 @@ try:
                     broadcast(f'{message}\n'.encode())
                 except KeyboardInterrupt:
                     print("Closing server...")
+                    #broadcast("Closing server...")
                     #client_thread.join()
                     exit()
         except KeyboardInterrupt:
             print("Closing server...")
+            #broadcast("Closing server...")
             #client_thread.join()
             exit()
 except KeyboardInterrupt:
     print("Closing server...")
+    #broadcast("Closing server...")
     #client_thread.join()
     exit()
