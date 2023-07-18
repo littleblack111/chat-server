@@ -28,7 +28,7 @@ muted = []
 
 def stop(self):
     client_thread.join()
-    server_thread.join()
+    main.join()
     self.running = False
     socket.socket(socket.AF_INET, 
                   socket.SOCK_STREAM).connect( (self.hostname, self.port))
@@ -243,8 +243,8 @@ try:
         with open(f"{HOME}/scripts/logs/chat.log", "w") as log_file:
             log_file.truncate(0)
         try:
-            server_thread = threading.Thread(target=accept_connections)
-            server_thread.start()
+            main = threading.Thread(target=accept_connections)
+            main.start()
             #client_socket, client_address = server_socket.accept()
             #handle_client(client_socket, client_address)
         except KeyboardInterrupt:
