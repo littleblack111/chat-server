@@ -1,4 +1,4 @@
-
+#
 #  Copyright (C) 2023 littleblack111 <https://github.com/littleblack111/>
 
 import socket
@@ -9,7 +9,7 @@ import threading
 HOST = '0.0.0.0'  # listen on both loopback and local IP address
 PORT = 8000
 
-VERSOIN = "1.2" # Implemented mute, unmute and tempmute, added userlist
+VERSION = "1.2" # Implemented mute, unmute and tempmute, added userlist
 HOME = path.expanduser('~')
 
 swearList = ['fuck', 'shit', 'bitch', 'nigg']
@@ -37,13 +37,13 @@ def stop(self):
 def broadcast(message):
     for client in clients:
         client.send(message)
-    with open(f"{HOME}/scripts/logs/chat.log", "a") as log_file:
+    with open(f"{HOME}/scripts/store/chat-server/chat.log", "a") as log:
         try:
-            log_file.write(message.decode())
+            log.write(message.decode())
         except AttributeError:
-            log_file.write(message)
-    #with open("chat.log", "a") as log_file:
-        #log_file.write(message.decode())
+            log.write(message)
+    #with open("chat.log", "a") as log:
+        #log.write(message.decode())
 
 def kick(address, kuname, client_socket):
     global faddress
@@ -82,8 +82,8 @@ def kick(address, kuname, client_socket):
 def mute(mname: str):
     muted.append(mname)
 
-def unmute(umname: str):
-    muted.remove(umname)
+def unmute(mname: str):
+    muted.remove(mname)
     try:
         tplaceholdertmp.cancel()
     except:
@@ -95,6 +95,21 @@ def tempmute(mname: str, time: int):
     #threading.Timer(time*60, unmute(name))
     tplaceholdertmp = threading.Timer(time*60, unmute, mname).start()
 
+def verifyaccount(vname: str, vpasswd: str):
+    vpasswdhash = hash(vpasswd)
+    del vpasswd
+    with open(f"{HOME}/scripts/store/chat-server/accountdb.plaindb", r) as db:
+        while line := db.readline():
+            verificationcontent = line.rstrip()
+
+
+
+def createaccount(cname: str, cpasswd: str):
+    cpasswdhash = hash(cpasswd)
+    del cpasswd
+    with open(f"{HOME}/scripts/store/chat-server/accountdb.plaindb", "a") as db:
+        db.writelines(f"{cname}:{cpasswdhash}")
+    print(f"Successfully created account with username: {cname} and passwordhash of {cpasswdhash}")
 
 
 def handle_client(client_socket, client_address):
@@ -140,12 +155,12 @@ def handle_client(client_socket, client_address):
 
     names.append(name)
     #broadcast(f'{client_address} has joined the chat\n'.encode())
-    with open(f"{HOME}/scripts/logs/chat.log", "r") as log_file:
-        log_contents = log_file.read()
+    with open(f"{HOME}/scripts/store/chat-server/chat.log", "r") as log:
+        log_contents = log.read()
         client_socket.send(log_contents.encode())
     broadcast(f'{name} has joined the chat\n'.encode())
-    #with open("chat.log", "r") as log_file:
-    #    log_contents = log_file.read()
+    #with open("chat.log", "r") as log:
+    #    log_contents = log.read()
     #    client_socket.send(log_contents.encode())
 
     while True:
@@ -238,10 +253,10 @@ def accept_connections():
 
 try:
     if __name__ == '__main__':
-        #with open("chat.log", "w") as log_file:
-        #    log_file.truncate(0)
-        with open(f"{HOME}/scripts/logs/chat.log", "w") as log_file:
-            log_file.truncate(0)
+        #with open("chat.log", "w") as log:
+        #    log.truncate(0)
+        with open(f"{HOME}/scripts/store/chat-server/chat.log", "w") as log:
+            log.truncate(0)
         try:
             server_thread = threading.Thread(target=accept_connections)
             server_thread.start()
