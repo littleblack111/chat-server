@@ -7,8 +7,8 @@ class CFileDescriptor {
   public:
 	CFileDescriptor() = default;
 	explicit CFileDescriptor(int const fd);
-	CFileDescriptor(CFileDescriptor &&);
-	CFileDescriptor &operator=(CFileDescriptor &&);
+	CFileDescriptor(CFileDescriptor &&) noexcept;
+	CFileDescriptor &operator=(CFileDescriptor &&) noexcept;
 	~CFileDescriptor();
 
 	CFileDescriptor(const CFileDescriptor &)			= delete;
