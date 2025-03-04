@@ -2,7 +2,6 @@
 #include <cerrno>
 #include <cmath>
 #include <cstring>
-#include <ostream>
 #include <print>
 #include <sys/socket.h>
 
