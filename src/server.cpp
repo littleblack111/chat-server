@@ -13,9 +13,9 @@ CServer::CServer(uint16_t port)
 	m_addr.sin_family	   = AF_INET;
 	m_addr.sin_port		   = htons(port);
 	m_addr.sin_addr.s_addr = INADDR_ANY;
-	m_dBind		   = bind(m_sockfd.get(), reinterpret_cast<sockaddr *>(&m_addr), sizeof(m_addr));
-	m_dListen = listen(m_sockfd.get(), 5);
-  m_dBind < 0 || m_dListen < 0 ? throw std::runtime_error("Failed to bind or listen") : std::println("Server started on port: {}", port);
+	m_dBind				   = bind(m_sockfd.get(), reinterpret_cast<sockaddr *>(&m_addr), sizeof(m_addr));
+	m_dListen			   = listen(m_sockfd.get(), 5);
+	 m_dBind < 0 || m_dListen < 0 ? throw std::runtime_error("Failed to bind or listen") : std::println("Server started on port: {}", port);
 
 	// char buffer[1024] = {0};
 	// int clientSocket = accept(m_sockfd.get(), nullptr, nullptr);
@@ -36,15 +36,14 @@ CServer::~CServer() {
 	m_sockfd.reset();
 }
 
-
 void CServer::log(const eLogLevel loglevel, const std::string &message) const {
-  std::println("[{}]: {}", "a", message);
+	std::println("[{}]: {}", "a", message);
 }
 
 bool CServer::isValid() {
-  return m_sockfd.isValid() && m_dBind >= 0 && m_dListen >= 0;
+	return m_sockfd.isValid() && m_dBind >= 0 && m_dListen >= 0;
 }
 
 Hyprutils::OS::CFileDescriptor CServer::getSocket() const {
-  return m_sockfd.duplicate();
+	return m_sockfd.duplicate();
 }
