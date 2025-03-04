@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <fcntl.h>
-#include <hyprutils/os/FileDescriptor.hpp>
+#include "FileDescriptor.hpp"
 #include <sys/poll.h>
 #include <unistd.h>
 #include <utility>
