@@ -53,7 +53,7 @@ clang-format:
 
 clang-tidy:
 	@echo "Running clang-tidy..."
-	@clang-tidy $(SRCS) -- $(CXXFLAGS)
+	@clang-tidy -fix-errors $(SRCS) -- $(CXXFLAGS)
 
 debug: CXXFLAGS = $(DEBUG_CXXFLAGS)
 debug: LDFLAGS = $(DEBUG_LDFLAGS)
