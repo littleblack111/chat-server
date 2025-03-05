@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install dependencies(clang-format & clang-tidy)
-      run: sudo apt update && sudo apt install -y g++ && sudo apt install -y clang-format && sudo apt install -y clang-tidy
+      run: sudo apt update && sudo apt install -y g++-14 && sudo apt install -y clang-format && sudo apt install -y clang-tidy && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 10
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
 
     steps:
     - name: Install dependencies(g++)
-      run: sudo apt update && sudo apt install -y g++
+      run: sudo apt update && sudo apt install -y g++-14 && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 10
 
     - name: Checkout repository
       uses: actions/checkout@v4
