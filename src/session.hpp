@@ -20,13 +20,17 @@ class CSession {
 	void		run();
 
   private:
+	enum eEventType {
+		READ,
+		WRITE
+	};
 	Hyprutils::OS::CFileDescriptor m_sockfd;
 	std::string					   m_name;
 	void						   recvManager();
 	bool						   registerSession();
 	void						   onConnect() const;
 	void						   onDisconnect() const;
-	void						   onErrno() const;
+	void						   onErrno(eEventType) const;
 	void						   onRecv(SRecvData &data) const;
 	friend class CSessionManager;
 };

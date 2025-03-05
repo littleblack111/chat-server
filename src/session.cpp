@@ -1,6 +1,5 @@
 #include "session.hpp"
 #include <cerrno>
-#include <cmath>
 #include <cstring>
 #include <print>
 #include <sys/socket.h>
@@ -23,8 +22,14 @@ void CSession::onDisconnect() const {
 	std::println("Client disconnected");
 }
 
-void CSession::onErrno() const {
-	std::println("Error: {}", strerror(errno));
+void CSession::onErrno(eEventType eventType) const {
+	const auto err = strerror(errno);
+	switch (eventType) {
+	case READ:
+		std::println("Error while reading: {}", err);
+	case WRITE:
+		std::println("Error while writing: {}", err);
+	}
 }
 
 void CSession::onRecv(SRecvData &data) const {
@@ -44,7 +49,7 @@ CSession::SRecvData CSession::read() {
 	ssize_t	  dataSize = recv(m_sockfd.get(), recvData.data, recvData.dataSize, 0);
 	if (dataSize < 0) {
 		recvData.good = false;
-		onErrno();
+		onErrno(READ);
 	}
 	if (dataSize == 0) {
 		recvData.good = false;
@@ -56,21 +61,7 @@ CSession::SRecvData CSession::read() {
 
 CSession::SRecvData CSession::read(std::string &msg) {
 	write(msg);
-	SRecvData recvData;
-	ssize_t	  dataSize = recv(m_sockfd.get(), recvData.data, recvData.dataSize, 0);
-
-	if (dataSize > 0) {
-		recvData.good = false;
-
-		if (dataSize < 0)
-			onErrno();
-
-		if (dataSize == 0)
-			onDisconnect();
-	}
-	onRecv(recvData);
-
-	return recvData;
+	return read();
 }
 
 void CSession::run() {
@@ -96,11 +87,11 @@ bool CSession::isValid() const {
 }
 
 bool CSession::write(const std::string &msg) const {
-	bool	bad		   = false;
-	ssize_t bytes_sent = send(m_sockfd.get(), msg.c_str(), msg.size(), 0);
-	if (bytes_sent < 0) {
+	bool	bad		 = false;
+	ssize_t sentSize = send(m_sockfd.get(), msg.c_str(), msg.size(), 0);
+	if (sentSize < 0) {
 		bad = true;
-		onErrno();
+		onErrno(WRITE);
 	}
 	return bad;
 }
