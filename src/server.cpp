@@ -27,10 +27,6 @@ CServer::~CServer() {
 	m_sockfd.reset();
 }
 
-void CServer::log(const eLogLevel loglevel, const std::string &message) const {
-	std::println("[{}]: {}", "a", message);
-}
-
 Hyprutils::OS::CFileDescriptor CServer::getSocket() const {
 	return m_sockfd.duplicate();
 }

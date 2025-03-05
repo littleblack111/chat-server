@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FileDescriptor.hpp"
+#include "format.hpp"
 #include <string>
 
 class CSession {
@@ -15,9 +16,11 @@ class CSession {
 	std::string getName() const;
 	bool		isValid() const;
 	SRecvData	read();
-	SRecvData	read(std::string &msg);
-	bool		write(const std::string &msg) const;
-	void		run();
+	SRecvData	read(const std::string &msg);
+	bool		write(const std::string &msg, eFormatType type) const;
+	template <typename... Args>
+	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) const;
+	void run();
 
   private:
 	enum eEventType {
@@ -31,6 +34,7 @@ class CSession {
 	void						   onConnect() const;
 	void						   onDisconnect() const;
 	void						   onErrno(eEventType) const;
-	void						   onRecv(SRecvData &data) const;
+	void						   onRecv(const SRecvData &data) const;
+	void						   onSend(const std::string &msg) const;
 	friend class CSessionManager;
 };
