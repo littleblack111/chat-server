@@ -17,9 +17,10 @@ CServer::CServer(uint16_t port)
 	m_addr.sin_family	   = AF_INET;
 	m_addr.sin_port		   = htons(port);
 	m_addr.sin_addr.s_addr = INADDR_ANY;
-	 bind(m_sockfd.get(), reinterpret_cast<sockaddr *>(&m_addr), sizeof(m_addr)) ||
-    listen(m_sockfd.get(), 5)
-  ? throw std::runtime_error("Failed to bind or listen") : std::println("Server started on port: {}", port);
+	bind(m_sockfd.get(), reinterpret_cast<sockaddr *>(&m_addr), sizeof(m_addr)) ||
+			listen(m_sockfd.get(), 5)
+		? throw std::runtime_error("Failed to bind or listen")
+		: std::println("Server started on port: {}", port);
 };
 
 CServer::~CServer() {
