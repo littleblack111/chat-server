@@ -1,5 +1,6 @@
 #pragma once
 
+#include "format.hpp"
 #include "session.hpp"
 #include <memory>
 #include <thread>
@@ -9,11 +10,12 @@ class CSessionManager {
   public:
 	CSessionManager();
 	~CSessionManager();
-	void enterLoop();
-	void newSession(Hyprutils::OS::CFileDescriptor sockfd);
-	void broadcast(const std::string &message) const;
-	void kick(const CSession *session) const;
-	void addSession(const CSession &session);
+	void												enterLoop();
+	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession(Hyprutils::OS::CFileDescriptor sockfd);
+	void												broadcast(const std::string &message, eFormatType type = {}) const;
+	void												kick(const CSession *session) const;
+	void												addSession(const CSession &session);
+	void												removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);
 
   private:
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;

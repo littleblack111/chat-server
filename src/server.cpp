@@ -27,6 +27,6 @@ CServer::~CServer() {
 	m_sockfd.reset();
 }
 
-Hyprutils::OS::CFileDescriptor CServer::getSocket() const {
-	return m_sockfd.duplicate();
+Hyprutils::OS::CFileDescriptor *CServer::getSocket() {
+	return &m_sockfd;
 }
