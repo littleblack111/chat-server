@@ -2,7 +2,9 @@
 
 #include "FileDescriptor.hpp"
 #include "format.hpp"
+#include <memory>
 #include <string>
+#include <thread>
 
 class CSession {
   public:
@@ -10,6 +12,7 @@ class CSession {
 		char	data[1024] = {0};
 		ssize_t dataSize   = sizeof(data);
 		bool	good	   = true;
+		bool	charValid  = true;
 	};
 	CSession(Hyprutils::OS::CFileDescriptor m_sockfd);
 	~CSession();
@@ -21,8 +24,10 @@ class CSession {
 	template <typename... Args>
 	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) const;
 	void run();
+	void setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
   private:
+	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
 	enum eEventType {
 		READ,
 		WRITE
