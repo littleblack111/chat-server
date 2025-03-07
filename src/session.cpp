@@ -1,5 +1,7 @@
 #include "session.hpp"
+#include "format.hpp"
 #include "log.hpp"
+#include "sessionManager.hpp"
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
@@ -17,34 +19,34 @@ CSession::~CSession() {
 }
 
 void CSession::onConnect() const {
-	log(INFO, "Client connected");
+	log(LOG, "Client connected");
 }
 
 void CSession::onDisconnect() const {
-	log(INFO, "Client disconnected");
+	log(LOG, "Client disconnected");
 }
 
 void CSession::onErrno(eEventType eventType) const {
 	const auto err = strerror(errno);
 	switch (eventType) {
 	case READ:
-		log(ERROR, "Error while reading: {}", err);
+		log(LOG, "Error while reading: {}", err);
 	case WRITE:
-		log(ERROR, "Error while writing: {}", err);
+		log(LOG, "Error while writing: {}", err);
 	}
 }
 
 void CSession::onRecv(const SRecvData &data) const {
-	log(INFO, "Received: {}", data.data, data.dataSize);
+	log(LOG, "Received: {}", data.data, data.dataSize);
 }
 
 void CSession::onSend(const std::string &msg) const {
-	log(INFO, "Sent: {}", msg);
+	log(LOG, "Sent: {}", msg);
 }
 
 void CSession::recvManager() {
 	while (true) {
-		CSession::SRecvData recvData = read();
+		SRecvData recvData = read();
 		if (!recvData.good)
 			break;
 	}
@@ -59,7 +61,7 @@ CSession::SRecvData CSession::read() {
 	}
 	if (dataSize == 0) {
 		recvData.good = false;
-		onDisconnect();
+		// onDisconnect();
 	}
 
 	onRecv(recvData);
@@ -67,7 +69,7 @@ CSession::SRecvData CSession::read() {
 }
 
 CSession::SRecvData CSession::read(const std::string &msg) {
-	write(eFormatType::STANDARD, "{}", msg, false);
+	write({}, "{}", msg, false);
 	return read();
 }
 
@@ -75,6 +77,8 @@ void CSession::run() {
 	onConnect();
 	registerSession();
 	recvManager();
+
+	g_pSessionManager->removeSession(self);
 }
 
 bool CSession::registerSession() {
@@ -83,13 +87,13 @@ bool CSession::registerSession() {
 		return false;
 
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
-		write("Name cannot be empty", eFormatType::ERROR);
+		write("Name cannot be empty", eFormatType::ERR);
 		registerSession();
 	}
 
 	m_name = recvData.data;
 
-	std::println("Client registered as: {}", m_name);
+	log(LOG, "Client registered as: {}", m_name);
 
 	return true;
 }
@@ -106,7 +110,7 @@ bool CSession::isValid() const {
 
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) const {
-	std::string msg = CFormatter::fmt(type, fmt, std::forward<Args>(args)...);
+	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
 
 	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
 		onErrno(WRITE);
@@ -122,4 +126,8 @@ bool CSession::write(const std::string &msg, eFormatType type) const {
 
 std::string CSession::getName() const {
 	return m_name;
+}
+
+void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
+	this->self = self;
 }

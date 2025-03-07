@@ -13,22 +13,34 @@ enum eFormatType : int8_t {
 
 namespace NFormatter {
 inline std::string fmt(eFormatType type, std::string str) {
-    std::string prefix;
-    switch (type) {
-        case LOG:  prefix = "[LOG] "; break;
-        case WARN: prefix = "[WARN] "; break;
-        case ERR:  prefix = "[ERROR] "; break;
-        case SYS:  prefix = "[SYSTEM] "; break;
-        case CHAT: prefix = "[CHAT] "; break;
-        default:   prefix = ""; break;
-    }
-    if (!str.empty() && str.back() != '\n' && !prefix.empty())
-        str += '\n';
-    return prefix + str;
+	std::string prefix;
+	switch (type) {
+	case LOG:
+		prefix = "[LOG] ";
+		break;
+	case WARN:
+		prefix = "[WARN] ";
+		break;
+	case ERR:
+		prefix = "[ERROR] ";
+		break;
+	case SYS:
+		prefix = "[SYSTEM] ";
+		break;
+	case CHAT:
+		prefix = "[CHAT] ";
+		break;
+	default:
+		prefix = "";
+		break;
+	}
+	if (!str.empty() && str.back() != '\n' && !prefix.empty())
+		str += '\n';
+	return prefix + str;
 }
 
 template <typename... Args>
 std::string fmt(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
-    return NFormatter::fmt(type, std::format(fmt, std::forward<Args>(args)...));
+	return NFormatter::fmt(type, std::format(fmt, std::forward<Args>(args)...));
 }
 } // namespace NFormatter
