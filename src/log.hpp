@@ -1,28 +1,23 @@
 #pragma once
 #include "format.hpp"
-#include <chrono>
 #include <format>
 #include <print>
 #include <string>
 
-enum eLogLevel : int8_t {
-	INFO = 0,
-	WARN,
-	ERROR,
-	FATAL
-};
+inline void log(FILE* _stream, eFormatType type, std::string str) {
+    std::println(_stream, "{}", NFormatter::fmt(type, str));
+}
 
-inline bool useColors = true;
-
-void log(eLogLevel level, std::string str);
+inline void log(eFormatType type, std::string str) {
+    log(stdout, type, str);
+}
 
 template <typename... Args>
-void log(eLogLevel level, std::format_string<Args...> fmt, Args &&...args) {
-	const auto	now		  = std::chrono::system_clock::now();
-	const auto	hms		  = std::chrono::hh_mm_ss{now - std::chrono::floor<std::chrono::days>(now)};
-	std::string timeStamp = std::format("[{}] ", hms);
+void log(FILE* _stream, eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+    log(_stream, type, std::format(fmt, std::forward<Args>(args)...));
+}
 
-	std::string msg = CFormatter::fmt(eFormatType::RAW, fmt, std::forward<Args>(args)...);
-
-	log(level, timeStamp + msg);
+template <typename... Args>
+void log(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+    log(stdout, type, std::format(fmt, std::forward<Args>(args)...));
 }
