@@ -8,21 +8,23 @@
 
 class CSession {
   public:
+	CSession(Hyprutils::OS::CFileDescriptor m_sockfd);
+	~CSession();
+
 	struct SRecvData {
 		char	data[1024] = {0};
 		ssize_t dataSize   = sizeof(data);
 		bool	good	   = true;
 		bool	charValid  = true;
 	};
-	CSession(Hyprutils::OS::CFileDescriptor m_sockfd);
-	~CSession();
-	std::string getName() const;
-	bool		isValid() const;
+
+	std::string getName();
+	bool		isValid();
 	SRecvData	read();
 	SRecvData	read(const std::string &msg);
-	bool		write(const std::string &msg, eFormatType type) const;
+	bool		write(const std::string &msg, eFormatType type);
 	template <typename... Args>
-	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) const;
+	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
 	void run();
 	void setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
@@ -36,10 +38,10 @@ class CSession {
 	std::string					   m_name;
 	void						   recvManager();
 	bool						   registerSession();
-	void						   onConnect() const;
-	void						   onDisconnect() const;
-	void						   onErrno(eEventType) const;
-	void						   onRecv(const SRecvData &data) const;
-	void						   onSend(const std::string &msg) const;
+	void						   onConnect();
+	void						   onDisconnect();
+	void						   onErrno(eEventType);
+	void						   onRecv(const SRecvData &data);
+	void						   onSend(const std::string &msg);
 	friend class CSessionManager;
 };
