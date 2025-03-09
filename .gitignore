@@ -1,2 +1,2 @@
-test
-chat.log
+*.o
+.cache
