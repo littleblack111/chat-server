@@ -18,15 +18,15 @@ CSession::~CSession() {
 	m_sockfd.reset();
 }
 
-void CSession::onConnect() const {
+void CSession::onConnect() {
 	log(LOG, "Client connected");
 }
 
-void CSession::onDisconnect() const {
+void CSession::onDisconnect() {
 	log(LOG, "Client disconnected");
 }
 
-void CSession::onErrno(eEventType eventType) const {
+void CSession::onErrno(eEventType eventType) {
 	const auto err = strerror(errno);
 	switch (eventType) {
 	case READ:
@@ -36,17 +36,18 @@ void CSession::onErrno(eEventType eventType) const {
 	}
 }
 
-void CSession::onRecv(const SRecvData &data) const {
+void CSession::onRecv(const SRecvData &data) {
 	log(LOG, "Received: {}", data.data, data.dataSize);
 }
 
-void CSession::onSend(const std::string &msg) const {
+void CSession::onSend(const std::string &msg) {
 	log(LOG, "Sent: {}", msg);
 }
 
 void CSession::recvManager() {
 	while (true) {
 		SRecvData recvData = read();
+    g_pSessionManager->broadcast(recvData.data, eFormatType::CHAT);
 		if (!recvData.good)
 			break;
 	}
@@ -98,7 +99,7 @@ bool CSession::registerSession() {
 	return true;
 }
 
-bool CSession::isValid() const {
+bool CSession::isValid() {
 	if (!m_sockfd.isValid() || m_name.empty())
 		return false;
 
@@ -109,7 +110,7 @@ bool CSession::isValid() const {
 }
 
 template <typename... Args>
-bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) const {
+bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
 
 	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
@@ -120,11 +121,11 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 	return true;
 }
 
-bool CSession::write(const std::string &msg, eFormatType type) const {
+bool CSession::write(const std::string &msg, eFormatType type) {
 	return write(type, "{}", msg);
 }
 
-std::string CSession::getName() const {
+std::string CSession::getName() {
 	return m_name;
 }
 
