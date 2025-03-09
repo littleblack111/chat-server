@@ -10,14 +10,18 @@ class CSessionManager {
   public:
 	CSessionManager();
 	~CSessionManager();
-	void												enterLoop();
+  
 	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession(Hyprutils::OS::CFileDescriptor sockfd);
-	void												broadcast(const std::string &message, eFormatType type = NONE) const;
+
+	void												enterLoop();
+	void												broadcast(const std::string &msg, eFormatType type = NONE) const;
 	void												kick(const CSession *session) const;
 	void												addSession(const CSession &session);
 	void												removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);
 
   private:
+	void												broadcastChat(const std::string &msg, const std::string &username) const;
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
+  friend class CChatManager;
 };
 inline std::shared_ptr<CSessionManager> g_pSessionManager;

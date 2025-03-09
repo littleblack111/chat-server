@@ -29,6 +29,12 @@ void CSessionManager::broadcast(const std::string &msg, eFormatType type) const 
 		session->write(msg, type);
 }
 
+void CSessionManager::broadcastChat(const std::string &msg, const std::string &username) const {
+	for (const auto &[thread, session] : m_vSessions)
+    if (session->getName() != username)
+      session->write(msg, NONE);
+}
+
 void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 

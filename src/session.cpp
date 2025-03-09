@@ -5,7 +5,7 @@
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
-#include <unistd.h>
+#include "chatManager.hpp"
 
 CSession::CSession(Hyprutils::OS::CFileDescriptor sockfd)
 	: m_sockfd(std::move(sockfd)) {
@@ -47,7 +47,7 @@ void CSession::onSend(const std::string &msg) {
 void CSession::recvManager() {
 	while (true) {
 		SRecvData recvData = read();
-    g_pSessionManager->broadcast(recvData.data, eFormatType::CHAT);
+    g_pChatManager->newMessage({.msg=recvData.data, .username=m_name});
 		if (!recvData.good)
 			break;
 	}
@@ -91,8 +91,8 @@ bool CSession::registerSession() {
 		write("Name cannot be empty", eFormatType::ERR);
 		registerSession();
 	}
-
-	m_name = recvData.data;
+  *std::remove(recvData.data, recvData.data+strlen(recvData.data), '\n') = '\0';
+	this->m_name = recvData.data;
 
 	log(LOG, "Client registered as: {}", m_name);
 
