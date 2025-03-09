@@ -12,7 +12,7 @@ class CSessionManager {
 	~CSessionManager();
 	void												enterLoop();
 	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession(Hyprutils::OS::CFileDescriptor sockfd);
-	void												broadcast(const std::string &message, eFormatType type = {}) const;
+	void												broadcast(const std::string &message, eFormatType type = NONE) const;
 	void												kick(const CSession *session) const;
 	void												addSession(const CSession &session);
 	void												removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);
