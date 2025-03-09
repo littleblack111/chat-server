@@ -1,5 +1,4 @@
 #include "server.hpp"
-#include "sessionManager.hpp"
 #include <cstring>
 #include <print>
 #include <sys/socket.h>
