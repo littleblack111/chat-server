@@ -1,0 +1,173 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/chatManager.o",
+      "src/chatManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/chatManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/chatManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/chatServer.o",
+      "src/chatServer.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/chatServer.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/chatServer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/commandHandler.o",
+      "src/commandHandler.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commandHandler.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/commandHandler.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/FileDescriptor.o",
+      "src/FileDescriptor.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/FileDescriptor.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/FileDescriptor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/inputManager.o",
+      "src/inputManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/inputManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/inputManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/main.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/server.o",
+      "src/server.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/server.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/server.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/session.o",
+      "src/session.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/session.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/session.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/sessionManager.o",
+      "src/sessionManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/sessionManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/sessionManager.o"
+  }
+]
