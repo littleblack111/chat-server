@@ -1,9 +1,13 @@
-#include "server.hpp"
-#include "sessionManager.hpp"
+#include "chatServer.hpp"
 
+// TODO: ARGC, ARGV. the CServer ctor should take a port number
 int main() {
-	g_pServer		  = std::make_unique<CServer>(8080);
-	g_pSessionManager = std::make_unique<CSessionManager>();
-	g_pSessionManager->enterLoop();
-	return 0;
+  g_pChatServer = std::make_unique<CChatServer>();
+  g_pChatServer->start();
+
+  // died
+  g_pChatServer->cleanup();
+  g_pChatServer.reset();
+
+  return 0;
 }
