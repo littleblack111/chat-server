@@ -20,4 +20,4 @@ class CSessionManager {
   private:
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
 };
-inline std::unique_ptr<CSessionManager> g_pSessionManager;
+inline std::shared_ptr<CSessionManager> g_pSessionManager;

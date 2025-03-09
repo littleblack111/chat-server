@@ -13,7 +13,7 @@ CSessionManager::~CSessionManager() {
 }
 
 std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession(Hyprutils::OS::CFileDescriptor sockfd) {
-	std::shared_ptr session	 = std::make_shared<CSession>(std::move(sockfd));
+	std::shared_ptr session	 = std::make_unique<CSession>(std::move(sockfd));
 	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session), std::move(session));
 	instance->second->setSelf(instance);
 	return instance;
