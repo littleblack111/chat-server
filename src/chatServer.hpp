@@ -1,4 +1,5 @@
 #include <memory>
+#include <thread>
 
 class CChatServer {
 public:
@@ -9,6 +10,7 @@ public:
 private:
   void initManagers();
   void initServer();
+  std::jthread m_sessionThread;
 };
 
 inline std::unique_ptr<CChatServer> g_pChatServer;
