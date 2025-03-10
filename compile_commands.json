@@ -68,6 +68,25 @@
       "-fPIC",
       "-DDEBUG",
       "-o",
+      "src/commands.o",
+      "src/commands.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commands.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/commands.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "-c",
+      "-std=c++23",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
       "src/FileDescriptor.o",
       "src/FileDescriptor.cpp"
     ],
