@@ -2,6 +2,7 @@
 #include <cstring>
 #include <print>
 #include <sys/socket.h>
+#include "log.hpp"
 
 CServer::CServer(uint16_t port)
 	: m_sockfd(Hyprutils::OS::CFileDescriptor{socket(AF_INET, SOCK_STREAM, 0)}) {
@@ -20,10 +21,13 @@ CServer::CServer(uint16_t port)
 			listen(m_sockfd.get(), 5)
 		? throw std::runtime_error("Failed to bind or listen")
 		: std::println("Server started on port: {}", port);
+
+  log(LOG, "Server: initialized");
 };
 
 CServer::~CServer() {
 	m_sockfd.reset();
+  log(SYS, "Server: bye");
 }
 
 Hyprutils::OS::CFileDescriptor *CServer::getSocket() {

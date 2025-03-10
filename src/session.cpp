@@ -1,5 +1,4 @@
 #include "session.hpp"
-#include "format.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
 #include <cerrno>
@@ -7,15 +6,21 @@
 #include <sys/socket.h>
 #include "chatManager.hpp"
 
+
 CSession::CSession(Hyprutils::OS::CFileDescriptor sockfd)
 	: m_sockfd(std::move(sockfd)) {
 	if (!m_sockfd.isValid())
-		throw std::runtime_error("Failed to create socket");
+		throw std::runtime_error("session: Failed to create socket");
+
+  log(TRACE, "session: initialized");
 }
 
 CSession::~CSession() {
 	onDisconnect();
 	m_sockfd.reset();
+
+  self->second.reset();
+  log(TRACE, "session({}): bye", m_name);
 }
 
 void CSession::onConnect() {
@@ -49,6 +54,7 @@ void CSession::recvLoop() {
 		SRecvData recvData = read();
 		if (!recvData.good)
 			break;
+
     g_pChatManager->newMessage({.msg=recvData.data, .username=m_name});
 	}
 }
@@ -82,21 +88,27 @@ void CSession::run() {
 	g_pSessionManager->removeSession(self);
 }
 
-bool CSession::registerSession() {
+void CSession::registerSession() {
 	SRecvData recvData = read("Name: ");
 	if (!recvData.good)
-		return false;
+		return;
 
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
 		write("Name cannot be empty", eFormatType::ERR);
 		registerSession();
-	}
+    return;
+	} 
+
   *std::remove(recvData.data, recvData.data+strlen(recvData.data), '\n') = '\0';
+  if (g_pSessionManager->nameExists(recvData.data)) {
+    write("Name already exists", eFormatType::ERR);
+    registerSession();
+    return;
+  }
+
 	this->m_name = recvData.data;
 
 	log(LOG, "Client registered as: {}", m_name);
-
-	return true;
 }
 
 bool CSession::isValid() {
