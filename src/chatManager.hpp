@@ -4,7 +4,7 @@
 
 class CChatManager {
 public:
-  CChatManager() = default;
+  CChatManager();
   ~CChatManager();
   struct SMessage {
     std::string msg;
