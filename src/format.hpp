@@ -4,6 +4,7 @@
 
 enum eFormatType : int8_t {
 	NONE,
+  TRACE,
 	LOG,
 	WARN,
 	ERR,
