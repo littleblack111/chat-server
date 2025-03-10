@@ -44,12 +44,12 @@ void CSession::onSend(const std::string &msg) {
 	log(LOG, "Sent: {}", msg);
 }
 
-void CSession::recvManager() {
+void CSession::recvLoop() {
 	while (true) {
 		SRecvData recvData = read();
-    g_pChatManager->newMessage({.msg=recvData.data, .username=m_name});
 		if (!recvData.good)
 			break;
+    g_pChatManager->newMessage({.msg=recvData.data, .username=m_name});
 	}
 }
 
@@ -77,7 +77,7 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 void CSession::run() {
 	onConnect();
 	registerSession();
-	recvManager();
+	recvLoop();
 
 	g_pSessionManager->removeSession(self);
 }
