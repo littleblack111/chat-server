@@ -144,3 +144,8 @@ std::string CSession::getName() {
 void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
 	this->self = self;
 }
+
+void CSession::onShutdown() {
+  write(SYS, "Shutting down, bye");
+  g_pSessionManager->removeSession(self);
+}
