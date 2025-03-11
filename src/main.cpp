@@ -1,6 +1,7 @@
 #include "chatServer.hpp"
 #include <csignal>
 #include "log.hpp"
+#include <unistd.h>
 
 static void handleSignal(int sig) {
   signal(sig, SIG_DFL);
