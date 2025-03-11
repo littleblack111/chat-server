@@ -1,6 +1,5 @@
 #include "sessionManager.hpp"
 #include "log.hpp"
-#include "server.hpp"
 #include "session.hpp"
 #include <algorithm>
 #include <unistd.h>
@@ -26,8 +25,8 @@ CSessionManager::~CSessionManager() {
 	log(SYS, "SessionManager: bye");
 }
 
-std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession(Hyprutils::OS::CFileDescriptor sockfd) {
-	std::shared_ptr session	 = std::make_shared<CSession>(std::move(sockfd));
+std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession() {
+	std::shared_ptr session	 = std::make_shared<CSession>();
 	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session), std::move(session));
 	instance->second->setSelf(instance);
 	return instance;
@@ -35,7 +34,7 @@ std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession(
 
 void CSessionManager::run() {
 	while (true)
-		newSession(Hyprutils::OS::CFileDescriptor{accept(g_pServer->getSocket()->get(), nullptr, nullptr) /* awaits new client/session */});
+		newSession();
 }
 
 void CSessionManager::broadcast(const std::string &msg, eFormatType type) const {

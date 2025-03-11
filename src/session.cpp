@@ -1,15 +1,22 @@
 #include "session.hpp"
 #include "chatManager.hpp"
 #include "log.hpp"
+#include "server.hpp"
 #include "sessionManager.hpp"
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 
-CSession::CSession(Hyprutils::OS::CFileDescriptor sockfd)
-	: m_sockfd(std::move(sockfd)) {
+CSession::CSession() : m_addrLen(sizeof(m_addr)) {
+  m_sockfd = Hyprutils::OS::CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
+
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
+
+  inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
+  m_port = ntohs(m_addr.sin_port);
+  log(TRACE, "session({}): connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
 }
@@ -82,8 +89,7 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 void CSession::run() {
 	onConnect();
 	registerSession() ? recvLoop() :
-					  // TODO: get ip and print the ip also
-		log(LOG, "User exited without even registering");
+		log(LOG, "Client {} exited without even registering", m_ip);
 
 	g_pSessionManager->removeSession(self);
 }
