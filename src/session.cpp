@@ -1,26 +1,25 @@
 #include "session.hpp"
+#include "chatManager.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
-#include "chatManager.hpp"
-
 
 CSession::CSession(Hyprutils::OS::CFileDescriptor sockfd)
 	: m_sockfd(std::move(sockfd)) {
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
-  log(TRACE, "session: initialized");
+	log(TRACE, "session: initialized");
 }
 
 CSession::~CSession() {
 	onDisconnect();
 	m_sockfd.reset();
 
-  self->second.reset();
-  log(TRACE, "session({}): bye", m_name);
+	self->second.reset();
+	log(TRACE, "session({}): bye", m_name);
 }
 
 void CSession::onConnect() {
@@ -55,7 +54,7 @@ void CSession::recvLoop() {
 		if (!recvData.good)
 			break;
 
-    g_pChatManager->newMessage({.msg=recvData.data, .username=m_name});
+		g_pChatManager->newMessage({.msg = recvData.data, .username = m_name});
 	}
 }
 
@@ -82,10 +81,9 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 
 void CSession::run() {
 	onConnect();
-	registerSession() ?
-    recvLoop() :
-    // TODO: get ip and print the ip also
-    log(LOG, "User exited without even registering");
+	registerSession() ? recvLoop() :
+					  // TODO: get ip and print the ip also
+		log(LOG, "User exited without even registering");
 
 	g_pSessionManager->removeSession(self);
 }
@@ -98,19 +96,19 @@ bool CSession::registerSession() {
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
 		write("Name cannot be empty", eFormatType::ERR);
 		return registerSession();
-	} 
+	}
 
-  *std::remove(recvData.data, recvData.data+strlen(recvData.data), '\n') = '\0';
-  if (g_pSessionManager->nameExists(recvData.data)) {
-    write("Name already exists", eFormatType::ERR);
-    return registerSession();
-  }
+	*std::remove(recvData.data, recvData.data + strlen(recvData.data), '\n') = '\0';
+	if (g_pSessionManager->nameExists(recvData.data)) {
+		write("Name already exists", eFormatType::ERR);
+		return registerSession();
+	}
 
 	this->m_name = recvData.data;
 
 	log(LOG, "Client registered as: {}", m_name);
 
-  return true;
+	return true;
 }
 
 bool CSession::isValid() {
@@ -148,6 +146,6 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 }
 
 void CSession::onShutdown() {
-  write(SYS, "Shutting down, bye");
-  g_pSessionManager->removeSession(self);
+	write(SYS, "Shutting down, bye");
+	g_pSessionManager->removeSession(self);
 }

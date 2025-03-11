@@ -43,6 +43,6 @@ class CSession {
 	void						   onErrno(eEventType);
 	void						   onRecv(const SRecvData &data);
 	void						   onSend(const std::string &msg);
-  void  onShutdown();
+	void						   onShutdown();
 	friend class CSessionManager;
 };
