@@ -82,8 +82,10 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 
 void CSession::run() {
 	onConnect();
-	if (registerSession())
-    recvLoop();
+	registerSession() ?
+    recvLoop() :
+    // TODO: get ip and print the ip also
+    log(LOG, "User exited without even registering");
 
 	g_pSessionManager->removeSession(self);
 }
