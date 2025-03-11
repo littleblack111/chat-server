@@ -11,7 +11,7 @@ class CSessionManager {
 	CSessionManager();
 	~CSessionManager();
 
-	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession(Hyprutils::OS::CFileDescriptor sockfd);
+	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession();
 
 	void run();
 	void broadcast(const std::string &msg, eFormatType type = NONE) const;
