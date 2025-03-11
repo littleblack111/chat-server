@@ -30,7 +30,7 @@ class CSession {
 
   private:
 	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
-	enum eEventType {
+	enum eEventType : std::uint8_t {
 		READ,
 		WRITE
 	};
