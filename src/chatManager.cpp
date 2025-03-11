@@ -18,5 +18,5 @@ void CChatManager::newMessage(const SMessage &msg) {
 }
 
 void CChatManager::broadcastMessage(const SMessage &msg) {
-	g_pSessionManager->broadcastChat(NFormatter::fmt(eFormatType::NONE, "{}: {}", msg.username, msg.msg), msg.username);
+	g_pSessionManager->broadcastChat(NFormatter::fmt(NONE, "{}: {}", msg.username, msg.msg), msg.username);
 }
