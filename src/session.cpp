@@ -3,20 +3,21 @@
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
+#include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
-#include <arpa/inet.h>
 
-CSession::CSession() : m_addrLen(sizeof(m_addr)) {
-  m_sockfd = Hyprutils::OS::CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
+CSession::CSession()
+	: m_addrLen(sizeof(m_addr)) {
+	m_sockfd = Hyprutils::OS::CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
 
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
-  inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
-  m_port = ntohs(m_addr.sin_port);
-  log(TRACE, "session({}): connected on port {}", m_ip, m_port);
+	inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
+	m_port = ntohs(m_addr.sin_port);
+	log(TRACE, "session({}): connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
 }
