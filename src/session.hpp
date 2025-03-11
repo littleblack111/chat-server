@@ -37,7 +37,7 @@ class CSession {
 	Hyprutils::OS::CFileDescriptor m_sockfd;
 	std::string					   m_name;
 	void						   recvLoop();
-	void						   registerSession();
+	bool						   registerSession();
 	void						   onConnect();
 	void						   onDisconnect();
 	void						   onErrno(eEventType);
