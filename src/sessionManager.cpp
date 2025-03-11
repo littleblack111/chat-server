@@ -6,7 +6,15 @@
 #include <utility>
 #include "log.hpp"
 
+void CSessionManager::shutdownSessions() {
+	for (const auto &[thread, session] : m_vSessions)
+    session->onShutdown();
+}
+
 CSessionManager::CSessionManager() {
+  if (std::atexit([]() { g_pSessionManager->shutdownSessions(); }))
+    log(ERR, "Failed to register SessionManager atexit handler, will fallback to quick_exit after hang");
+
   log(LOG, "SessionManager: initialized");
 };
 
