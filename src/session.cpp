@@ -82,33 +82,33 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 
 void CSession::run() {
 	onConnect();
-	registerSession();
-	recvLoop();
+	if (registerSession())
+    recvLoop();
 
 	g_pSessionManager->removeSession(self);
 }
 
-void CSession::registerSession() {
+bool CSession::registerSession() {
 	SRecvData recvData = read("Name: ");
 	if (!recvData.good)
-		return;
+		return false;
 
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
 		write("Name cannot be empty", eFormatType::ERR);
-		registerSession();
-    return;
+		return registerSession();
 	} 
 
   *std::remove(recvData.data, recvData.data+strlen(recvData.data), '\n') = '\0';
   if (g_pSessionManager->nameExists(recvData.data)) {
     write("Name already exists", eFormatType::ERR);
-    registerSession();
-    return;
+    return registerSession();
   }
 
 	this->m_name = recvData.data;
 
 	log(LOG, "Client registered as: {}", m_name);
+
+  return true;
 }
 
 bool CSession::isValid() {
