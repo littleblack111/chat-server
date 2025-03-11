@@ -20,6 +20,7 @@ class CSessionManager {
 	void												removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);
 
   bool           nameExists(const std::string &name);
+  void shutdownSessions();
 
   private:
 	void												broadcastChat(const std::string &msg, const std::string &username) const;
