@@ -79,20 +79,19 @@ CSession::SRecvData CSession::read() {
 	}
 
 	onRecv(recvData);
-  m_isReading = false;
+	m_isReading = false;
 	return recvData;
 }
 
 CSession::SRecvData CSession::read(const std::string &msg) {
 	write({}, "{}", msg, false);
-  m_isReading = true;
+	m_isReading = true;
 	return read();
 }
 
 void CSession::run() {
 	onConnect();
-	registerSession() ? recvLoop() :
-		log(LOG, "Client {} exited without even registering", m_ip);
+	registerSession() ? recvLoop() : log(LOG, "Client {} exited without even registering", m_ip);
 
 	g_pSessionManager->removeSession(self);
 }
@@ -133,8 +132,8 @@ bool CSession::isValid() {
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
-  if (m_isReading)
-    msg.insert(0, "\n");
+	if (m_isReading)
+		msg.insert(0, "\n");
 
 	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
 		onErrno(WRITE);
