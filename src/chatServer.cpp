@@ -35,7 +35,7 @@ void CChatServer::start() {
 	initManagers();
 
 	// will await while waiting for accept() to return a new client
-	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager);
+	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager.get());
 	m_sessionManagerThread.detach();
 
 	while (true) {
