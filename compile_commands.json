@@ -3,7 +3,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -22,7 +22,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -41,7 +41,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -60,7 +60,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -79,7 +79,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -98,7 +98,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
@@ -117,7 +117,7 @@
     "arguments": [
       "/usr/bin/x86_64-pc-linux-gnu-g++",
       "-c",
-      "-std=c++23",
+      "-std=c++26",
       "-g3",
       "-O0",
       "-Wall",
