@@ -8,11 +8,11 @@ DATADIR ?= $(PREFIX)/share
 
 OBJS = $(SRCS:.cpp=.o)
 
-CXXFLAGS += -std=c++23 -Oz -s -Wall -flto -fPIC
+CXXFLAGS += -std=c++26 -Oz -s -Wall -flto -fPIC
 LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 # Debug flags
-DEBUG_CXXFLAGS = -std=c++23 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
+DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
 DEBUG_LDFLAGS = -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 JOB_COUNT := $(BIN) $(OBJS)
