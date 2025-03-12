@@ -1,7 +1,9 @@
 #include "chatServer.hpp"
 #include "log.hpp"
+#include <algorithm>
 #include <csignal>
 #include <unistd.h>
+#include <vector>
 
 static void handleSignal(int sig) {
 	signal(sig, SIG_DFL);
@@ -27,11 +29,49 @@ static void registerSignals() {
 	signal(SIGPIPE, SIG_IGN);
 }
 
+static void help() {
+  log(ERR, "usage: chat-server <port>");
+}
+
 // TODO: ARGC, ARGV. the CServer ctor should take a port number
-int main() {
+int main(int argc, char *argv[]) {
+	std::vector<std::string> args{argv + 1, argv + argc};
+  if (args.empty()) {
+    help();
+    return 1;
+  }
+  uint16_t port = 0;
+  for (const auto &arg : args) {
+    if (arg == "-h" || arg == "--help") {
+      help();
+      return 0;
+    } else if (std::ranges::all_of(arg, ::isdigit)) {
+      port = std::stoi(arg);
+      if (std::stoi(arg) < 0) {
+        log(ERR, "Port number must be greater than 0");
+
+        return 1;
+      } else if (std::stoi(arg) > 65535) {
+        log(ERR, "Port number must be less than 65536");
+
+        return 1;
+      }
+
+      port = std::stoi(arg);
+      log(LOG, "Port number: {}", port);
+    }
+  }
+
+  if (port == 0) {
+    log(ERR, "Port number is required");
+
+    help();
+    return 1;
+  }
+
 	registerSignals();
 
-	g_pChatServer = std::make_unique<CChatServer>();
+	g_pChatServer = std::make_unique<CChatServer>(port);
 	g_pChatServer->start();
 
 	// died
