@@ -45,7 +45,7 @@ class CSession {
 	char												m_ip[INET_ADDRSTRLEN];
 	int													m_port;
 
-  bool m_isReading = false;
+	bool m_isReading = false;
 
 	void recvLoop();
 	bool registerSession();
