@@ -79,11 +79,13 @@ CSession::SRecvData CSession::read() {
 	}
 
 	onRecv(recvData);
+  m_isReading = false;
 	return recvData;
 }
 
 CSession::SRecvData CSession::read(const std::string &msg) {
 	write({}, "{}", msg, false);
+  m_isReading = true;
 	return read();
 }
 
@@ -131,6 +133,8 @@ bool CSession::isValid() {
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
+  if (m_isReading)
+    msg.insert(0, "\n");
 
 	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
 		onErrno(WRITE);
