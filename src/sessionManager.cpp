@@ -27,7 +27,7 @@ CSessionManager::~CSessionManager() {
 
 std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession() {
 	std::shared_ptr session	 = std::make_shared<CSession>();
-	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session), std::move(session));
+	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session), session);
 	instance->second->setSelf(instance);
 	return instance;
 }
