@@ -11,7 +11,7 @@ class CChatServer {
   private:
 	void		 initManagers();
 	void		 initServer();
-	std::jthread m_sessionThread;
+	std::jthread m_sessionManagerThread;
 };
 
 inline std::unique_ptr<CChatServer> g_pChatServer;
