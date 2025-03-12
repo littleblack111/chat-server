@@ -18,10 +18,11 @@ CSessionManager::CSessionManager() {
 };
 
 CSessionManager::~CSessionManager() {
-	for (auto &[thread, session] : m_vSessions)
+	for (auto &[thread, session] : m_vSessions) {
 		if (thread.joinable())
-			thread.join();
-
+			thread.detach();
+    session.reset();
+  }
 	log(SYS, "SessionManager: bye");
 }
 
@@ -62,6 +63,7 @@ void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSes
 	if (it != m_vSessions.end()) {
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
+    it->second.reset();
 		m_vSessions.erase(it);
 	}
 }
