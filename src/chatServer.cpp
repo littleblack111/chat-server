@@ -15,8 +15,8 @@ CChatServer::~CChatServer() {
 
 void CChatServer::cleanup() {
 	g_pChatManager.reset();
-	// if (m_sessionThread.joinable())
-	// m_sessionThread.join();
+	// if (m_sessionManagerThread.joinable())
+	// m_sessionManagerThread.join();
 	g_pSessionManager.reset();
 	g_pServer.reset();
 }
@@ -35,8 +35,8 @@ void CChatServer::start() {
 	initManagers();
 
 	// will await while waiting for accept() to return a new client
-	m_sessionThread = std::jthread(&CSessionManager::run, g_pSessionManager.get());
-	m_sessionThread.detach();
+	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager.get());
+	m_sessionManagerThread.detach();
 
 	while (true) {
 	}
