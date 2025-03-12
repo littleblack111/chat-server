@@ -9,7 +9,7 @@ CServer::CServer(uint16_t port)
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("Failed to create socket");
 
-	int reuse = 1;
+	constexpr int reuse = 1;
 	if (setsockopt(m_sockfd.get(), SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
 		std::println(stderr, "setsockopt(SO_REUSEADDR) failed");
 
