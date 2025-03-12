@@ -4,7 +4,7 @@
 #include "server.hpp"
 #include "sessionManager.hpp"
 
-CChatServer::CChatServer() {
+CChatServer::CChatServer(uint16_t port): m_port(port) {
 	log(LOG, "ChatServer: initialized");
 };
 
@@ -24,7 +24,7 @@ void CChatServer::cleanup() {
 void CChatServer::initManagers() {
 	log(LOG, "ChatServer: initializing managers");
 	log(LOG, "Creating Server");
-	g_pServer = std::make_unique<CServer>(8080);
+	g_pServer = std::make_unique<CServer>(m_port);
 	log(LOG, "Creating SessionManager");
 	g_pSessionManager = std::make_shared<CSessionManager>();
 	log(LOG, "Creating ChatManager");
