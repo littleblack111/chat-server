@@ -14,7 +14,7 @@ class CSessionManager {
 	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession();
 
 	void run();
-	void broadcast(const std::string &msg, eFormatType type = NONE) const;
+	void broadcast(eFormatType type, const std::string &msg) const;
 	void kick(const CSession *session) const;
 	void addSession(const CSession &session);
 	void removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);

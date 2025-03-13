@@ -38,7 +38,7 @@ void CSessionManager::run() {
 		newSession();
 }
 
-void CSessionManager::broadcast(const std::string &msg, eFormatType type) const {
+void CSessionManager::broadcast(eFormatType type, const std::string &msg) const {
 	for (const auto &[thread, session] : m_vSessions)
 		session->write(msg, type);
 }
