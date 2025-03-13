@@ -10,11 +10,11 @@ class CChatManager {
 		std::string msg;
 		std::string username;
 	};
-	void newMessage(const SMessage &msg);
-	void broadcastMessage(const SMessage &msg);
-  std::string fmtBroadcastMessage(const SMessage &msg);
+	void		newMessage(const SMessage &msg);
+	void		broadcastMessage(const SMessage &msg);
+	std::string fmtBroadcastMessage(const SMessage &msg);
 
-  std::vector<SMessage> getChat();
+	std::vector<SMessage> getChat();
 
   private:
 	std::vector<SMessage> m_vMessages;

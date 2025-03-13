@@ -3,8 +3,8 @@
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
-#include <arpa/inet.h>
 #include <algorithm>
+#include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
@@ -77,14 +77,14 @@ void CSession::SRecvData::sanitize() {
 
 	if (const auto start = data.find_first_not_of(" \t\r\n"); start != std::string::npos) {
 		const auto end = data.find_last_not_of(" \t\r\n");
-		data = data.substr(start, end - start + 1);
+		data		   = data.substr(start, end - start + 1);
 	} else
 		data.clear();
 }
 
 std::unique_ptr<CSession::SRecvData> CSession::read() {
 	auto recvData = std::make_unique<SRecvData>();
-	
+
 	recvData->data.resize(recvData->size);
 	ssize_t size = recv(m_sockfd.get(), &recvData->data[0], recvData->size, 0);
 
@@ -93,7 +93,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 		onErrno(READ);
 	} else if (size == 0)
 		recvData->good = false;
-		// onDisconnect();
+	// onDisconnect();
 	else
 		recvData->data.resize(size);
 
@@ -111,12 +111,12 @@ std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg) {
 void CSession::run() {
 	onConnect();
 	if (registerSession()) {
-    // g_pSessionManager->broadcast(g_pChatManager->getChat());
-    for (const auto &chat : g_pChatManager->getChat())
-      write(g_pChatManager->fmtBroadcastMessage(chat));
-    recvLoop();
-  } else
-    log(LOG, "Client {} exited without even registering", m_ip);
+		// g_pSessionManager->broadcast(g_pChatManager->getChat());
+		for (const auto &chat : g_pChatManager->getChat())
+			write(g_pChatManager->fmtBroadcastMessage(chat));
+		recvLoop();
+	} else
+		log(LOG, "Client {} exited without even registering", m_ip);
 
 	g_pSessionManager->removeSession(self);
 }

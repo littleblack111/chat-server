@@ -4,7 +4,8 @@
 #include "server.hpp"
 #include "sessionManager.hpp"
 
-CChatServer::CChatServer(uint16_t port): m_port(port) {
+CChatServer::CChatServer(uint16_t port)
+	: m_port(port) {
 	log(LOG, "ChatServer: initialized");
 };
 
