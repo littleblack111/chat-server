@@ -16,7 +16,6 @@ class CSession {
 		char	data[1024] = {0};
 		ssize_t dataSize   = sizeof(data);
 		bool	good	   = true;
-		bool	charValid  = true;
 	};
 
 	std::string getName();
