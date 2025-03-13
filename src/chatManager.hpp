@@ -12,9 +12,11 @@ class CChatManager {
 	};
 	void newMessage(const SMessage &msg);
 	void broadcastMessage(const SMessage &msg);
+  std::string fmtBroadcastMessage(const SMessage &msg);
+
+  std::vector<SMessage> getChat();
 
   private:
-	void				  broadcastMessage(const std::string &msg, const std::string &username);
 	std::vector<SMessage> m_vMessages;
 };
 inline std::unique_ptr<CChatManager> g_pChatManager;
