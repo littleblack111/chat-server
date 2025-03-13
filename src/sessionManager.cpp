@@ -38,9 +38,9 @@ void CSessionManager::run() {
 		newSession();
 }
 
-void CSessionManager::broadcast(eFormatType type, const std::string &msg) const {
+void CSessionManager::broadcast(const std::string &msg) const {
 	for (const auto &[thread, session] : m_vSessions)
-		session->write(msg, type);
+		session->write(msg);
 }
 
 void CSessionManager::broadcastChat(const std::string &msg, const std::string &username) const {
@@ -49,7 +49,7 @@ void CSessionManager::broadcastChat(const std::string &msg, const std::string &u
 			continue;
 		auto name = session->getName();
 		if (name != username)
-			session->write(msg, NONE);
+			session->write(msg);
 	}
 }
 
@@ -66,4 +66,5 @@ void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSes
     it->second.reset();
 		m_vSessions.erase(it);
 	}
+
 }

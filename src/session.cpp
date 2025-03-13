@@ -84,7 +84,7 @@ CSession::SRecvData CSession::read() {
 }
 
 CSession::SRecvData CSession::read(const std::string &msg) {
-	write({}, "{}", msg, false);
+	write("{}", msg, false);
 	m_isReading = true;
 	return read();
 }
@@ -102,13 +102,13 @@ bool CSession::registerSession() {
 		return false;
 
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
-		write("Name cannot be empty", ERR);
+		write("Name cannot be empty");
 		return registerSession();
 	}
 
 	*std::remove(recvData.data, recvData.data + strlen(recvData.data), '\n') = '\0';
 	if (g_pSessionManager->nameExists(recvData.data)) {
-		write("Name already exists", ERR);
+		write("Name already exists");
 		return registerSession();
 	}
 
@@ -130,8 +130,8 @@ bool CSession::isValid() {
 }
 
 template <typename... Args>
-bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
-	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
+bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
+	std::string msg = NFormatter::fmt(NONE, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");
 
@@ -143,8 +143,8 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 	return true;
 }
 
-bool CSession::write(const std::string &msg, eFormatType type) {
-	return write(type, "{}", msg);
+bool CSession::write(const std::string &msg) {
+	return write("{}", msg);
 }
 
 std::string CSession::getName() {
@@ -156,6 +156,6 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 }
 
 void CSession::onShutdown() {
-	write(SYS, "Shutting down, bye");
+	write("Shutting down, bye");
 	g_pSessionManager->removeSession(self);
 }
