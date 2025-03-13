@@ -4,6 +4,7 @@
 #include "server.hpp"
 #include "sessionManager.hpp"
 #include <arpa/inet.h>
+#include <algorithm>
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
@@ -66,23 +67,35 @@ void CSession::recvLoop() {
 	}
 }
 
+bool CSession::SRecvData::isEmpty() const {
+	return data.empty() || std::ranges::all_of(data, [](char c) { return std::isspace(c); });
+}
+
+void CSession::SRecvData::sanitize() {
+	if (!data.empty() && data.back() == '\n')
+		data.pop_back();
+
+	if (const auto start = data.find_first_not_of(" \t\r\n"); start != std::string::npos) {
+		const auto end = data.find_last_not_of(" \t\r\n");
+		data = data.substr(start, end - start + 1);
+	} else
+		data.clear();
+}
+
 std::unique_ptr<CSession::SRecvData> CSession::read() {
 	auto recvData = std::make_unique<SRecvData>();
-	char buffer[1024] = {0};
 	
-	ssize_t dataSize = recv(m_sockfd.get(), buffer, sizeof(buffer), 0);
-	if (dataSize < 0) {
+	recvData->data.resize(recvData->size);
+	ssize_t size = recv(m_sockfd.get(), &recvData->data[0], recvData->size, 0);
+
+	if (size < 0) {
 		recvData->good = false;
 		onErrno(READ);
-	}
-	if (dataSize == 0) {
+	} else if (size == 0)
 		recvData->good = false;
 		// onDisconnect();
-	}
-
-	if (dataSize > 0) {
-		recvData->data = std::string(buffer, dataSize);
-	}
+	else
+		recvData->data.resize(size);
 
 	onRecv(*recvData);
 	m_isReading = false;
@@ -113,14 +126,10 @@ bool CSession::registerSession() {
 	if (!recvData->good)
 		return false;
 
-	if (recvData->data.empty() || recvData->data[0] == '\n' || recvData->data[0] == ' ') {
+	recvData->sanitize();
+	if (recvData->isEmpty()) {
 		write("Name cannot be empty");
 		return registerSession();
-	}
-
-	// Remove trailing newline if present
-	if (!recvData->data.empty() && recvData->data.back() == '\n') {
-		recvData->data.pop_back();
 	}
 
 	if (g_pSessionManager->nameExists(recvData->data)) {
