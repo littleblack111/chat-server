@@ -14,8 +14,13 @@ class CSession {
 
 	struct SRecvData {
 		std::string data;
+    const size_t size = 1024;
 		bool        good = true;
+
+		bool isEmpty() const;
+		void sanitize();
 	};
+
 
 	std::string getName();
 	void        setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
