@@ -9,6 +9,7 @@ enum eFormatType : int8_t {
 	WARN,
 	ERR,
 	SYS,
+  NONEWLINE
 };
 
 namespace NFormatter {
@@ -34,8 +35,10 @@ inline std::string fmt(eFormatType type, std::string str) {
 		prefix = "";
 		break;
 	}
-	if (!str.empty() && str.back() != '\n' && !prefix.empty())
+
+	if (str.back() != '\n' && type != NONEWLINE)
 		str += '\n';
+
 	return prefix + str;
 }
 
