@@ -102,13 +102,13 @@ bool CSession::registerSession() {
 		return false;
 
 	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
-		write("Name cannot be empty", eFormatType::ERR);
+		write("Name cannot be empty", ERR);
 		return registerSession();
 	}
 
 	*std::remove(recvData.data, recvData.data + strlen(recvData.data), '\n') = '\0';
 	if (g_pSessionManager->nameExists(recvData.data)) {
-		write("Name already exists", eFormatType::ERR);
+		write("Name already exists", ERR);
 		return registerSession();
 	}
 
