@@ -91,7 +91,13 @@ CSession::SRecvData CSession::read(const std::string &msg) {
 
 void CSession::run() {
 	onConnect();
-	registerSession() ? recvLoop() : log(LOG, "Client {} exited without even registering", m_ip);
+	if (registerSession()) {
+    // g_pSessionManager->broadcast(g_pChatManager->getChat());
+    for (const auto &chat : g_pChatManager->getChat())
+      write(g_pChatManager->fmtBroadcastMessage(chat), NONE);
+    recvLoop();
+  } else
+    log(LOG, "Client {} exited without even registering", m_ip);
 
 	g_pSessionManager->removeSession(self);
 }
