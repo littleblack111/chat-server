@@ -28,9 +28,6 @@ inline std::string fmt(eFormatType type, std::string str) {
 	case SYS:
 		prefix = "[SYSTEM] ";
 		break;
-	case CHAT:
-		prefix = "[CHAT] ";
-		break;
 	case TRACE:
 		prefix = "[DEBUG] ";
 		break;
