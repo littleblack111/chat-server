@@ -49,7 +49,7 @@ void CSession::onErrno(eEventType eventType) {
 }
 
 void CSession::onRecv(const SRecvData &data) {
-	log(LOG, "Received: {}", data.data, data.dataSize);
+	log(LOG, "Received: {}", data.data);
 }
 
 void CSession::onSend(const std::string &msg) {
@@ -58,32 +58,38 @@ void CSession::onSend(const std::string &msg) {
 
 void CSession::recvLoop() {
 	while (true) {
-		SRecvData recvData = read(NFormatter::fmt(NONE, "{}: ", m_name));
-		if (!recvData.good)
+		auto recvData = read(NFormatter::fmt(NONE, "{}: ", m_name));
+		if (!recvData->good)
 			break;
 
-		g_pChatManager->newMessage({.msg = recvData.data, .username = m_name});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name});
 	}
 }
 
-CSession::SRecvData CSession::read() {
-	SRecvData recvData;
-	ssize_t	  dataSize = recv(m_sockfd.get(), recvData.data, recvData.dataSize, 0);
+std::unique_ptr<CSession::SRecvData> CSession::read() {
+	auto recvData = std::make_unique<SRecvData>();
+	char buffer[1024] = {0};
+	
+	ssize_t dataSize = recv(m_sockfd.get(), buffer, sizeof(buffer), 0);
 	if (dataSize < 0) {
-		recvData.good = false;
+		recvData->good = false;
 		onErrno(READ);
 	}
 	if (dataSize == 0) {
-		recvData.good = false;
+		recvData->good = false;
 		// onDisconnect();
 	}
 
-	onRecv(recvData);
+	if (dataSize > 0) {
+		recvData->data = std::string(buffer, dataSize);
+	}
+
+	onRecv(*recvData);
 	m_isReading = false;
 	return recvData;
 }
 
-CSession::SRecvData CSession::read(const std::string &msg) {
+std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg) {
 	write("{}", msg, false);
 	m_isReading = true;
 	return read();
@@ -103,22 +109,26 @@ void CSession::run() {
 }
 
 bool CSession::registerSession() {
-	SRecvData recvData = read("Name: ");
-	if (!recvData.good)
+	auto recvData = read("Name: ");
+	if (!recvData->good)
 		return false;
 
-	if (recvData.data[0] == '\n' || recvData.data[0] == ' ') {
+	if (recvData->data.empty() || recvData->data[0] == '\n' || recvData->data[0] == ' ') {
 		write("Name cannot be empty");
 		return registerSession();
 	}
 
-	*std::remove(recvData.data, recvData.data + strlen(recvData.data), '\n') = '\0';
-	if (g_pSessionManager->nameExists(recvData.data)) {
+	// Remove trailing newline if present
+	if (!recvData->data.empty() && recvData->data.back() == '\n') {
+		recvData->data.pop_back();
+	}
+
+	if (g_pSessionManager->nameExists(recvData->data)) {
 		write("Name already exists");
 		return registerSession();
 	}
 
-	this->m_name = recvData.data;
+	this->m_name = recvData->data;
 
 	log(LOG, "Client registered as: {}", m_name);
 
