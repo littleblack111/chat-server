@@ -9,7 +9,6 @@ enum eFormatType : int8_t {
 	WARN,
 	ERR,
 	SYS,
-	CHAT,
 };
 
 namespace NFormatter {
@@ -27,9 +26,6 @@ inline std::string fmt(eFormatType type, std::string str) {
 		break;
 	case SYS:
 		prefix = "[SYSTEM] ";
-		break;
-	case CHAT:
-		prefix = "[CHAT] ";
 		break;
 	case TRACE:
 		prefix = "[DEBUG] ";

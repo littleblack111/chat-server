@@ -24,9 +24,9 @@ class CSession {
 
 	SRecvData read();
 	SRecvData read(const std::string &msg);
-	bool	  write(const std::string &msg, eFormatType type);
+	bool	  write(const std::string &msg);
 	template <typename... Args>
-	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
+	bool write(std::format_string<Args...> fmt, Args &&...args);
 
 	void run();
 
