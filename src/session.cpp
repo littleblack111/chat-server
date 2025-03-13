@@ -58,7 +58,7 @@ void CSession::onSend(const std::string &msg) {
 
 void CSession::recvLoop() {
 	while (true) {
-		SRecvData recvData = read();
+		SRecvData recvData = read(NFormatter::fmt(NONE, "{}: ", m_name));
 		if (!recvData.good)
 			break;
 
