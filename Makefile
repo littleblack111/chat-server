@@ -57,5 +57,8 @@ clang-tidy:
 
 debug: CXXFLAGS = $(DEBUG_CXXFLAGS)
 debug: LDFLAGS = $(DEBUG_LDFLAGS)
+debug: CC = afl-g++
+debug: CXX = afl-g++
+debug: export AFL_USE_ASAN = 1
 debug: $(BIN)
 	@echo "Debug build complete"
