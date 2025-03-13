@@ -9,10 +9,10 @@ class CChatServer {
 	void cleanup();
 
   private:
-  uint16_t m_port;
+	uint16_t m_port;
 
-	void		 initManagers();
-	void		 initServer();
+	void initManagers();
+	void initServer();
 
 	std::jthread m_sessionManagerThread;
 };

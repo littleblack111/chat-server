@@ -13,25 +13,24 @@ class CSession {
 	~CSession();
 
 	struct SRecvData {
-		std::string data;
-    const size_t size = 1024;
-		bool        good = true;
+		std::string	 data;
+		const size_t size = 1024;
+		bool		 good = true;
 
 		bool isEmpty() const;
 		void sanitize();
 	};
 
-
 	std::string getName();
-	void        setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
+	void		setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
 	std::unique_ptr<SRecvData> read(const std::string &msg);
-	bool	  write(const std::string &msg);
+	bool					   write(const std::string &msg);
 	template <typename... Args>
 	bool write(std::format_string<Args...> fmt, Args &&...args);
-  template <typename... Args>
-  bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
+	template <typename... Args>
+	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
 
 	void run();
 
