@@ -58,7 +58,7 @@ void CSession::onSend(const std::string &msg) {
 
 void CSession::recvLoop() {
 	while (true) {
-		auto recvData = read(NFormatter::fmt(NONE, "{}: ", m_name));
+		auto recvData = read(NFormatter::fmt(NONEWLINE, "{}: ", m_name));
 		if (!recvData->good)
 			break;
 
@@ -90,7 +90,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 }
 
 std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg) {
-	write("{}", msg, false);
+	write(NONEWLINE, "{}", msg, false);
 	m_isReading = true;
 	return read();
 }
@@ -148,6 +148,20 @@ bool CSession::isValid() {
 template <typename... Args>
 bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
 	std::string msg = NFormatter::fmt(NONE, fmt, std::forward<Args>(args)...);
+	if (m_isReading)
+		msg.insert(0, "\n");
+
+	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
+		onErrno(WRITE);
+		return false;
+	}
+	onSend(msg);
+	return true;
+}
+
+template <typename... Args>
+bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");
 
