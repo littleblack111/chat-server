@@ -9,7 +9,7 @@ enum eFormatType : int8_t {
 	WARN,
 	ERR,
 	SYS,
-  NONEWLINE
+	NONEWLINE
 };
 
 namespace NFormatter {

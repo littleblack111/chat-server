@@ -18,7 +18,7 @@ void CChatManager::newMessage(const SMessage &msg) {
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
-  return NFormatter::fmt(NONE, "{}: {}", msg.username, msg.msg);
+	return NFormatter::fmt(NONE, "{}: {}", msg.username, msg.msg);
 }
 
 void CChatManager::broadcastMessage(const SMessage &msg) {
@@ -26,5 +26,5 @@ void CChatManager::broadcastMessage(const SMessage &msg) {
 }
 
 std::vector<CChatManager::SMessage> CChatManager::getChat() {
-  return m_vMessages;
+	return m_vMessages;
 }
