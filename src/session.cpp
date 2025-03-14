@@ -186,7 +186,7 @@ bool CSession::write(const std::string &msg) {
 	return write("{}", msg);
 }
 
-std::string CSession::getName() {
+const std::string &CSession::getName() const {
 	return m_name;
 }
 
