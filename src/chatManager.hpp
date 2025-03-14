@@ -16,7 +16,7 @@ class CChatManager {
 	void		broadcastMessage(const SMessage &msg);
 	std::string fmtBroadcastMessage(const SMessage &msg);
 
-	std::vector<SMessage> getChat();
+	const std::vector<SMessage> &getChat() const;
 
   private:
 	std::vector<SMessage> m_vMessages;
