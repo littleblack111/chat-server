@@ -8,7 +8,7 @@ class CServer {
   public:
 	CServer(uint16_t port);
 	~CServer();
-	Hyprutils::OS::CFileDescriptor *getSocket();
+	const Hyprutils::OS::CFileDescriptor *getSocket() const;
 
   private:
 	Hyprutils::OS::CFileDescriptor m_sockfd;

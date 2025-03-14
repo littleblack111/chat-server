@@ -21,7 +21,7 @@ class CSession {
 		void sanitize();
 	};
 
-	std::string getName();
+	const std::string &getName() const;
 	void		setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();

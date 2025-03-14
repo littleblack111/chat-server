@@ -25,6 +25,6 @@ void CChatManager::broadcastMessage(const SMessage &msg) {
 	g_pSessionManager->broadcastChat(fmtBroadcastMessage(msg), msg.username);
 }
 
-std::vector<CChatManager::SMessage> CChatManager::getChat() {
+const std::vector<CChatManager::SMessage> &CChatManager::getChat() const {
 	return m_vMessages;
 }

@@ -30,6 +30,6 @@ CServer::~CServer() {
 	log(SYS, "Server: bye");
 }
 
-Hyprutils::OS::CFileDescriptor *CServer::getSocket() {
+const Hyprutils::OS::CFileDescriptor *CServer::getSocket() const {
 	return &m_sockfd;
 }
