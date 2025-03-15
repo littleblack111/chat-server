@@ -1,5 +1,8 @@
 #include "chatServer.hpp"
 #include "chatManager.hpp"
+#include "commandHandler.hpp"
+#include "commands.hpp"
+#include "inputManager.hpp"
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
@@ -20,6 +23,8 @@ void CChatServer::cleanup() {
 	// m_sessionManagerThread.join();
 	g_pSessionManager.reset();
 	g_pServer.reset();
+	g_pCommandHandler.reset();
+	g_pInputManager.reset();
 }
 
 void CChatServer::initManagers() {
@@ -30,15 +35,20 @@ void CChatServer::initManagers() {
 	g_pSessionManager = std::make_shared<CSessionManager>();
 	log(LOG, "Creating ChatManager");
 	g_pChatManager = std::make_unique<CChatManager>();
+	log(LOG, "Creating InputManager");
+	g_pInputManager = std::make_unique<CInputManager>();
 }
 
 void CChatServer::start() {
 	initManagers();
 
+	log(LOG, "Creating CommandHandler");
+	g_pCommandHandler = std::make_unique<CCommandHandler>();
+	registerCommands();
+
 	// will await while waiting for accept() to return a new client
 	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager.get());
 	m_sessionManagerThread.detach();
 
-	while (true) {
-	}
+	g_pInputManager->run();
 }

@@ -1,7 +1,7 @@
 [
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -20,7 +20,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -39,7 +39,45 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/commandHandler.o",
+      "src/commandHandler.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commandHandler.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/commandHandler.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/commands.o",
+      "src/commands.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commands.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/commands.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -58,7 +96,26 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "src/inputManager.o",
+      "src/inputManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/inputManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/src/inputManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -77,7 +134,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -96,7 +153,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
@@ -115,7 +172,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/x86_64-pc-linux-gnu-g++",
+      "/usr/bin/afl-g++",
       "-c",
       "-std=c++26",
       "-g3",
