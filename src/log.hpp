@@ -6,11 +6,19 @@
 #include <unistd.h>
 
 inline void log(FILE *_stream, eFormatType type, std::string str) {
+#ifndef DEBUG
+	if (type == TRACE)
+		return;
+#endif
 	std::println(_stream, "{}", NFormatter::fmt(type, str));
 }
 
 template <typename... Args>
 void log(FILE *_stream, eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+#ifndef DEBUG
+	if (type == TRACE)
+		return;
+#endif
 	std::println(_stream, "{}", NFormatter::fmt(type, fmt, std::forward<Args>(args)...));
 }
 
