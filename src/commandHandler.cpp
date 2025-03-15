@@ -17,12 +17,12 @@ bool CCommandHandler::isCommand(const std::string &str) const {
 
 bool CCommandHandler::validCommand(const std::string &command) const {
 	return std::ranges::any_of(m_vCommands, [&command](const SCommand &cmd) {
-		return cmd.command == command;
+		return cmd.name == command;
 	});
 }
 
 bool CCommandHandler::registerCommand(const SCommand &command) {
-	if (command.command.empty() || !command.exe || !command.parser)
+	if (command.name.empty() || !command.exe || !command.parser)
 		return false;
 
 	m_vCommands.push_back(command);
@@ -31,14 +31,14 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 
 std::function<CCommandHandler::SCommand::SResult(std::string args)> CCommandHandler::getCommand(const std::string &command) const {
 	return std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) {
-			   return cmd.command == command;
+			   return cmd.name == command;
 		   })
 		->exe;
 }
 
 std::function<CCommandHandler::SCommand::SResult(const std::string &args)> CCommandHandler::getParser(const std::string &command) const {
 	return std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) {
-			   return cmd.command == command;
+			   return cmd.name == command;
 		   })
 		->parser;
 }

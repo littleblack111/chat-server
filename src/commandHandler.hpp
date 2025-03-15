@@ -14,7 +14,7 @@ class CCommandHandler {
 			bool		good;
 		};
 
-		std::string										command;
+		std::string										name;
 		std::function<SResult(const std::string &args)> parser;
 		std::function<SResult(const std::string &args)> exe;
 	};

@@ -3,7 +3,7 @@
 
 void registerCommands() {
 	g_pCommandHandler->registerCommand({
-		.command = "test",
+		.name = "test",
 		.parser	 = [](const std::string &args) -> CCommandHandler::SCommand::SResult {
 			 return {.result = args, .good = true};
 		},
