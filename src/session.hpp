@@ -22,7 +22,7 @@ class CSession {
 	};
 
 	const std::string &getName() const;
-	void		setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
+	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
 	std::unique_ptr<SRecvData> read(const std::string &msg);
@@ -55,11 +55,15 @@ class CSession {
 	void recvLoop();
 	bool registerSession();
 
+#ifdef DEBUG
 	void onConnect();
 	void onDisconnect();
+#endif
 	void onErrno(eEventType);
+#ifdef DEBUG
 	void onRecv(const SRecvData &data);
 	void onSend(const std::string &msg);
+#endif
 	void onShutdown();
 
 	friend class CSessionManager;
