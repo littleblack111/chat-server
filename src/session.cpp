@@ -18,19 +18,24 @@ CSession::CSession()
 
 	inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
 	m_port = ntohs(m_addr.sin_port);
-	log(TRACE, "session({}): connected on port {}", m_ip, m_port);
+	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
 }
 
 CSession::~CSession() {
+#ifdef DEBUG
 	onDisconnect();
+#endif
 	m_sockfd.reset();
 
 	self->second.reset();
-	log(TRACE, "session({}): bye", m_name);
+	log(LOG, "Client {}@{} disconnected", m_name, m_ip);
+
+	log(TRACE, "session({}@{}): bye", m_name, m_ip);
 }
 
+#ifdef DEBUG
 void CSession::onConnect() {
 	log(LOG, "Client connected");
 }
@@ -38,17 +43,19 @@ void CSession::onConnect() {
 void CSession::onDisconnect() {
 	log(LOG, "Client disconnected");
 }
+#endif
 
 void CSession::onErrno(eEventType eventType) {
 	const auto err = strerror(errno);
 	switch (eventType) {
 	case READ:
-		log(LOG, "Error while reading: {}", err);
+		log(WARN, "Error while reading: {}", err);
 	case WRITE:
-		log(LOG, "Error while writing: {}", err);
+		log(WARN, "Error while writing: {}", err);
 	}
 }
 
+#ifdef DEBUG
 void CSession::onRecv(const SRecvData &data) {
 	log(LOG, "Received: {}", data.data);
 }
@@ -56,6 +63,7 @@ void CSession::onRecv(const SRecvData &data) {
 void CSession::onSend(const std::string &msg) {
 	log(LOG, "Sent: {}", msg);
 }
+#endif
 
 void CSession::recvLoop() {
 	while (true) {
@@ -93,11 +101,12 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 		onErrno(READ);
 	} else if (size == 0)
 		recvData->good = false;
-	// onDisconnect();
 	else
 		recvData->data.resize(size);
 
+#ifdef DEBUG
 	onRecv(*recvData);
+#endif
 	m_isReading = false;
 	return recvData;
 }
@@ -109,9 +118,10 @@ std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg) {
 }
 
 void CSession::run() {
+#ifdef DEBUG
 	onConnect();
+#endif
 	if (registerSession()) {
-		// g_pSessionManager->broadcast(g_pChatManager->getChat());
 		for (const auto &chat : g_pChatManager->getChat())
 			write(g_pChatManager->fmtBroadcastMessage(chat));
 		recvLoop();
@@ -164,7 +174,9 @@ bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
 		onErrno(WRITE);
 		return false;
 	}
+#ifdef DEBUG
 	onSend(msg);
+#endif
 	return true;
 }
 
@@ -178,7 +190,9 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 		onErrno(WRITE);
 		return false;
 	}
+#ifdef DEBUG
 	onSend(msg);
+#endif
 	return true;
 }
 
