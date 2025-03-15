@@ -12,7 +12,7 @@ CChatManager::~CChatManager() {
 }
 
 void CChatManager::newMessage(const SMessage &msg) {
-	log(LOG, "New message from {}: {}", msg.username, msg.msg);
+	log(LOG, "{}: {}", msg.username, msg.msg);
 	broadcastMessage(msg);
 	m_vMessages.push_back(msg);
 }
