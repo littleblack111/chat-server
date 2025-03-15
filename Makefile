@@ -34,7 +34,11 @@ install: $(all)
 
 clean:
 	@echo "Cleaning up"
-	-@rm $(BIN) $(OBJS)
+	-@rm $(OBJS)
+
+clean-all: clean
+	@echo "Cleaning up all"
+	-@rm -rf $(BIN)
 
 $(BIN): $(OBJS)
 	$(call progress, Linking $@)
