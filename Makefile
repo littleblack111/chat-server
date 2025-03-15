@@ -2,7 +2,7 @@ BIN = chat-server
 SRCS = $(wildcard src/*.cpp)
 HEADERS = $(wildcard src/*.hpp)
 
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 DATADIR ?= $(PREFIX)/share
 
