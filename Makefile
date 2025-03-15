@@ -18,6 +18,9 @@ DEBUG_LDFLAGS = -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 JOB_COUNT := $(BIN) $(OBJS)
 JOBS_DONE := $(shell ls -l $(JOB_COUNT) 2> /dev/null | wc -l)
 
+NPROC := $(shell nproc 2>/dev/null || getconf NPROCESSORS_CONF || echo 2)
+MAKEFLAGS += -j$(NPROC)
+
 define progress
 	$(eval JOBS_DONE := $(shell echo $$(($(JOBS_DONE) + 1))))
 	@printf "[$(JOBS_DONE)/$(shell echo $(JOB_COUNT) | wc -w)] %s %s\n" $(1) $(2)
