@@ -8,6 +8,7 @@
 void CSessionManager::shutdownSessions() {
 	for (const auto &[thread, session] : m_vSessions)
 		session->onKick("Server shutting down");
+
 }
 
 CSessionManager::CSessionManager() {

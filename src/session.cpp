@@ -208,6 +208,7 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 }
 
 void CSession::onKick(const std::string &reason) {
-	write(reason);
+  if (!reason.empty())
+    write(reason);
 	g_pSessionManager->removeSession(self);
 }
