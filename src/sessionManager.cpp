@@ -2,13 +2,13 @@
 #include "log.hpp"
 #include "session.hpp"
 #include <algorithm>
+#include <cstring>
 #include <unistd.h>
 #include <utility>
 
 void CSessionManager::shutdownSessions() {
 	for (const auto &[thread, session] : m_vSessions)
 		session->onKick("Server shutting down");
-
 }
 
 CSessionManager::CSessionManager() {
@@ -56,43 +56,35 @@ void CSessionManager::broadcastChat(const std::string &msg, const std::string &u
 
 bool CSessionManager::nameExists(const std::string &name) {
 	return std::ranges::any_of(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
-  
 }
 
 const CSession *CSessionManager::getByName(const std::string &name) const {
-  auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
-  return it != m_vSessions.end() ? it->second.get() : nullptr;
+	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
 const CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
-  auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { return s.second->m_ip == m_ip; });
-  return it != m_vSessions.end() ? it->second.get() : nullptr;
+	auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { log(LOG, s.second->m_ip); return strcmp(s.second->m_ip, m_ip) == 0; });
+	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
 void CSessionManager::kick(const CSession *session, const std::string &reason) const {
-  // for (const auto &[thread, s] : m_vSessions) {
-  //   if (s.get() == session) {
-  //       s->onKick("");
-  //     break;
-  //   }
-  // }
-  std::ranges::for_each(m_vSessions, [session, reason](const auto &s) {
-    if (s.second.get() == session) {
-      s.second->onKick(reason, true);
-    }
-  });
+	std::ranges::for_each(m_vSessions, [session, reason](const auto &s) {
+		if (s.second.get() == session)
+			s.second->onKick(reason, true);
+	});
 }
 
 void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
-    const auto native_handle = it->first.native_handle();
+		const auto native_handle = it->first.native_handle();
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
 		it->second.reset();
 		m_vSessions.erase(it);
-    if (kill && native_handle != 0)
-      pthread_cancel(native_handle);
+		if (kill && native_handle != 0)
+			pthread_cancel(native_handle);
 	}
 }

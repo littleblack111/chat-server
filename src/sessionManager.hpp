@@ -22,8 +22,8 @@ class CSessionManager {
 	bool nameExists(const std::string &name);
 	void shutdownSessions();
 
-  const CSession *getByName(const std::string &name) const;
-  const CSession *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
+	const CSession *getByName(const std::string &name) const;
+	const CSession *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
 
   private:
 	void broadcastChat(const std::string &msg, const std::string &username) const;

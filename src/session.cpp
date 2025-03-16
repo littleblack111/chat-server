@@ -157,7 +157,7 @@ bool CSession::isValid() {
 	if (!m_sockfd.isValid() || m_name.empty())
 		return false;
 
-	int err = 0;
+	int		  err  = 0;
 	socklen_t size = sizeof(err);
 	return getsockopt(m_sockfd.get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
 }
@@ -207,7 +207,7 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 }
 
 void CSession::onKick(const std::string &reason, const bool &kill) {
-  if (!reason.empty())
-    write(reason);
+	if (!reason.empty())
+		write(reason);
 	g_pSessionManager->removeSession(self, kill);
 }

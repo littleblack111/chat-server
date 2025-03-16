@@ -43,11 +43,6 @@ void CChatServer::start() {
 	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager);
 	m_sessionManagerThread.detach();
 
-	// while (true) {
-	// }
-  sleep(3);
-  g_pSessionManager->kick(g_pSessionManager->getByName("asd"));
-  // g_pSessionManager->getByName("asd");
 	while (true) {
 	}
 }
