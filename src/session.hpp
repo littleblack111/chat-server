@@ -64,7 +64,7 @@ class CSession {
 	void onRecv(const SRecvData &data);
 	void onSend(const std::string &msg);
 #endif
-	void onShutdown();
+	void onKick(const std::string &reason = "", const bool &kill = false);
 
 	friend class CSessionManager;
 };

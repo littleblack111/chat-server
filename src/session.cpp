@@ -29,7 +29,6 @@ CSession::~CSession() {
 #endif
 	m_sockfd.reset();
 
-	self->second.reset();
 	log(LOG, "Client {}@{} disconnected", m_name, m_ip);
 
 	log(TRACE, "session({}@{}): bye", m_name, m_ip);
@@ -158,10 +157,9 @@ bool CSession::isValid() {
 	if (!m_sockfd.isValid() || m_name.empty())
 		return false;
 
-	if (send(m_sockfd.get(), "", 0, MSG_NOSIGNAL) < 0)
-		return false;
-
-	return true;
+	int		  err  = 0;
+	socklen_t size = sizeof(err);
+	return getsockopt(m_sockfd.get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
 }
 
 template <typename... Args>
@@ -208,7 +206,8 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 	this->self = self;
 }
 
-void CSession::onShutdown() {
-	write("Shutting down, bye");
-	g_pSessionManager->removeSession(self);
+void CSession::onKick(const std::string &reason, const bool &kill) {
+	if (!reason.empty())
+		write(reason);
+	g_pSessionManager->removeSession(self, kill);
 }
