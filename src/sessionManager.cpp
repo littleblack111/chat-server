@@ -7,7 +7,7 @@
 
 void CSessionManager::shutdownSessions() {
 	for (const auto &[thread, session] : m_vSessions)
-		session->onShutdown();
+		session->onKick("Server shutting down");
 }
 
 CSessionManager::CSessionManager() {
@@ -55,6 +55,31 @@ void CSessionManager::broadcastChat(const std::string &msg, const std::string &u
 
 bool CSessionManager::nameExists(const std::string &name) {
 	return std::ranges::any_of(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+  
+}
+
+const CSession *CSessionManager::getByName(const std::string &name) const {
+  auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+  return it != m_vSessions.end() ? it->second.get() : nullptr;
+}
+
+const CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
+  auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { return s.second->m_ip == m_ip; });
+  return it != m_vSessions.end() ? it->second.get() : nullptr;
+}
+
+void CSessionManager::kick(const CSession *session, const std::string &reason) const {
+  // for (const auto &[thread, s] : m_vSessions) {
+  //   if (s.get() == session) {
+  //       s->onKick("");
+  //     break;
+  //   }
+  // }
+  std::ranges::for_each(m_vSessions, [session, reason](const auto &s) {
+    if (s.second.get() == session) {
+      s.second->onKick(reason);
+    }
+  });
 }
 
 void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session) {
@@ -64,6 +89,8 @@ void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSes
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
 		it->second.reset();
+    if (it->first.native_handle())
+    pthread_cancel(it->first.native_handle());
 		m_vSessions.erase(it);
 	}
 }
