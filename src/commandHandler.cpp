@@ -29,31 +29,25 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 	return true;
 }
 
-std::function<CCommandHandler::SCommand::SResult(std::string args)> CCommandHandler::getCommand(const std::string &command) const {
-	return std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) {
-			   return cmd.name == command;
-		   })
-		->exe;
+const CCommandHandler::SCommand *CCommandHandler::getCommand(const std::string &command) const {
+    auto it = std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) { return cmd.name == command; });
+    if (it != m_vCommands.end())
+        return &*it;
+    
+    return nullptr;
 }
 
-std::function<CCommandHandler::SCommand::SResult(const std::string &args)> CCommandHandler::getParser(const std::string &command) const {
-	return std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) {
-			   return cmd.name == command;
-		   })
-		->parser;
-}
-
-CCommandHandler::SCommand::SResult CCommandHandler::exeCommand(const std::string &command, const std::string &args) const {
-	const auto parser = getParser(command)(args);
-	if (!parser.good)
+CCommandHandler::SCommand::SResult CCommandHandler::exeCommand(const SCommand &command, const std::string &args) const {
+  const auto parsed = command.parser(args);
+	if (!parsed.good)
 		return {.result = {}, .good = false};
 
-	return getCommand(command)(parser.result);
+	return command.exe(parsed.result);
 }
 
 CCommandHandler::SCommand::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args) const {
 	if (!validCommand(command))
 		return {.result = {}, .good = false};
 
-	return exeCommand(command, args);
+	return exeCommand(*getCommand(command), args);
 }

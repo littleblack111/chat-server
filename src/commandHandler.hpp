@@ -26,9 +26,8 @@ class CCommandHandler {
 	CCommandHandler::SCommand::SResult newCommand(const std::string &command, const std::string &args) const;
 
   private:
-	std::function<CCommandHandler::SCommand::SResult(std::string args)> getCommand(const std::string &command) const;
-	std::function<SCommand::SResult(const std::string &args)>			getParser(const std::string &command) const;
-	CCommandHandler::SCommand::SResult									exeCommand(const std::string &command, const std::string &args) const;
+	const CCommandHandler::SCommand *getCommand(const std::string &command) const;
+	CCommandHandler::SCommand::SResult									exeCommand(const SCommand &command, const std::string &args) const;
 
 	std::vector<SCommand> m_vCommands;
 };
