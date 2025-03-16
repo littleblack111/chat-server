@@ -78,20 +78,21 @@ void CSessionManager::kick(const CSession *session, const std::string &reason) c
   // }
   std::ranges::for_each(m_vSessions, [session, reason](const auto &s) {
     if (s.second.get() == session) {
-      s.second->onKick(reason);
+      s.second->onKick(reason, true);
     }
   });
 }
 
-void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session) {
+void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
+    const auto native_handle = it->first.native_handle();
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
 		it->second.reset();
-    if (it->first.native_handle())
-    pthread_cancel(it->first.native_handle());
 		m_vSessions.erase(it);
+    if (kill && native_handle != 0)
+      pthread_cancel(native_handle);
 	}
 }

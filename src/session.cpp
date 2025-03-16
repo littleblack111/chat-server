@@ -29,7 +29,6 @@ CSession::~CSession() {
 #endif
 	m_sockfd.reset();
 
-	self->second.reset();
 	log(LOG, "Client {}@{} disconnected", m_name, m_ip);
 
 	log(TRACE, "session({}@{}): bye", m_name, m_ip);
@@ -207,8 +206,8 @@ void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self)
 	this->self = self;
 }
 
-void CSession::onKick(const std::string &reason) {
+void CSession::onKick(const std::string &reason, const bool &kill) {
   if (!reason.empty())
     write(reason);
-	g_pSessionManager->removeSession(self);
+	g_pSessionManager->removeSession(self, kill);
 }

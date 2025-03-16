@@ -17,7 +17,7 @@ class CSessionManager {
 	void broadcast(const std::string &msg) const;
 	void kick(const CSession *session, const std::string &reason = "") const;
 	void addSession(const CSession &session);
-	void removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session);
+	void removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill = false);
 
 	bool nameExists(const std::string &name);
 	void shutdownSessions();
