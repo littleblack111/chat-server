@@ -6,6 +6,9 @@
 
 CChatServer::CChatServer(uint16_t port)
 	: m_port(port) {
+	if (std::atexit([]() { g_pChatServer->cleanup(); }))
+		log(ERR, "Failed to register CChatServer atexit handler, dtors will not be called");
+
 	log(LOG, "ChatServer: initialized");
 };
 
