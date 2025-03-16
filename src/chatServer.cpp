@@ -3,6 +3,7 @@
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
+#include <unistd.h>
 
 CChatServer::CChatServer(uint16_t port)
 	: m_port(port) {
