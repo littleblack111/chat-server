@@ -36,7 +36,8 @@ static void handleCommand(std::string &input) {
 
 	args.empty() ? log(TRACE, "Spawning Command: {}", command) : log(TRACE, "Spawning Command: {}, Args: {}", command, args);
 	const auto exe = g_pCommandHandler->newCommand(command, args);
-	exe.good ? exe.result.empty() ? log(LOG, "Command {} succeeded", command) : log(LOG, "Command {} succeeded: {}", command, exe.result) : log(ERR, "Command {} failed", command);
+	exe.good ? exe.result.empty() ? log(LOG, "Command {} succeeded", command) : log(LOG, "Command {} succeeded: {}", command, exe.result) : exe.result.empty() ? log(ERR, "Command {} failed", command)
+																																							   : log(ERR, "Command {} failed: {}", command, exe.result);
 };
 
 void CInputManager::inputLoop() {
