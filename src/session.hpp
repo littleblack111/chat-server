@@ -22,6 +22,7 @@ class CSession {
 	};
 
 	const std::string &getName() const;
+	const char		  *getIp() const;
 	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
