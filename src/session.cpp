@@ -100,8 +100,10 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 		onErrno(READ);
 	} else if (size == 0)
 		recvData->good = false;
-	else
+	else {
 		recvData->data.resize(size);
+    recvData->good = true;
+  }
 
 #ifdef DEBUG
 	onRecv(*recvData);
