@@ -127,7 +127,7 @@ void CSession::run() {
 	} else
 		log(LOG, "Client {} exited without even registering", m_ip);
 
-	g_pSessionManager->removeSession(self);
+	g_pSessionManager->kick(self);
 }
 
 bool CSession::registerSession() {
@@ -204,10 +204,4 @@ const std::string &CSession::getName() const {
 
 void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
 	this->self = self;
-}
-
-void CSession::onKick(const std::string &reason, const bool &kill) {
-	if (!reason.empty())
-		write(reason);
-	g_pSessionManager->removeSession(self, kill);
 }
