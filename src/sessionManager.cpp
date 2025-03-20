@@ -75,8 +75,8 @@ void CSessionManager::kick(CSession *session, const bool &kill, const std::strin
 }
 
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill, const std::string &reason) {
-  if (!reason.empty())
-    session->second->write(reason);
+	if (!reason.empty())
+		session->second->write(reason);
 
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
