@@ -5,16 +5,18 @@ HEADERS = $(wildcard src/*.hpp)
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 DATADIR ?= $(PREFIX)/share
+BUILDDIR ?= build
 
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(patsubst src/%, $(BUILDDIR)/%, $(SRCS:.cpp=.o))
 
 CXXFLAGS += -std=c++26 -Oz -s -Wall -flto -fPIC
 LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 # Debug flags
 DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
-DEBUG_LDFLAGS = -Wl,--as-needed,-z,now,-z,pack-relative-relocs
+DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs
 
+$(shell mkdir -p $(BUILDDIR))
 JOB_COUNT := $(BIN) $(OBJS)
 JOBS_DONE := $(shell ls -l $(JOB_COUNT) 2> /dev/null | wc -l)
 
@@ -30,7 +32,7 @@ all: $(BIN)
 
 install: $(all)
 	@echo "Installing..."
-	@install -D -t $(DESTDIR)$(BINDIR) $(BIN)
+	@install -D -t $(DESTDIR)$(BINDIR) $(BUILDDIR)/$(BIN)
 
 clean:
 	@echo "Cleaning up"
@@ -38,18 +40,21 @@ clean:
 
 clean-all: clean
 	@echo "Cleaning up all"
-	-@rm -rf $(BIN)
+	-@rm -rf $(BUILDDIR)/$(BIN)
 
-$(BIN): $(OBJS)
+$(BUILDDIR)/$(BIN): $(OBJS)
 	$(call progress, Linking $@)
-	@$(CXX) -o $(BIN) \
+	@$(CXX) -o $@ \
 	$(OBJS) \
 	$(CXXFLAGS) \
-	$(LDFLAGS) \
-	-Wl,--no-as-needed \
+	$(LDFLAGS)
+
+# Create phony target that depends on the actual binary
+$(BIN): $(BUILDDIR)/$(BIN)
 
 
-%.o: %.cpp
+
+$(BUILDDIR)/%.o: src/%.cpp
 	$(call progress, Compiling $@)
 	@$(CXX) -c $< -o $@ \
 	$(CXXFLAGS)
@@ -61,6 +66,8 @@ clang-format:
 clang-tidy:
 	@echo "Running clang-tidy..."
 	@clang-tidy -fix-errors $(SRCS) -- $(CXXFLAGS)
+
+.PHONY: all install clean clean-all $(BIN)
 
 debug: CXXFLAGS = $(DEBUG_CXXFLAGS)
 debug: LDFLAGS = $(DEBUG_LDFLAGS)
