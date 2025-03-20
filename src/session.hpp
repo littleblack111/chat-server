@@ -15,7 +15,7 @@ class CSession {
 	struct SRecvData {
 		std::string	 data;
 		const size_t size = 1024;
-		bool		 good = true;
+		bool		 good = false;
 
 		bool isEmpty() const;
 		void sanitize();
