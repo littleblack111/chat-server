@@ -15,15 +15,15 @@ class CSessionManager {
 
 	void run();
 	void broadcast(const std::string &msg) const;
-	void kick(const CSession *session, const std::string &reason = "") const;
+	void kick(CSession *session, const bool &kill = false, const std::string &reason = "");
+	void kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill = false, const std::string &reason = "");
 	void addSession(const CSession &session);
-	void removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill = false);
 
 	bool nameExists(const std::string &name);
 	void shutdownSessions();
 
-	const CSession *getByName(const std::string &name) const;
-	const CSession *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
+	CSession *getByName(const std::string &name) const;
+	CSession *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
 
   private:
 	void broadcastChat(const std::string &msg, const std::string &username) const;
