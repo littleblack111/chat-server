@@ -7,8 +7,8 @@
 #include <utility>
 
 void CSessionManager::shutdownSessions() {
-	for (const auto &[thread, session] : m_vSessions)
-		session->onKick("Server shutting down");
+	for (auto &session : m_vSessions)
+		kick(&session, false, "Server shutting down");
 }
 
 CSessionManager::CSessionManager() {
@@ -58,24 +58,26 @@ bool CSessionManager::nameExists(const std::string &name) {
 	return std::ranges::any_of(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
 }
 
-const CSession *CSessionManager::getByName(const std::string &name) const {
+CSession *CSessionManager::getByName(const std::string &name) const {
 	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
-const CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
+CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
 	auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { log(LOG, s.second->m_ip); return strcmp(s.second->m_ip, m_ip) == 0; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
-void CSessionManager::kick(const CSession *session, const std::string &reason) const {
-	std::ranges::for_each(m_vSessions, [session, reason](const auto &s) {
-		if (s.second.get() == session)
-			s.second->onKick(reason, true);
-	});
+void CSessionManager::kick(CSession *session, const bool &kill, const std::string &reason) {
+	for (auto &_session : m_vSessions)
+		if (_session.second.get() == session)
+			kick(&_session, kill, reason);
 }
 
-void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill) {
+void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill, const std::string &reason) {
+  if (!reason.empty())
+    session->second->write(reason);
+
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
