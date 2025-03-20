@@ -204,6 +204,10 @@ const std::string &CSession::getName() const {
 	return m_name;
 }
 
+const char *CSession::getIp() const {
+	return m_ip;
+}
+
 void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
 	this->self = self;
 }
