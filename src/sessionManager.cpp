@@ -3,6 +3,7 @@
 #include "session.hpp"
 #include <algorithm>
 #include <cstring>
+#include <ranges>
 #include <unistd.h>
 #include <utility>
 
@@ -66,6 +67,10 @@ CSession *CSessionManager::getByName(const std::string &name) const {
 CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
 	auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { log(LOG, s.second->m_ip); return strcmp(s.second->m_ip, m_ip) == 0; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
+}
+
+std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
+	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
 
 void CSessionManager::kick(CSession *session, const bool &kill, const std::string &reason) {

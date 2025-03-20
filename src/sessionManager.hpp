@@ -24,6 +24,7 @@ class CSessionManager {
 
 	CSession *getByName(const std::string &name) const;
 	CSession *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
+  std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:
 	void broadcastChat(const std::string &msg, const std::string &username) const;
