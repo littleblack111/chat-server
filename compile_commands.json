@@ -49,68 +49,68 @@
       "-fPIC",
       "-DDEBUG",
       "-o",
+      "build/commandHandler.o",
+      "src/commandHandler.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commandHandler.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/commandHandler.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "build/commands.o",
+      "src/commands.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/commands.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/commands.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "build/FileDescriptor.o",
+      "src/FileDescriptor.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/FileDescriptor.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/FileDescriptor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
       "build/main.o",
       "src/main.cpp"
     ],
     "directory": "/mnt/DATA/personal/Code/projects/chat-server",
     "file": "/mnt/DATA/personal/Code/projects/chat-server/src/main.cpp",
     "output": "/mnt/DATA/personal/Code/projects/chat-server/build/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/afl-g++",
-      "-c",
-      "-std=c++26",
-      "-g3",
-      "-O0",
-      "-Wall",
-      "-fno-lto",
-      "-fPIC",
-      "-DDEBUG",
-      "-o",
-      "build/server.o",
-      "src/server.cpp"
-    ],
-    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
-    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/server.cpp",
-    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/server.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/afl-g++",
-      "-c",
-      "-std=c++26",
-      "-g3",
-      "-O0",
-      "-Wall",
-      "-fno-lto",
-      "-fPIC",
-      "-DDEBUG",
-      "-o",
-      "build/session.o",
-      "src/session.cpp"
-    ],
-    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
-    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/session.cpp",
-    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/session.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/afl-g++",
-      "-c",
-      "-std=c++26",
-      "-g3",
-      "-O0",
-      "-Wall",
-      "-fno-lto",
-      "-fPIC",
-      "-DDEBUG",
-      "-o",
-      "build/sessionManager.o",
-      "src/sessionManager.cpp"
-    ],
-    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
-    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/sessionManager.cpp",
-    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/sessionManager.o"
   }
 ]
