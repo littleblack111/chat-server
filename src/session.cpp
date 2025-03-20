@@ -1,5 +1,6 @@
 #include "session.hpp"
 #include "chatManager.hpp"
+#include "commandHandler.hpp"
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
@@ -18,6 +19,7 @@ CSession::CSession()
 
 	inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
 	m_port = ntohs(m_addr.sin_port);
+  m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return strcmp(ip, m_ip) == 0; });
 	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
@@ -69,6 +71,16 @@ void CSession::recvLoop() {
 		auto recvData = read(NFormatter::fmt(NONEWLINE, "{}: ", m_name));
 		if (!recvData->good)
 			break;
+
+    recvData->sanitize();
+    if (m_isAdmin && g_pCommandHandler->isCommand(recvData->data)) {
+      g_pCommandHandler->handleCommand(recvData->data);
+      continue;
+    }
+    if (m_isAdmin) {
+      write("Invalid command");
+      continue;
+    }
 
 		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name});
 	}

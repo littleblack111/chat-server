@@ -30,6 +30,7 @@ class CSessionManager {
 	void broadcastChat(const std::string &msg, const std::string &username) const;
 
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
+
 	friend class CChatManager;
 };
 inline std::shared_ptr<CSessionManager> g_pSessionManager;

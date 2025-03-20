@@ -1,5 +1,6 @@
 #include "commandHandler.hpp"
 #include "log.hpp"
+#include "sessionManager.hpp"
 #include <algorithm>
 
 CCommandHandler::CCommandHandler() {
@@ -56,3 +57,46 @@ CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command,
 
 	return exeCommand(*getCommand(command), args);
 }
+
+void CCommandHandler::handleCommand(std::string &input, const char ip[INET_ADDRSTRLEN]) const {
+	input = input.substr(1);
+
+	std::string command;
+	std::string args;
+
+	size_t spacePos = input.find(' ');
+	if (spacePos == std::string::npos) {
+		command = input;
+		args	= "";
+	} else {
+		command = input.substr(0, spacePos);
+		// skip extra spaces
+		size_t startPos = input.find_first_not_of(' ', spacePos);
+		if (startPos != std::string::npos)
+			args = input.substr(startPos);
+	}
+
+    args.empty() ? log(TRACE, "Spawning Command: {}", command) : log(TRACE, "Spawning Command: {}, Args: {}", command, args);
+    const auto exe = newCommand(command, args);
+
+    std::function<void(const std::string&)> outputter = log;
+    
+    if (ip != nullptr) {
+        if (auto session = g_pSessionManager->getByIp(ip)) {
+            outputter = [session](const std::string& msg) { session->write(msg); };
+        }
+    }
+
+    if (exe.good) {
+        if (exe.result.empty())
+            outputter("Command succeeded");
+        else
+            outputter(exe.result);
+    } else {
+        if (exe.result.empty())
+            outputter("Command failed");
+        else
+            outputter(exe.result);
+    }
+};
+
