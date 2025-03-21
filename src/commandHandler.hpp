@@ -3,6 +3,7 @@
 #include <any>
 #include <functional>
 #include <memory>
+#include <netinet/in.h>
 #include <string>
 #include <vector>
 
@@ -32,6 +33,7 @@ class CCommandHandler {
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
 	SResult newCommand(const std::string &command, const std::string &args) const;
+	void	handleCommand(std::string input, const char ip[INET_ADDRSTRLEN] = {}) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {
