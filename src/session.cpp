@@ -1,5 +1,6 @@
 #include "session.hpp"
 #include "chatManager.hpp"
+#include "commandHandler.hpp"
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
@@ -17,7 +18,8 @@ CSession::CSession()
 		throw std::runtime_error("session: Failed to create socket");
 
 	inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
-	m_port = ntohs(m_addr.sin_port);
+	m_port	  = ntohs(m_addr.sin_port);
+	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return strcmp(ip, m_ip) == 0; });
 	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
@@ -70,7 +72,12 @@ void CSession::recvLoop() {
 		if (!recvData->good)
 			break;
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name});
+		recvData->sanitize();
+		const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
+		if (m_isAdmin && isCommand)
+			g_pCommandHandler->handleCommand(recvData->data, m_ip);
+
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .admin = isCommand});
 	}
 }
 
@@ -124,7 +131,7 @@ void CSession::run() {
 #endif
 	if (registerSession()) {
 		for (const auto &chat : g_pChatManager->getChat())
-			write(g_pChatManager->fmtBroadcastMessage(chat));
+			writeChat(chat);
 		recvLoop();
 	} else
 		log(LOG, "Client {} exited without even registering", m_ip);
@@ -198,6 +205,15 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 
 bool CSession::write(const std::string &msg) {
 	return write("{}", msg);
+}
+
+void CSession::writeChat(const CChatManager::SMessage &msg) {
+	if (m_name != msg.username) {
+		if (msg.admin && !m_isAdmin)
+			return;
+
+		write(g_pChatManager->fmtBroadcastMessage(msg));
+	}
 }
 
 const std::string &CSession::getName() const {
