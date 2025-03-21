@@ -72,13 +72,13 @@ std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
 	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
 
-void CSessionManager::kick(CSession *session, const bool &kill, const std::string &reason) {
+void CSessionManager::kick(CSession *session, const bool kill, const std::string &reason) {
 	for (auto &_session : m_vSessions)
 		if (_session.second.get() == session)
 			kick(&_session, kill, reason);
 }
 
-void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill, const std::string &reason) {
+void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
