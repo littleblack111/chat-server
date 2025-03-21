@@ -1,5 +1,6 @@
 #pragma once
 
+#include "chatManager.hpp"
 #include "format.hpp"
 #include "session.hpp"
 #include <memory>
@@ -27,9 +28,10 @@ class CSessionManager {
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:
-	void broadcastChat(const std::string &msg, const std::string &username) const;
+	void broadcastChat(const CChatManager::SMessage &msg) const;
 
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
+
 	friend class CChatManager;
 };
 inline std::shared_ptr<CSessionManager> g_pSessionManager;
