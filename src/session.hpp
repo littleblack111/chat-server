@@ -1,12 +1,12 @@
 #pragma once
 
 #include "FileDescriptor.hpp"
+#include "chatManager.hpp"
 #include "format.hpp"
 #include <memory>
 #include <netinet/in.h>
 #include <string>
 #include <thread>
-#include "chatManager.hpp"
 
 class CSession {
   public:
@@ -33,14 +33,14 @@ class CSession {
 	bool write(std::format_string<Args...> fmt, Args &&...args);
 	template <typename... Args>
 	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
-  void writeChat(const CChatManager::SMessage &msg);
+	void writeChat(const CChatManager::SMessage &msg);
 
 	void run();
 
 	bool isValid();
 
   private:
-  constexpr static char m_adminIps[1][INET_ADDRSTRLEN] = {"127.0.0.1"};
+	constexpr static char m_adminIps[1][INET_ADDRSTRLEN] = {"127.0.0.1"};
 
 	enum eEventType : std::uint8_t {
 		READ,
@@ -54,7 +54,7 @@ class CSession {
 	std::string											m_name;
 	char												m_ip[INET_ADDRSTRLEN];
 	int													m_port;
-  bool m_isAdmin = false;
+	bool												m_isAdmin = false;
 
 	bool m_isReading = false;
 

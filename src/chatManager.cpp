@@ -13,8 +13,7 @@ CChatManager::~CChatManager() {
 
 void CChatManager::newMessage(const SMessage &msg) {
 	log(LOG, "{}: {}", msg.username, msg.msg);
-  // g_pSessionManager->broadcastChat(fmtBroadcastMessage(msg), msg.username);
-  g_pSessionManager->broadcastChat(msg);
+	g_pSessionManager->broadcastChat(msg);
 	m_vMessages.push_back(msg);
 }
 

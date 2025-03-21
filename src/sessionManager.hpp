@@ -1,11 +1,11 @@
 #pragma once
 
+#include "chatManager.hpp"
 #include "format.hpp"
 #include "session.hpp"
 #include <memory>
 #include <thread>
 #include <vector>
-#include "chatManager.hpp"
 
 class CSessionManager {
   public:

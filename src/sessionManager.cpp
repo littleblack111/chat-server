@@ -47,9 +47,10 @@ void CSessionManager::broadcast(const std::string &msg) const {
 
 void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
 	for (const auto &[thread, session] : m_vSessions) {
-		if (!session) continue;
+		if (!session)
+			continue;
 
-    session->writeChat(msg);
+		session->writeChat(msg);
 	}
 }
 
@@ -81,8 +82,8 @@ void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *s
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
-    if (!reason.empty())
-      it->second->write(reason);
+		if (!reason.empty())
+			it->second->write(reason);
 		const auto native_handle = it->first.native_handle();
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
