@@ -177,7 +177,7 @@ bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
 	if (m_isReading)
 		msg.insert(0, "\n");
 
-	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
+	if (send(m_sockfd.get(), msg.c_str(), msg.size(), MSG_NOSIGNAL) < 0) {
 		onErrno(WRITE);
 		return false;
 	}
