@@ -13,16 +13,13 @@ CChatManager::~CChatManager() {
 
 void CChatManager::newMessage(const SMessage &msg) {
 	log(LOG, "{}: {}", msg.username, msg.msg);
-	broadcastMessage(msg);
+  // g_pSessionManager->broadcastChat(fmtBroadcastMessage(msg), msg.username);
+  g_pSessionManager->broadcastChat(msg);
 	m_vMessages.push_back(msg);
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 	return NFormatter::fmt(NONE, "{}: {}", msg.username, msg.msg);
-}
-
-void CChatManager::broadcastMessage(const SMessage &msg) {
-	g_pSessionManager->broadcastChat(fmtBroadcastMessage(msg), msg.username);
 }
 
 const std::vector<CChatManager::SMessage> &CChatManager::getChat() const {

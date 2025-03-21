@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <string>
 #include <thread>
+#include "chatManager.hpp"
 
 class CSession {
   public:
@@ -32,6 +33,7 @@ class CSession {
 	bool write(std::format_string<Args...> fmt, Args &&...args);
 	template <typename... Args>
 	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
+  void writeChat(const CChatManager::SMessage &msg);
 
 	void run();
 

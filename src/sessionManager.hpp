@@ -5,6 +5,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include "chatManager.hpp"
 
 class CSessionManager {
   public:
@@ -27,7 +28,7 @@ class CSessionManager {
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:
-	void broadcastChat(const std::string &msg, const std::string &username) const;
+	void broadcastChat(const CChatManager::SMessage &msg) const;
 
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
 

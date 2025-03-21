@@ -73,16 +73,11 @@ void CSession::recvLoop() {
 			break;
 
     recvData->sanitize();
-    if (m_isAdmin && g_pCommandHandler->isCommand(recvData->data)) {
-      g_pCommandHandler->handleCommand(recvData->data);
-      continue;
-    }
-    if (m_isAdmin) {
-      write("Invalid command");
-      continue;
-    }
+    const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
+    if (m_isAdmin && isCommand)
+      g_pCommandHandler->handleCommand(recvData->data, m_ip);
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .admin = isCommand});
 	}
 }
 
@@ -136,7 +131,7 @@ void CSession::run() {
 #endif
 	if (registerSession()) {
 		for (const auto &chat : g_pChatManager->getChat())
-			write(g_pChatManager->fmtBroadcastMessage(chat));
+      writeChat(chat);
 		recvLoop();
 	} else
 		log(LOG, "Client {} exited without even registering", m_ip);
@@ -210,6 +205,14 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 
 bool CSession::write(const std::string &msg) {
 	return write("{}", msg);
+}
+
+void CSession::writeChat(const CChatManager::SMessage &msg) {
+  if (m_name != msg.username) {
+    if (msg.admin && !m_isAdmin) return;
+
+    write(g_pChatManager->fmtBroadcastMessage(msg));
+  }
 }
 
 const std::string &CSession::getName() const {

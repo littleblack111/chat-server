@@ -45,13 +45,11 @@ void CSessionManager::broadcast(const std::string &msg) const {
 		session->write(msg);
 }
 
-void CSessionManager::broadcastChat(const std::string &msg, const std::string &username) const {
+void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
 	for (const auto &[thread, session] : m_vSessions) {
-		if (!session)
-			continue;
-		auto name = session->getName();
-		if (name != username)
-			session->write(msg);
+		if (!session) continue;
+
+    session->writeChat(msg);
 	}
 }
 

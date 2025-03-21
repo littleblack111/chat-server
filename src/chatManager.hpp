@@ -11,6 +11,7 @@ class CChatManager {
 	struct SMessage {
 		std::string msg;
 		std::string username;
+    bool admin = false;
 	};
 	void		newMessage(const SMessage &msg);
 	void		broadcastMessage(const SMessage &msg);

@@ -24,6 +24,6 @@ void CInputManager::inputLoop() {
 		if (input.empty())
 			continue;
 
-		g_pCommandHandler->isCommand(input) ? g_pCommandHandler->handleCommand(input) : g_pChatManager->broadcastMessage({.msg = input, .username = "Server"});
+		g_pCommandHandler->isCommand(input) ? g_pCommandHandler->handleCommand(input) : g_pChatManager->newMessage({.msg = input, .username = "Server"});
 	}
 }

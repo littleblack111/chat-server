@@ -58,7 +58,7 @@ CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command,
 	return exeCommand(*getCommand(command), args);
 }
 
-void CCommandHandler::handleCommand(std::string &input, const char ip[INET_ADDRSTRLEN]) const {
+void CCommandHandler::handleCommand(std::string input, const char ip[INET_ADDRSTRLEN]) const {
 	input = input.substr(1);
 
 	std::string command;
@@ -76,27 +76,16 @@ void CCommandHandler::handleCommand(std::string &input, const char ip[INET_ADDRS
 			args = input.substr(startPos);
 	}
 
-    args.empty() ? log(TRACE, "Spawning Command: {}", command) : log(TRACE, "Spawning Command: {}, Args: {}", command, args);
-    const auto exe = newCommand(command, args);
+  args.empty() ? log(LOG, "Spawning Command: {}", command) : log(LOG, "Spawning Command: {}, Args: {}", command, args);
+  const auto exe = newCommand(command, args);
 
-    std::function<void(const std::string&)> outputter = log;
-    
-    if (ip != nullptr) {
-        if (auto session = g_pSessionManager->getByIp(ip)) {
-            outputter = [session](const std::string& msg) { session->write(msg); };
-        }
-    }
+  std::function<void(eFormatType, const std::string&)> outputter = [](eFormatType type, const std::string& msg) { log(type, "{}", msg); };
+  
+  if (ip != nullptr) {
+      if (auto session = g_pSessionManager->getByIp(ip))
+          outputter = [session](eFormatType, const std::string& msg) { session->write(msg); };
+  }
 
-    if (exe.good) {
-        if (exe.result.empty())
-            outputter("Command succeeded");
-        else
-            outputter(exe.result);
-    } else {
-        if (exe.result.empty())
-            outputter("Command failed");
-        else
-            outputter(exe.result);
-    }
+  exe.good ? exe.result.empty() ? outputter(LOG, "Command succeeded") : outputter(LOG, exe.result) : exe.result.empty() ? outputter(ERR, "Command failed") : outputter(ERR, exe.result);
 };
 
