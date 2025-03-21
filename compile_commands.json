@@ -106,11 +106,87 @@
       "-fPIC",
       "-DDEBUG",
       "-o",
+      "build/inputManager.o",
+      "src/inputManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/inputManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/inputManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
       "build/main.o",
       "src/main.cpp"
     ],
     "directory": "/mnt/DATA/personal/Code/projects/chat-server",
     "file": "/mnt/DATA/personal/Code/projects/chat-server/src/main.cpp",
     "output": "/mnt/DATA/personal/Code/projects/chat-server/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "build/server.o",
+      "src/server.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/server.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/server.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "build/session.o",
+      "src/session.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/session.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/session.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
+      "build/sessionManager.o",
+      "src/sessionManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/sessionManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/sessionManager.o"
   }
 ]
