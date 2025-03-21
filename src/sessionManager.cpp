@@ -80,12 +80,11 @@ void CSessionManager::kick(CSession *session, const bool &kill, const std::strin
 }
 
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill, const std::string &reason) {
-	if (!reason.empty())
-		session->second->write(reason);
-
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
+    if (!reason.empty())
+      it->second->write(reason);
 		const auto native_handle = it->first.native_handle();
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
