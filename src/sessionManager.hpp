@@ -16,8 +16,8 @@ class CSessionManager {
 
 	void run();
 	void broadcast(const std::string &msg) const;
-	void kick(CSession *session, const bool &kill = false, const std::string &reason = "");
-	void kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool &kill = false, const std::string &reason = "");
+	void kick(CSession *session, const bool kill = false, const std::string &reason = "");
+	void kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill = false, const std::string &reason = "");
 	void addSession(const CSession &session);
 
 	bool nameExists(const std::string &name);
