@@ -6,7 +6,7 @@ permissions:
 
 on:
   workflow_run:
-    workflows: [continuous integration]
+    workflows: [Continuous Integration]
     types: [completed]
     branches: [main]
 
