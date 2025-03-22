@@ -34,7 +34,7 @@ static void help() {
 }
 
 // TODO: ARGC, ARGV. the CServer ctor should take a port number
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) try {
 	std::vector<std::string> args{argv + 1, argv + argc};
 	if (args.empty()) {
 		help();
@@ -80,4 +80,10 @@ int main(int argc, char *argv[]) {
 	g_pChatServer.reset();
 
 	return EXIT_SUCCESS;
+} catch (const std::exception &e) {
+	log(ERR, "Fatal error: {}", e.what());
+	return EXIT_FAILURE;
+} catch (...) {
+	log(ERR, "Unknown fatal error occurred");
+	return EXIT_FAILURE;
 }
