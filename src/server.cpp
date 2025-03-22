@@ -1,7 +1,6 @@
 #include "server.hpp"
 #include "log.hpp"
 #include <cstring>
-#include <print>
 #include <sys/socket.h>
 
 CServer::CServer(uint16_t port)
@@ -24,7 +23,7 @@ CServer::CServer(uint16_t port)
 	bind(m_sockfd.get(), reinterpret_cast<sockaddr *>(&m_addr), sizeof(m_addr)) ||
 			listen(m_sockfd.get(), 5)
 		? throw std::runtime_error("Failed to bind or listen")
-		: std::println("Server started on port: {}", port);
+		: log(LOG, "Server started on port: {}", port);
 
 	log(LOG, "Server: initialized");
 };
