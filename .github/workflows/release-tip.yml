@@ -1,0 +1,76 @@
+name: Release Tip
+
+permissions:
+  contents: write
+  actions: read
+
+on:
+  workflow_run:
+    workflows: [continuous integration]
+    types: [completed]
+    branches: [main]
+
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Tip Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -fa tip -m "Latest Continuous Release" ${GITHUB_SHA}
+          git push --force origin tip
+
+  release:
+    needs: [tag]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: chat-server
+          path: artifacts/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Create Source Archive
+        run: |
+          mkdir chat-server-source
+          cp -r src/ Makefile .clang-format README.md chat-server-source/ || true
+          tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f chat-server-source.tar.gz chat-server-source/
+          rm -rf chat-server-source
+
+      - name: Prepare Binary Archive
+        run: |
+          cd artifacts
+          chmod +x chat-server
+          tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f ../chat-server-linux-x86_64.tar.gz *
+          cd ..
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 'Chat Server Tip (Latest)'
+          prerelease: true
+          tag_name: tip
+          target_commitish: ${{ github.sha }}
+          files: |
+            chat-server-source.tar.gz
+            chat-server-linux-x86_64.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}
+
