@@ -55,7 +55,16 @@ void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
 }
 
 bool CSessionManager::nameExists(const std::string &name) {
-	return std::ranges::any_of(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+
+	if (it != m_vSessions.end()) {
+		if (!it->second->isValid()) {
+			kick(it->second.get(), true, "Connection lost");
+			return false;
+		}
+		return true;
+	}
+	return false;
 }
 
 CSession *CSessionManager::getByName(const std::string &name) const {
