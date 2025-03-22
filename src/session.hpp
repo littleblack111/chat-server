@@ -35,6 +35,9 @@ class CSession {
 	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
 	void writeChat(const CChatManager::SMessage &msg);
 
+	bool isMuted() const;
+	void setMuted(bool mute);
+
 	void run();
 
 	bool isValid();
@@ -57,6 +60,7 @@ class CSession {
 	bool												m_isAdmin = false;
 
 	bool m_isReading = false;
+	bool m_isMuted	 = false;
 
 	void recvLoop();
 	bool registerSession();

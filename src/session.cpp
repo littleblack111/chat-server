@@ -139,6 +139,14 @@ void CSession::run() {
 	g_pSessionManager->kick(self);
 }
 
+bool CSession::isMuted() const {
+	return m_isMuted;
+}
+
+void CSession::setMuted(bool mute) {
+	m_isMuted = mute;
+}
+
 bool CSession::registerSession() {
 	auto recvData = read("Name: ");
 	if (!recvData->good)
