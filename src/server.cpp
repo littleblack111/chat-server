@@ -9,9 +9,13 @@ CServer::CServer(uint16_t port)
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("Failed to create socket");
 
-	constexpr int reuse = 1;
-	if (setsockopt(m_sockfd.get(), SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
-		std::println(stderr, "setsockopt(SO_REUSEADDR) failed");
+	constexpr int opt  = 1;
+	constexpr int size = sizeof(opt);
+	if (setsockopt(m_sockfd.get(), SOL_SOCKET, SO_REUSEADDR, &opt, size) < 0)
+		log(stderr, WARN, "setsockopt(SO_REUSEADDR) failed");
+
+	if (setsockopt(m_sockfd.get(), SOL_SOCKET, SO_KEEPALIVE, &opt, size) < 0)
+		log(stderr, WARN, "setsockopt(SO_KEEPALIVE) failed");
 
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr.sin_family	   = AF_INET;
