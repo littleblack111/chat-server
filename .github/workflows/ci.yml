@@ -1,0 +1,138 @@
+name: continuous integration
+
+on:
+  push:
+    paths:
+      - 'src/*.cpp'
+      - '.clang-format'
+      - 'Makefile'
+      - '.github/**'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/*.cpp'
+      - 'src/*.hpp'
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+  gcc:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    name: "Build (Arch)"
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel git make ninja gcc clang
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          fetch-depth: 0
+
+      - name: Build project
+        run: |
+          make all
+
+      - name: Upload Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chat-server
+          path: build/chat-server
+
+  clang:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    name: "Build with Clang (Arch)"
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel git make ninja clang llvm clang
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          fetch-depth: 0
+
+      - name: Build project
+        run: |
+          CXX=clang++ make all
+
+  clang-format:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    name: "Code Style (Arch)"
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm make clang git
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          fetch-depth: 0
+
+      - name: Run clang-format
+        run: make clang-format
+
+      - name: Configure Git
+        run: git config --global --add safe.directory '*'
+
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: clang-format"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+
+  clang-tidy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    name: "Static Analysis (Arch)"
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm make clang git
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          fetch-depth: 0
+
+      - name: Run clang-tidy
+        run: make clang-tidy || true
+
+      - name: Configure Git
+        run: git config --global --add safe.directory '*'
+
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: clang-tidy"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
