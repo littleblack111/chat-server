@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'src/*.cpp'
+      - 'src/*.hpp'
       - '.clang-format'
       - 'Makefile'
       - '.github/**'
@@ -18,9 +19,9 @@ permissions:
     pull-requests: write
 
 jobs:
-  gcc:
+  linux:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
-    name: "Build (Arch)"
+    name: "Build (Linux)"
     runs-on: ubuntu-latest
     container:
       image: archlinux
@@ -45,12 +46,46 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: chat-server
+          name: chat-server-linux
           path: build/chat-server
 
-  clang:
+  macos:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
-    name: "Build with Clang (Arch)"
+    name: "Build (macOS)"
+    runs-on: macos-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install llvm@14 gcc@14 make ninja
+      - name: Install compiler
+        id: install_cc
+        uses: rlalik/setup-cpp-compiler@master
+        with:
+          compiler: gcc-14
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Build project
+        env:
+          # CC: ${{ steps.install_cc.outputs.cc }}
+          # CXX: ${{ steps.install_cc.outputs.cxx }}
+          # above don't work cuz for some reason it's using g++ from /usr/local/bin :/
+          CC: /opt/homebrew/bin/g++-14
+          CXX: /opt/homebrew/bin/g++-14
+        run: make all
+      - name: Upload Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chat-server-macos
+          path: build/chat-server
+
+  clang-linux:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    name: "Build with Clang (Linux)"
     runs-on: ubuntu-latest
     container:
       image: archlinux
@@ -58,7 +93,7 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -Syu --noconfirm
-          pacman -S --noconfirm base-devel git make ninja clang llvm clang
+          pacman -S --noconfirm base-devel git make ninja clang llvm
 
       - name: Checkout repository
         uses: actions/checkout@v4

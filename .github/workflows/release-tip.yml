@@ -40,11 +40,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download Build Artifacts
+      - name: Download Linux Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: chat-server
-          path: artifacts/
+          name: chat-server-linux
+          path: artifacts/linux/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Download macOS Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chat-server-macos
+          path: artifacts/macos/
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
@@ -53,14 +61,24 @@ jobs:
           mkdir chat-server-source
           cp -r src/ Makefile .clang-format README.md chat-server-source/ || true
           tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f chat-server-source.tar.gz chat-server-source/
+          sha256sum chat-server-source.tar.gz > chat-server-source.tar.gz.sha256
           rm -rf chat-server-source
 
-      - name: Prepare Binary Archive
+      - name: Prepare Linux Binary Archive
         run: |
-          cd artifacts
+          cd artifacts/linux
           chmod +x chat-server
-          tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f ../chat-server-linux-x86_64.tar.gz *
-          cd ..
+          tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f ../../chat-server-linux-x86_64.tar.gz *
+          cd ../..
+          sha256sum chat-server-linux-x86_64.tar.gz > chat-server-linux-x86_64.tar.gz.sha256
+
+      - name: Prepare macOS Binary Archive
+        run: |
+          cd artifacts/macos
+          chmod +x chat-server
+          tar -czv --owner=0 --group=0 --no-same-owner --no-same-permissions -f ../../chat-server-macos-x86_64.tar.gz *
+          cd ../..
+          sha256sum chat-server-macos-x86_64.tar.gz > chat-server-macos-x86_64.tar.gz.sha256
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -71,6 +89,10 @@ jobs:
           target_commitish: ${{ github.sha }}
           files: |
             chat-server-source.tar.gz
+            chat-server-source.tar.gz.sha256
             chat-server-linux-x86_64.tar.gz
+            chat-server-linux-x86_64.tar.gz.sha256
+            chat-server-macos-x86_64.tar.gz
+            chat-server-macos-x86_64.tar.gz.sha256
           token: ${{ secrets.GITHUB_TOKEN }}
 
