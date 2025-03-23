@@ -13,7 +13,7 @@ static void handleSignal(int sig) {
 	switch (sig) {
 	default:
 		// quick_exit(less cleanup) if the cleanup took too long
-		signal(SIGALRM, [](int) { std::quick_exit(1); });
+		signal(SIGALRM, [](int) { std::_Exit(1); });
 		alarm(5);
 
 		std::exit(0);
