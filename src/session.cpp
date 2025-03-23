@@ -140,11 +140,19 @@ void CSession::run() {
 }
 
 bool CSession::isMuted() const {
-	return m_isMuted;
+	return m_bMuted;
 }
 
 void CSession::setMuted(bool mute) {
-	m_isMuted = mute;
+	m_bMuted = mute;
+}
+
+bool CSession::isDeaf() const {
+	return m_bDeaf;
+}
+
+void CSession::setDeaf(bool deaf) {
+	m_bDeaf = deaf;
 }
 
 bool CSession::registerSession() {
@@ -167,6 +175,7 @@ bool CSession::registerSession() {
 
 	log(LOG, "Client registered as: {}", m_name);
 
+	setDeaf(false);
 	return true;
 }
 
@@ -181,6 +190,8 @@ bool CSession::isValid() {
 
 template <typename... Args>
 bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
+	if (isDeaf())
+		return false;
 	std::string msg = NFormatter::fmt(NONE, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");

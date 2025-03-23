@@ -37,6 +37,8 @@ class CSession {
 
 	bool isMuted() const;
 	void setMuted(bool mute);
+	bool isDeaf() const;
+	void setDeaf(bool deaf);
 
 	void run();
 
@@ -60,7 +62,8 @@ class CSession {
 	bool												m_isAdmin = false;
 
 	bool m_isReading = false;
-	bool m_isMuted	 = false;
+	bool m_bMuted	 = false;
+	bool m_bDeaf	 = true; // init as true as we don't want anything during registerSession
 
 	void recvLoop();
 	bool registerSession();
