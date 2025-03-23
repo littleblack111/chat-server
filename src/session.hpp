@@ -27,7 +27,7 @@ class CSession {
 	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
-	std::unique_ptr<SRecvData> read(const std::string &msg);
+	std::unique_ptr<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
 	bool					   write(const std::string &msg);
 	template <typename... Args>
 	bool write(std::format_string<Args...> fmt, Args &&...args);
@@ -37,6 +37,8 @@ class CSession {
 
 	bool isMuted() const;
 	void setMuted(bool mute);
+	bool isDeaf() const;
+	void setDeaf(bool deaf);
 
 	void run();
 
@@ -60,7 +62,8 @@ class CSession {
 	bool												m_isAdmin = false;
 
 	bool m_isReading = false;
-	bool m_isMuted	 = false;
+	bool m_bMuted	 = false;
+	bool m_bDeaf	 = true; // init as true as we don't want anything during registerSession
 
 	void recvLoop();
 	bool registerSession();

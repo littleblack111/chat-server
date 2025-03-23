@@ -119,8 +119,11 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 	return recvData;
 }
 
-std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg) {
+std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg, bool bypassDeaf) {
+	const auto deaf = isDeaf();
+	if (bypassDeaf && deaf) setDeaf(false);
 	write(NONEWLINE, "{}", msg, false);
+	if (bypassDeaf && deaf) setDeaf(true);
 	m_isReading = true;
 	return read();
 }
@@ -140,26 +143,38 @@ void CSession::run() {
 }
 
 bool CSession::isMuted() const {
-	return m_isMuted;
+	return m_bMuted;
 }
 
 void CSession::setMuted(bool mute) {
-	m_isMuted = mute;
+	m_bMuted = mute;
+}
+
+bool CSession::isDeaf() const {
+	return m_bDeaf;
+}
+
+void CSession::setDeaf(bool deaf) {
+	m_bDeaf = deaf;
 }
 
 bool CSession::registerSession() {
-	auto recvData = read("Name: ");
+	auto recvData = read("Name: ", true);
 	if (!recvData->good)
 		return false;
 
 	recvData->sanitize();
 	if (recvData->isEmpty()) {
+		setDeaf(false);
 		write("Name cannot be empty");
+		setDeaf(true);
 		return registerSession();
 	}
 
 	if (g_pSessionManager->nameExists(recvData->data)) {
+		setDeaf(false);
 		write("Name already exists");
+		setDeaf(true);
 		return registerSession();
 	}
 
@@ -167,6 +182,7 @@ bool CSession::registerSession() {
 
 	log(LOG, "Client registered as: {}", m_name);
 
+	setDeaf(false);
 	return true;
 }
 
@@ -181,6 +197,8 @@ bool CSession::isValid() {
 
 template <typename... Args>
 bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
+	if (isDeaf())
+		return false;
 	std::string msg = NFormatter::fmt(NONE, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");
@@ -197,6 +215,9 @@ bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
 
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+	if (isDeaf())
+		return false;
+
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");
