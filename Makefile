@@ -20,6 +20,11 @@ $(shell mkdir -p $(BUILDDIR))
 JOB_COUNT := $(BIN) $(OBJS)
 JOBS_DONE := $(shell ls -l $(JOB_COUNT) 2> /dev/null | wc -l)
 
+CXXFLAGS += $(shell pkg-config --cflags notcurses notcurses++)
+LDFLAGS += $(shell pkg-config --libs notcurses notcurses++)
+DEBUG_CXXFLAGS += $(shell pkg-config --cflags notcurses notcurses++)
+DEBUG_LDFLAGS += $(shell pkg-config --libs notcurses notcurses++)
+
 NPROC := $(shell nproc 2>/dev/null || getconf NPROCESSORS_CONF || echo 2)
 MAKEFLAGS += -j$(NPROC)
 
