@@ -6,7 +6,11 @@
 #include <ncpp/Plane.hh>
 #include <ncpp/Reader.hh>
 
-CInputManagerImpl::CInputManagerImpl() {
+CInputManagerImpl::CInputManagerImpl()
+	: msgPlane(ncplane_create(stdplane, &msgOpts))
+	, sepPlane(ncplane_create(stdplane, &sepOpts))
+	, inputPlane(ncplane_create(stdplane, &inputOpts))
+	, reader(ncreader_create(inputPlane, &ropts)) {
 	notcurses_options nopts{};
 	nopts.flags = NCOPTION_NO_ALTERNATE_SCREEN;
 
@@ -30,7 +34,6 @@ CInputManagerImpl::CInputManagerImpl() {
 		.margin_b = 0,
 		.margin_r = 0,
 	};
-	msgPlane = ncplane_create(stdplane, &msgOpts);
 
 	struct ncplane_options sepOpts = {
 		.y		  = static_cast<int>(dimy - 3),
@@ -44,7 +47,6 @@ CInputManagerImpl::CInputManagerImpl() {
 		.margin_b = 0,
 		.margin_r = 0,
 	};
-	sepPlane = ncplane_create(stdplane, &sepOpts);
 
 	ncplane_putstr_yx(sepPlane, 0, 0, "────────────────── Type your message below ──────────────────");
 
@@ -60,11 +62,9 @@ CInputManagerImpl::CInputManagerImpl() {
 		.margin_b = 0,
 		.margin_r = 0,
 	};
-	inputPlane = ncplane_create(stdplane, &inputOpts);
 
 	ncreader_options ropts{};
 	ropts.flags = NCREADER_OPTION_CURSOR;
-	reader		= ncreader_create(inputPlane, &ropts);
 
 	ncplane_putstr_yx(inputPlane, 0, 0, "> ");
 	ncplane_cursor_move_yx(inputPlane, 0, 2);
