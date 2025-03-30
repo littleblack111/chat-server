@@ -5,13 +5,14 @@
 #include "renderManager.hpp"
 
 CInputManager::CInputManager()
-	: m_input(ftxui::Input(&m_szInput, {.multiline = false, .on_enter = [&] {
+	: m_input(ftxui::Input(&m_szInput, {.transform = [](ftxui::InputState state) {
+  state.element |= ftxui::bgcolor(ftxui::Color::Black);
+  return state.element; }, .multiline = false, .on_enter = [&] {
 											if (m_szInput.empty())
 												return;
 
 											g_pCommandHandler->isCommand(m_szInput) ? g_pCommandHandler->handleCommand(m_szInput) : g_pChatManager->newMessage({.msg = m_szInput, .username = "Server"});
-											m_szInput.clear();
-										}}) // NOLINT
+											m_szInput.clear(); }}) // NOLINT
 	  )
 	, inputComponent(ftxui::Renderer(m_input, [&] {
 		return ftxui::hbox({
