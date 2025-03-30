@@ -144,6 +144,25 @@
       "-fPIC",
       "-DDEBUG",
       "-o",
+      "build/renderManager.o",
+      "src/renderManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/renderManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/renderManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
       "build/server.o",
       "src/server.cpp"
     ],

@@ -4,6 +4,7 @@
 #include "commands.hpp"
 #include "inputManager.hpp"
 #include "log.hpp"
+#include "renderManager.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
 
@@ -28,12 +29,15 @@ void CChatServer::cleanup() {
 	g_pServer.reset();
 	g_pCommandHandler.reset();
 	g_pInputManager.reset();
+	g_pRenderManager.reset();
 }
 
 void CChatServer::initManagers() {
 	log(LOG, "ChatServer: initializing managers");
 	log(LOG, "Creating Server");
 	g_pServer = std::make_unique<CServer>(m_port);
+	log(LOG, "Creating RenderManager");
+	g_pRenderManager = std::make_unique<CRenderManager>();
 	log(LOG, "Creating SessionManager");
 	g_pSessionManager = std::make_shared<CSessionManager>();
 	log(LOG, "Creating ChatManager");
@@ -53,5 +57,5 @@ void CChatServer::start() {
 	m_sessionManagerThread = std::jthread(&CSessionManager::run, g_pSessionManager.get());
 	m_sessionManagerThread.detach();
 
-	g_pInputManager->run();
+	g_pInputManager->inputLoop();
 }
