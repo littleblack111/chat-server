@@ -1,7 +1,7 @@
 #include "renderManager.hpp"
 
 CRenderManager::CRenderManager()
-	: screen(ftxui::ScreenInteractive::Fullscreen()) {};
+	: screen(ftxui::ScreenInteractive::Fullscreen()) = default;
 
 void CRenderManager::enterLoop() {
 	screen.Loop(renderer);
