@@ -125,6 +125,25 @@
       "-fPIC",
       "-DDEBUG",
       "-o",
+      "build/IOManager.o",
+      "src/IOManager.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/IOManager.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/IOManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/afl-g++",
+      "-c",
+      "-std=c++26",
+      "-g3",
+      "-O0",
+      "-Wall",
+      "-fno-lto",
+      "-fPIC",
+      "-DDEBUG",
+      "-o",
       "build/main.o",
       "src/main.cpp"
     ],

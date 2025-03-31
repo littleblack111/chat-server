@@ -1,16 +1,18 @@
 #pragma once
 #include "format.hpp"
-#include <format>
-#include <print>
 #include <string>
-#include <unistd.h>
+#include <print>
+#include "IOManager.hpp"
 
 inline void log(FILE *_stream, eFormatType type, std::string str) {
 #ifndef DEBUG
 	if (type == TRACE)
 		return;
 #endif
-	std::println(_stream, "{}", NFormatter::fmt(type, str));
+  if (g_pIOManager)
+    g_pIOManager->addLog({.type = type, .log = str});
+  else
+    std::println(_stream, "{}", NFormatter::fmt(type, str));
 }
 
 template <typename... Args>
@@ -19,7 +21,10 @@ void log(FILE *_stream, eFormatType type, std::format_string<Args...> fmt, Args 
 	if (type == TRACE)
 		return;
 #endif
-	std::println(_stream, "{}", NFormatter::fmt(type, fmt, std::forward<Args>(args)...));
+  if (g_pIOManager)
+    g_pIOManager->addLog({.type = type, .log = NFormatter::fmt(NONEWLINE, fmt, std::forward<Args>(args)...)});
+  else
+    std::println(_stream, "{}", NFormatter::fmt(type, fmt, std::forward<Args>(args)...));
 }
 
 inline void log(eFormatType type, std::string str) {

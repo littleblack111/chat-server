@@ -1,3 +1,4 @@
 - [ ] tabs for each user for direct message
 - [ ] fix: bottom(input) only 20% of screen instead of hardcoded px
 - [ ] auto focus input
+- [ ] tabs for logs(log/chat)
