@@ -3,7 +3,7 @@
 
 CRenderManager::CRenderManager()
 	: screen(ftxui::ScreenInteractive::Fullscreen()) {
-  log(SYS, "RenderManager: initialized");
+	log(SYS, "RenderManager: initialized");
 };
 
 void CRenderManager::enterLoop() {
