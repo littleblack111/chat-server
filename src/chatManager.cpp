@@ -1,7 +1,7 @@
 #include "chatManager.hpp"
+#include "IOManager.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
-#include "IOManager.hpp"
 
 CChatManager::CChatManager() {
 	log(LOG, "ChatManager: initialized");
@@ -19,7 +19,7 @@ void CChatManager::newMessage(const SMessage &msg) {
 		return;
 	}
 	g_pSessionManager->broadcastChat(msg);
-  g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
+	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
@@ -27,12 +27,10 @@ std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 }
 
 std::vector<CChatManager::SMessage> CChatManager::getChat() const {
-  std::vector<SMessage> chat;
+	std::vector<SMessage> chat;
 
-  for (const auto &[msg, log]: g_pIOManager->getIO()) {
-    if (msg)
-      chat.push_back(*msg);
-  }
-  return chat;
+	for (const auto &[msg, log] : g_pIOManager->getIO())
+		if (msg)
+			chat.push_back(*msg);
+	return chat;
 }
-

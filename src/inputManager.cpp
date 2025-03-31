@@ -1,9 +1,9 @@
 #include "inputManager.hpp"
+#include "IOManager.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
 #include "log.hpp"
 #include "renderManager.hpp"
-#include "IOManager.hpp"
 
 CInputManager::CInputManager()
 	: m_input(ftxui::Input(&m_szInput, "Type here...", {.transform = [](ftxui::InputState state) {
@@ -30,16 +30,15 @@ CInputManager::CInputManager()
 	, logComponent(ftxui::Renderer([] {
 		std::vector<ftxui::Element> messages;
 		for (const auto &[chat, log] : g_pIOManager->getIO()) {
-      if (chat && !chat->msg.empty()) {
-        std::string username = chat->username;
-        if (username.back() == '\n')
-          username.pop_back();
-        messages.push_back(ftxui::window(ftxui::text(username), ftxui::paragraph(chat->msg)));
-      }
-      else if (log && !log->log.empty())
-        messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
-    }
-			// messages.push_back(ftxui::window(ftxui::text(msg.username), ftxui::paragraph(msg.msg)));
+			if (chat && !chat->msg.empty()) {
+				std::string username = chat->username;
+				if (username.back() == '\n')
+					username.pop_back();
+				messages.push_back(ftxui::window(ftxui::text(username), ftxui::paragraph(chat->msg)));
+			} else if (log && !log->log.empty())
+				messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
+		}
+		// messages.push_back(ftxui::window(ftxui::text(msg.username), ftxui::paragraph(msg.msg)));
 
 		return ftxui::vbox(messages);
 	})) {

@@ -1,4 +1,5 @@
 #include "chatServer.hpp"
+#include "IOManager.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
 #include "commands.hpp"
@@ -7,7 +8,6 @@
 #include "renderManager.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
-#include "IOManager.hpp"
 
 CChatServer::CChatServer(uint16_t port)
 	: m_port(port) {
@@ -30,7 +30,7 @@ void CChatServer::cleanup() {
 	g_pServer.reset();
 	g_pCommandHandler.reset();
 	g_pInputManager.reset();
-  g_pIOManager.reset();
+	g_pIOManager.reset();
 	g_pRenderManager.reset();
 }
 
@@ -40,8 +40,8 @@ void CChatServer::initManagers() {
 	g_pServer = std::make_unique<CServer>(m_port);
 	log(LOG, "Creating RenderManager");
 	g_pRenderManager = std::make_unique<CRenderManager>();
-  log(LOG, "Creating IOManager");
-  g_pIOManager = std::make_unique<CIOManager>();
+	log(LOG, "Creating IOManager");
+	g_pIOManager = std::make_unique<CIOManager>();
 	log(LOG, "Creating SessionManager");
 	g_pSessionManager = std::make_shared<CSessionManager>();
 	log(LOG, "Creating ChatManager");

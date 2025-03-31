@@ -17,6 +17,5 @@ class CChatManager {
 	std::string fmtBroadcastMessage(const SMessage &msg);
 
 	std::vector<SMessage> getChat() const;
-
 };
 inline std::unique_ptr<CChatManager> g_pChatManager;
