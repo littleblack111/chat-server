@@ -8,13 +8,8 @@
 
 CInputManager::CInputManager()
 	: m_input(ftxui::Input(&m_szInput, "Type here...", {.transform = [](ftxui::InputState state) {
-  if (state.focused) {
     state.element |= ftxui::bgcolor(ftxui::Color::HSVA(0, 0, 0, 0));
     state.element |= ftxui::color(ftxui::Color::White);
-  } else if (state.hovered && !state.focused)
-    state.element |= ftxui::bgcolor(ftxui::Color::GrayDark);
-  else
-    state.element |= ftxui::bgcolor(ftxui::Color::Black);
   return state.element; }, .multiline = false, .on_enter = [&] {
 											if (m_szInput.empty())
 												return;
@@ -28,7 +23,7 @@ CInputManager::CInputManager()
 			m_input->Render(),
 		});
 	}))
-	, logComponent(ftxui::Renderer([] {
+	, logComponent(ftxui::Renderer([this] {
 		std::vector<ftxui::Element> messages;
 		for (const auto &[chat, log] : g_pIOManager->getIO()) {
 			if (chat && !chat->msg.empty()) {
@@ -40,6 +35,7 @@ CInputManager::CInputManager()
 				messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
 		}
 
+    logComponent->OnEvent(ftxui::Event::Custom);
 		return ftxui::vbox(messages);
 	})) {
 
@@ -60,7 +56,6 @@ void CInputManager::inputLoop() {
 		inputComponent->TakeFocus();
 		return false;
 	});
-
 	g_pRenderManager->setRenderer(ftxui::Renderer(container, [this] {
 		return container->Render() | ftxui::border;
 	}));

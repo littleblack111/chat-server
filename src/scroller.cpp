@@ -5,6 +5,7 @@
 #include <ftxui/component/event.hpp>		  // for Event, Event::ArrowDown, Event::ArrowUp, Event::End, Event::Home, Event::PageDown, Event::PageUp
 #include <memory>							  // for shared_ptr, allocator, __shared_ptr_access
 #include <utility>							  // for move
+#include "log.hpp"
 
 #include "ftxui/component/component.hpp" // for Make
 #include "ftxui/component/mouse.hpp"	 // for Mouse, Mouse::WheelDown, Mouse::WheelUp
@@ -58,12 +59,17 @@ class ScrollerBase : public ComponentBase {
 		if (event == Event::End)
 			selected_ = size_;
 
-		selected_ = std::max(0, std::min(size_ - 1, selected_));
+    if (event == Event::Custom && sticky_select)
+      selected_ = size_;
+
+		selected_ = std::max(0, std::min(size_, selected_));
+    sticky_select = selected_ == size_;
 		return selected_old != selected_;
 	}
 
 	bool Focusable() const final { return true; }
 
+  bool sticky_select = false;
 	int selected_ = 0;
 	int size_	  = 0;
 	Box box_;
