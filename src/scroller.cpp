@@ -78,7 +78,7 @@ class CScrollerBase : public ComponentBase {
 Component Scroller(Component child) { // NOLINT
 	return Make<CScrollerBase>(std::move(child));
 }
-} // namespace ftxui // NOLINT
+} // namespace ftxui
 
 // Copyright 2021 Arthur Sonzogni. All rights reserved.
 // Use of this source code is governed by the MIT license that can be found in
