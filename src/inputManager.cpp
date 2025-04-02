@@ -46,8 +46,8 @@ CInputManager::~CInputManager() {
 }
 
 void CInputManager::updateIO() {
-  logComponent->OnEvent(ftxui::Event::Custom);
-  g_pRenderManager->screen.PostEvent(ftxui::Event::Custom);
+	logComponent->OnEvent(ftxui::Event::Custom);
+	g_pRenderManager->screen.PostEvent(ftxui::Event::Custom);
 }
 
 void CInputManager::inputLoop() {

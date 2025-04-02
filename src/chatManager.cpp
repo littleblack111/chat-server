@@ -21,7 +21,7 @@ void CChatManager::newMessage(const SMessage &msg) {
 	}
 	g_pSessionManager->broadcastChat(msg);
 	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
-  g_pInputManager->updateIO();
+	g_pInputManager->updateIO();
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
