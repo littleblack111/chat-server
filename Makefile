@@ -16,6 +16,11 @@ LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
 DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs
 
+CXXFLAGS += $(shell pkg-config --cflags ftxui)
+LDFLAGS += $(shell pkg-config --libs ftxui)
+DEBUG_CXXFLAGS += $(shell pkg-config --cflags ftxui)
+DEBUG_LDFLAGS += $(shell pkg-config --libs ftxui)
+
 $(shell mkdir -p $(BUILDDIR))
 JOB_COUNT := $(BIN) $(OBJS)
 JOBS_DONE := $(shell ls -l $(JOB_COUNT) 2> /dev/null | wc -l)

@@ -1,4 +1,6 @@
 #include "chatManager.hpp"
+#include "IOManager.hpp"
+#include "inputManager.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
 
@@ -7,7 +9,6 @@ CChatManager::CChatManager() {
 }
 
 CChatManager::~CChatManager() {
-	m_vMessages.clear();
 	log(SYS, "ChatManager: bye");
 }
 
@@ -19,13 +20,19 @@ void CChatManager::newMessage(const SMessage &msg) {
 		return;
 	}
 	g_pSessionManager->broadcastChat(msg);
-	m_vMessages.push_back(msg);
+	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
+	g_pInputManager->updateIO();
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 	return NFormatter::fmt(NONE, "{}: {}", msg.username, msg.msg);
 }
 
-const std::vector<CChatManager::SMessage> &CChatManager::getChat() const {
-	return m_vMessages;
+std::vector<CChatManager::SMessage> CChatManager::getChat() const {
+	std::vector<SMessage> chat;
+
+	for (const auto &[msg, log] : g_pIOManager->getIO())
+		if (msg)
+			chat.push_back(*msg);
+	return chat;
 }
