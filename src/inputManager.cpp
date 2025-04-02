@@ -54,16 +54,16 @@ void CInputManager::inputLoop() {
 	container = logComponent |= ftxui::Scroller;
 	container = ftxui::ResizableSplitBottom(inputComponent, container, &bottomSize);
 
-  // FIXME: this shit spams TakeFocus(not idle for power etc reasons)
-  // consider: custom loop, or just only allow focus to be inputComponent somehow
-  container |= ftxui::CatchEvent([&](ftxui::Event) {
-    inputComponent->TakeFocus();
-    return false;
-  });
+	// FIXME: this shit spams TakeFocus(not idle for power etc reasons)
+	// consider: custom loop, or just only allow focus to be inputComponent somehow
+	container |= ftxui::CatchEvent([&](ftxui::Event) {
+		inputComponent->TakeFocus();
+		return false;
+	});
 
 	g_pRenderManager->setRenderer(ftxui::Renderer(container, [this] {
 		return container->Render() | ftxui::border;
 	}));
-  inputComponent->TakeFocus();
+	inputComponent->TakeFocus();
 	g_pRenderManager->enterLoop();
 }
