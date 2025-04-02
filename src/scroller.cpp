@@ -15,14 +15,14 @@
 #include "ftxui/dom/requirement.hpp"	 // for Requirement
 #include "ftxui/screen/box.hpp"			 // for Box
 
-namespace ftxui {
+namespace ftxui { // NOLINT
 
-class ScrollerBase : public ComponentBase {
+class CScrollerBase : public ComponentBase {
   public:
-	ScrollerBase(Component child) { Add(child); }
+	CScrollerBase(Component child) { Add(child); }
 
   private:
-	Element OnRender() final {
+	Element OnRender() final { // NOLINT
 		auto focused = Focused() ? focus : ftxui::select;
 		auto style	 = Focused() ? inverted : nothing;
 
@@ -39,7 +39,7 @@ class ScrollerBase : public ComponentBase {
 			   vscroll_indicator | yframe | yflex | reflect(box_);
 	}
 
-	bool OnEvent(Event event) final {
+	bool OnEvent(Event event) final { // NOLINT
 		if (event.is_mouse() && box_.Contain(event.mouse().x, event.mouse().y))
 			TakeFocus();
 
@@ -67,7 +67,7 @@ class ScrollerBase : public ComponentBase {
 		return selected_old != selected_;
 	}
 
-	bool Focusable() const final { return true; }
+	bool Focusable() const final { return true; } // NOLINT
 
 	bool sticky_select = true;
 	int	 selected_	   = 0;
@@ -75,10 +75,10 @@ class ScrollerBase : public ComponentBase {
 	Box	 box_;
 };
 
-Component Scroller(Component child) {
-	return Make<ScrollerBase>(std::move(child));
+Component Scroller(Component child) { // NOLINT
+	return Make<CScrollerBase>(std::move(child));
 }
-} // namespace ftxui
+} // namespace ftxui // NOLINT
 
 // Copyright 2021 Arthur Sonzogni. All rights reserved.
 // Use of this source code is governed by the MIT license that can be found in
