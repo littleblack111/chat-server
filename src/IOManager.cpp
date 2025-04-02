@@ -1,4 +1,5 @@
 #include "IOManager.hpp"
+#include "inputManager.hpp"
 #include "log.hpp"
 
 CIOManager::CIOManager() {
@@ -16,4 +17,5 @@ const std::vector<CIOManager::SIO> &CIOManager::getIO() const {
 
 void CIOManager::addLog(const SLog &log) {
 	m_vIO.push_back({.msg = std::nullopt, .log = log});
+  g_pInputManager->updateIO();
 }

@@ -15,5 +15,7 @@ class CRenderManager {
   private:
 	ftxui::ScreenInteractive screen;
 	ftxui::Component		 renderer;
+
+  friend class CInputManager;
 };
 inline std::unique_ptr<CRenderManager> g_pRenderManager;

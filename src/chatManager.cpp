@@ -1,5 +1,6 @@
 #include "chatManager.hpp"
 #include "IOManager.hpp"
+#include "inputManager.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
 
@@ -20,6 +21,7 @@ void CChatManager::newMessage(const SMessage &msg) {
 	}
 	g_pSessionManager->broadcastChat(msg);
 	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
+  g_pInputManager->updateIO();
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {

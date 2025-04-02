@@ -36,18 +36,18 @@ void CChatServer::cleanup() {
 
 void CChatServer::initManagers() {
 	log(LOG, "ChatServer: initializing managers");
-	log(LOG, "Creating Server");
-	g_pServer = std::make_unique<CServer>(m_port);
 	log(LOG, "Creating RenderManager");
 	g_pRenderManager = std::make_unique<CRenderManager>();
+	log(LOG, "Creating InputManager");
+	g_pInputManager = std::make_unique<CInputManager>();
+	log(LOG, "Creating Server");
+	g_pServer = std::make_unique<CServer>(m_port);
 	log(LOG, "Creating IOManager");
 	g_pIOManager = std::make_unique<CIOManager>();
 	log(LOG, "Creating SessionManager");
 	g_pSessionManager = std::make_shared<CSessionManager>();
 	log(LOG, "Creating ChatManager");
 	g_pChatManager = std::make_unique<CChatManager>();
-	log(LOG, "Creating InputManager");
-	g_pInputManager = std::make_unique<CInputManager>();
 }
 
 void CChatServer::start() {

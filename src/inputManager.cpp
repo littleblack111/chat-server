@@ -23,7 +23,7 @@ CInputManager::CInputManager()
 			m_input->Render(),
 		});
 	}))
-	, logComponent(ftxui::Renderer([this] {
+	, logComponent(ftxui::Renderer([] {
 		std::vector<ftxui::Element> messages;
 		for (const auto &[chat, log] : g_pIOManager->getIO()) {
 			if (chat && !chat->msg.empty()) {
@@ -35,7 +35,6 @@ CInputManager::CInputManager()
 				messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
 		}
 
-    logComponent->OnEvent(ftxui::Event::Custom);
 		return ftxui::vbox(messages);
 	})) {
 
@@ -44,6 +43,11 @@ CInputManager::CInputManager()
 
 CInputManager::~CInputManager() {
 	log(SYS, "InputManager: bye");
+}
+
+void CInputManager::updateIO() {
+  logComponent->OnEvent(ftxui::Event::Custom);
+  g_pRenderManager->screen.PostEvent(ftxui::Event::Custom);
 }
 
 void CInputManager::inputLoop() {

@@ -10,6 +10,8 @@ class CInputManager {
 
 	void inputLoop();
 
+  void updateIO();
+
   private:
 	std::string m_szInput;
 
