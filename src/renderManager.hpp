@@ -13,6 +13,8 @@ class CRenderManager {
 	void setRenderer(ftxui::Component component);
 
   private:
+	void exitLoop();
+
 	ftxui::ScreenInteractive screen;
 	ftxui::Component		 renderer;
 

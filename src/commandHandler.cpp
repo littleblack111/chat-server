@@ -27,6 +27,8 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 		return false;
 
 	m_vCommands.push_back(command);
+
+	log(TRACE, "CommandHandler: registered command: {}", command.name);
 	return true;
 }
 
@@ -48,6 +50,7 @@ CCommandHandler::SResult CCommandHandler::exeCommand(const SCommand &command, co
 			return {.result = "", .good = false};
 		}
 
+	log(TRACE, "CommandHandler: executing command: {}", command.name);
 	return command.exe(parsed);
 }
 
