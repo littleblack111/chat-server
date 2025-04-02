@@ -27,7 +27,7 @@ void CChatServer::cleanup() {
 		g_pSessionManager->shutdownSessions();
 		g_pSessionManager.reset();
 	}
-	
+
 	g_pChatManager.reset();
 	g_pServer.reset();
 	g_pCommandHandler.reset();
