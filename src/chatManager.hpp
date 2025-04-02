@@ -16,9 +16,6 @@ class CChatManager {
 	void		newMessage(const SMessage &msg);
 	std::string fmtBroadcastMessage(const SMessage &msg);
 
-	const std::vector<SMessage> &getChat() const;
-
-  private:
-	std::vector<SMessage> m_vMessages;
+	std::vector<SMessage> getChat() const;
 };
 inline std::unique_ptr<CChatManager> g_pChatManager;
