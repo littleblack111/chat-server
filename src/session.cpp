@@ -47,12 +47,16 @@ void CSession::onDisconnect() {
 #endif
 
 void CSession::onErrno(eEventType eventType) {
-	const auto err = strerror(errno);
+	char		errbuf[256];
+	const char *err = strerror_r(errno, errbuf, sizeof(errbuf));
+
 	switch (eventType) {
 	case READ:
 		log(WARN, "Error while reading: {}", err);
+		break;
 	case WRITE:
 		log(WARN, "Error while writing: {}", err);
+		break;
 	}
 }
 
