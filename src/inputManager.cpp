@@ -4,6 +4,7 @@
 #include "commandHandler.hpp"
 #include "log.hpp"
 #include "renderManager.hpp"
+#include "scroller.hpp"
 
 CInputManager::CInputManager()
 	: m_input(ftxui::Input(&m_szInput, "Type here...", {.transform = [](ftxui::InputState state) {
@@ -38,7 +39,6 @@ CInputManager::CInputManager()
 			} else if (log && !log->log.empty())
 				messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
 		}
-		// messages.push_back(ftxui::window(ftxui::text(msg.username), ftxui::paragraph(msg.msg)));
 
 		return ftxui::vbox(messages);
 	})) {
@@ -50,7 +50,7 @@ CInputManager::~CInputManager() {
 }
 
 void CInputManager::inputLoop() {
-	container = logComponent;
+	container = logComponent |= ftxui::Scroller;
 	container = ftxui::ResizableSplitBottom(inputComponent, container, &bottomSize);
 
 	g_pRenderManager->setRenderer(ftxui::Renderer(container, [this] {
