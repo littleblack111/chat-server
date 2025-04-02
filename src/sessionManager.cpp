@@ -8,12 +8,17 @@
 #include <utility>
 
 void CSessionManager::shutdownSessions() {
+	if (m_vSessions.empty())
+		return;
+
 	for (auto &session : m_vSessions)
 		kick(&session, false, "Server shutting down");
 }
 
 CSessionManager::CSessionManager() {
-	if (std::atexit([]() { g_pSessionManager->shutdownSessions(); }))
+	if (std::atexit([]() {
+		if (g_pSessionManager) g_pSessionManager->shutdownSessions();
+	}))
 		log(ERR, "Failed to register SessionManager atexit handler, will fallback to quick_exit after hang");
 
 	log(LOG, "SessionManager: initialized");

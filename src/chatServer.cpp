@@ -23,10 +23,12 @@ CChatServer::~CChatServer() {
 }
 
 void CChatServer::cleanup() {
+	if (g_pSessionManager) {
+		g_pSessionManager->shutdownSessions();
+		g_pSessionManager.reset();
+	}
+	
 	g_pChatManager.reset();
-	// if (m_sessionManagerThread.joinable())
-	// m_sessionManagerThread.join();
-	g_pSessionManager.reset();
 	g_pServer.reset();
 	g_pCommandHandler.reset();
 	g_pInputManager.reset();
