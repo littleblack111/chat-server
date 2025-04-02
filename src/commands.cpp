@@ -21,7 +21,7 @@ void registerCommands() {
 	g_pCommandHandler->registerCommand(CCommandHandler::makeCommand<SKickArgs>({.name = "kick", .parser = [](const std::string &args) -> std::pair<SKickArgs, bool> {
       size_t pos = args.find(' ');
       std::string target = args;
-      std::string reason = "No reason specified";
+      std::string reason = "Kicked: No reason specified";
 
       if (pos != std::string::npos) {
         target = args.substr(0, pos);
@@ -55,7 +55,7 @@ void registerCommands() {
 	g_pCommandHandler->registerCommand(CCommandHandler::makeCommand<SMuteArgs>({.name = "mute", .parser = [](const std::string &args) -> std::pair<SMuteArgs, bool> {
       size_t pos = args.find(' ');
       std::string target = args;
-      std::string reason = "No reason specified";
+      std::string reason = "Muted: No reason specified";
 
       if (pos != std::string::npos) {
         target = args.substr(0, pos);

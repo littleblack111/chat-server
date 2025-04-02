@@ -25,6 +25,7 @@ CSessionManager::~CSessionManager() {
 			thread.detach();
 		session.reset();
 	}
+
 	log(SYS, "SessionManager: bye");
 }
 

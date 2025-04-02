@@ -38,11 +38,11 @@ CSession::~CSession() {
 
 #ifdef DEBUG
 void CSession::onConnect() {
-	log(LOG, "Client connected");
+	log(TRACE, "Client {}@{} connected", m_name, m_ip);
 }
 
 void CSession::onDisconnect() {
-	log(LOG, "Client disconnected");
+	log(TRACE, "Client {}@{} disconnected", m_name, m_ip);
 }
 #endif
 
@@ -62,7 +62,7 @@ void CSession::onErrno(eEventType eventType) {
 
 #ifdef DEBUG
 void CSession::onRecv(const SRecvData &data) {
-	log(LOG, "Received: {}", data.data);
+	log(TRACE, "Received: {}", data.data);
 }
 
 void CSession::onSend(const std::string &msg) {
@@ -77,6 +77,11 @@ void CSession::recvLoop() {
 			break;
 
 		recvData->sanitize();
+		if (recvData->isEmpty()) {
+			log(TRACE, "Empty message from {}", m_name);
+			continue;
+		}
+
 		const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
 		if (m_isAdmin && isCommand)
 			g_pCommandHandler->handleCommand(recvData->data, m_ip);
@@ -184,7 +189,7 @@ bool CSession::registerSession() {
 
 	this->m_name = recvData->data;
 
-	log(LOG, "Client registered as: {}", m_name);
+	log(LOG, "Client {} registered as: {}", m_ip, m_name);
 
 	setDeaf(false);
 	return true;

@@ -36,6 +36,7 @@ void CChatServer::cleanup() {
 
 void CChatServer::initManagers() {
 	log(LOG, "ChatServer: initializing managers");
+
 	log(LOG, "Creating RenderManager");
 	g_pRenderManager = std::make_unique<CRenderManager>();
 	log(LOG, "Creating InputManager");
