@@ -5,7 +5,7 @@
 
 #include "ftxui/component/component_base.hpp" // for Component
 
-namespace ftxui { // NOLINT
+namespace ftxui {					 // NOLINT
 Component Scroller(Component child); // NOLINT
 }
 #endif /* end of include guard: SCROLLER_H */
