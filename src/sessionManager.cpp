@@ -17,8 +17,9 @@ void CSessionManager::shutdownSessions() {
 
 CSessionManager::CSessionManager() {
 	if (std::atexit([]() {
-		if (g_pSessionManager) g_pSessionManager->shutdownSessions();
-	}))
+			if (g_pSessionManager)
+				g_pSessionManager->shutdownSessions();
+		}))
 		log(ERR, "Failed to register SessionManager atexit handler, will fallback to quick_exit after hang");
 
 	log(LOG, "SessionManager: initialized");
