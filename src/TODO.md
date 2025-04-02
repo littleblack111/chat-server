@@ -1,5 +1,10 @@
-- [ ] tabs for each user for direct message
-- [ ] fix: bottom(input) only 20% of screen instead of hardcoded px
-- [ ] auto focus input
-- [ ] tabs for logs(log/chat)
+## General
 - [ ] ci unit testing
+
+## FTXUI
+
+- [ ] tabs for each user for direct message
+- ~[ ] fix: bottom(input) only 20% of screen instead of hardcoded px~
+    - [x] fix: bottom(input) only take 1line of screen
+- [-] auto focus input // FIXME
+- [ ] tabs for logs(log/chat)
