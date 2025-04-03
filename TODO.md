@@ -1,5 +1,7 @@
 ## General
 - [ ] ci unit testing
+- [ ] multiline buffer input/output
+- [ ] file upload/download
 
 ## FTXUI
 
