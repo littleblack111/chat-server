@@ -130,9 +130,11 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 
 std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg, bool bypassDeaf) {
 	const auto deaf = isDeaf();
-	if (bypassDeaf && deaf) setDeaf(false);
+	if (bypassDeaf && deaf)
+		setDeaf(false);
 	write(NONEWLINE, "{}", msg, false);
-	if (bypassDeaf && deaf) setDeaf(true);
+	if (bypassDeaf && deaf)
+		setDeaf(true);
 	m_isReading = true;
 	return read();
 }
