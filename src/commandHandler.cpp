@@ -61,7 +61,7 @@ CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command,
 	return exeCommand(*getCommand(command), args);
 }
 
-void CCommandHandler::handleCommand(std::string input, const char ip[INET_ADDRSTRLEN]) const {
+void CCommandHandler::handleCommand(std::string input, const std::string &ip) const {
 	input = input.substr(1);
 
 	std::string command;
@@ -84,7 +84,7 @@ void CCommandHandler::handleCommand(std::string input, const char ip[INET_ADDRST
 
 	std::function<void(eFormatType, const std::string &)> outputter = [](eFormatType type, const std::string &msg) { log(type, "{}", msg); };
 
-	if (ip != nullptr)
+	if (!ip.empty())
 		if (auto session = g_pSessionManager->getByIp(ip))
 			outputter = [session](eFormatType, const std::string &msg) { session->write(msg); };
 

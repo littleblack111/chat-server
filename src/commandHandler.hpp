@@ -33,7 +33,7 @@ class CCommandHandler {
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
 	SResult newCommand(const std::string &command, const std::string &args) const;
-	void	handleCommand(std::string input, const char ip[INET_ADDRSTRLEN] = {}) const;
+	void	handleCommand(std::string input, const std::string &ip = {}) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {

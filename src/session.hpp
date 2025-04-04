@@ -23,7 +23,7 @@ class CSession {
 	};
 
 	const std::string &getName() const;
-	const char		  *getIp() const;
+	const std::string &getIp() const;
 	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
@@ -57,7 +57,7 @@ class CSession {
 	sockaddr_in											m_addr;
 	socklen_t											m_addrLen = sizeof(m_addr);
 	std::string											m_name;
-	char												m_ip[INET_ADDRSTRLEN];
+	std::string											m_ip;
 	int													m_port;
 	bool												m_isAdmin = false;
 
