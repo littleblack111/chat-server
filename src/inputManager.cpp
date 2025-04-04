@@ -53,6 +53,8 @@ void CInputManager::updateIO() {
 void CInputManager::inputLoop() {
 	container = logComponent |= ftxui::Scroller;
 	container = ftxui::ResizableSplitBottom(inputComponent, container, &bottomSize);
+	// FIXME: doesn't seem to work (https://github.com/ArthurSonzogni/FTXUI/pull/1028#issuecomment-2776497917)
+	logComponent |= ftxui::size(ftxui::HEIGHT, ftxui::GREATER_THAN, 10);
 
 	// FIXME: this shit spams TakeFocus(not ideal for power etc reasons)
 	// consider: custom loop, or just only allow focus to be inputComponent somehow
@@ -60,6 +62,7 @@ void CInputManager::inputLoop() {
 		inputComponent->TakeFocus();
 		return false;
 	});
+
 	g_pRenderManager->setRenderer(ftxui::Renderer(container, [this] {
 		return container->Render() | ftxui::border;
 	}));
