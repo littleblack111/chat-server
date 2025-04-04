@@ -24,7 +24,7 @@ class CSessionManager {
 	void shutdownSessions();
 
 	CSession							  *getByName(const std::string &name) const;
-	CSession							  *getByIp(const char m_ip[INET_ADDRSTRLEN]) const;
+	CSession							  *getByIp(const std::string &ip) const;
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:

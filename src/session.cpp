@@ -17,9 +17,11 @@ CSession::CSession()
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
-	inet_ntop(AF_INET, &m_addr.sin_addr, m_ip, INET_ADDRSTRLEN);
+	m_ip.resize(INET_ADDRSTRLEN);
+	inet_ntop(AF_INET, &m_addr.sin_addr, &m_ip[0], INET_ADDRSTRLEN);
+	m_ip.resize(strlen(m_ip.c_str()));
 	m_port	  = ntohs(m_addr.sin_port);
-	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return strcmp(ip, m_ip) == 0; });
+	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
 	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
@@ -260,7 +262,7 @@ const std::string &CSession::getName() const {
 	return m_name;
 }
 
-const char *CSession::getIp() const {
+const std::string &CSession::getIp() const {
 	return m_ip;
 }
 
