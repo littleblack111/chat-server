@@ -79,8 +79,8 @@ CSession *CSessionManager::getByName(const std::string &name) const {
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
-CSession *CSessionManager::getByIp(const char m_ip[INET_ADDRSTRLEN]) const {
-	auto it = std::ranges::find_if(m_vSessions, [&m_ip](const auto &s) { log(LOG, s.second->m_ip); return strcmp(s.second->m_ip, m_ip) == 0; });
+CSession *CSessionManager::getByIp(const std::string &ip) const {
+	auto it = std::ranges::find_if(m_vSessions, [&ip](const auto &s) { log(LOG, s.second->m_ip); return s.second->m_ip == ip; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
