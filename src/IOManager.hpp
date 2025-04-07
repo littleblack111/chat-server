@@ -20,7 +20,7 @@ class CIOManager {
 		std::optional<SLog>					  log;
 	};
 
-	const std::vector<SIO> getIO() const;
+	const std::vector<SIO> &getIO() const;
 	void				   addLog(const SLog &log);
 
   private:
