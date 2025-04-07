@@ -63,7 +63,7 @@ class CScrollerBase : public ComponentBase {
 			selected_ = size_;
 
 		selected_	  = std::max(0, std::min(size_, selected_));
-		sticky_select = selected_ == size_;
+		sticky_select = selected_ >= size_ - 15;
 		return selected_old != selected_;
 	}
 
