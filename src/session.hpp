@@ -24,7 +24,7 @@ class CSession {
 
 	const std::string &getName() const;
 	const std::string &getIp() const;
-	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
+	void			   setSelf(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>> self);
 
 	std::unique_ptr<SRecvData> read();
 	std::unique_ptr<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
@@ -52,14 +52,14 @@ class CSession {
 		WRITE
 	};
 
-	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
-	Hyprutils::OS::CFileDescriptor						m_sockfd;
-	sockaddr_in											m_addr;
-	socklen_t											m_addrLen = sizeof(m_addr);
-	std::string											m_name;
-	std::string											m_ip;
-	int													m_port;
-	bool												m_isAdmin = false;
+	std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>> self;
+	Hyprutils::OS::CFileDescriptor										m_sockfd;
+	sockaddr_in															m_addr;
+	socklen_t															m_addrLen = sizeof(m_addr);
+	std::string															m_name;
+	std::string															m_ip;
+	int																	m_port;
+	bool																m_isAdmin = false;
 
 	bool m_isReading = false;
 	bool m_bMuted	 = false;
