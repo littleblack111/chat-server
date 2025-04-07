@@ -14,7 +14,7 @@ CIOManager::~CIOManager() {
 	log(SYS, "IOManager: bye");
 }
 
-const std::vector<CIOManager::SIO> CIOManager::getIO() const {
+std::vector<CIOManager::SIO> CIOManager::getIO() const {
 	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_vIO;
 }
