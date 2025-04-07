@@ -152,7 +152,7 @@ void CSession::run() {
 	} else
 		log(LOG, "Client {} exited without even registering", m_ip);
 
-	g_pSessionManager->kick(self);
+	g_pSessionManager->kick(std::move(self));
 }
 
 bool CSession::isMuted() const {
@@ -267,6 +267,6 @@ const std::string &CSession::getIp() const {
 	return m_ip;
 }
 
-void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
-	this->self = self;
+void CSession::setSelf(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>> self) {
+	this->self = std::move(self);
 }

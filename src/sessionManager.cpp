@@ -12,7 +12,7 @@ void CSessionManager::shutdownSessions() {
 		return;
 
 	for (auto &session : m_vSessions)
-		kick(&session, false, "Server shutting down");
+		kick(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>>(&session), false, "Server shutting down");
 }
 
 CSessionManager::CSessionManager() {
@@ -35,11 +35,10 @@ CSessionManager::~CSessionManager() {
 	log(SYS, "SessionManager: bye");
 }
 
-std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession() {
+void CSessionManager::newSession() {
 	std::shared_ptr session	 = std::make_shared<CSession>();
-	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session.get()), session);
-	instance->second->setSelf(instance);
-	return instance;
+	auto			instance = std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>>(&m_vSessions.emplace_back(std::jthread(&CSession::run, session.get()), session));
+	instance->second->setSelf(std::move(instance));
 }
 
 void CSessionManager::run() {
@@ -66,7 +65,7 @@ bool CSessionManager::nameExists(const std::string &name) {
 
 	if (it != m_vSessions.end()) {
 		if (!it->second->isValid()) {
-			kick(it->second.get(), true, "Connection lost");
+			kick(it->second, true, "Connection lost");
 			return false;
 		}
 		return true;
@@ -74,28 +73,28 @@ bool CSessionManager::nameExists(const std::string &name) {
 	return false;
 }
 
-CSession *CSessionManager::getByName(const std::string &name) const {
+std::shared_ptr<CSession> CSessionManager::getByName(const std::string &name) const {
 	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
-	return it != m_vSessions.end() ? it->second.get() : nullptr;
+	return it != m_vSessions.end() ? it->second : nullptr;
 }
 
-CSession *CSessionManager::getByIp(const std::string &ip) const {
+std::shared_ptr<CSession> CSessionManager::getByIp(const std::string &ip) const {
 	auto it = std::ranges::find_if(m_vSessions, [&ip](const auto &s) { log(LOG, s.second->m_ip); return s.second->m_ip == ip; });
-	return it != m_vSessions.end() ? it->second.get() : nullptr;
+	return it != m_vSessions.end() ? it->second : nullptr;
 }
 
 std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
 	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
 
-void CSessionManager::kick(CSession *session, const bool kill, const std::string &reason) {
+void CSessionManager::kick(std::shared_ptr<CSession> session, const bool kill, const std::string &reason) {
 	for (auto &_session : m_vSessions)
-		if (_session.second.get() == session)
-			kick(&_session, kill, reason);
+		if (_session.second == session)
+			kick(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>>(&_session), kill, reason);
 }
 
-void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
-	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
+void CSessionManager::kick(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>> session, const bool kill, const std::string &reason) {
+	auto it = std::ranges::find_if(m_vSessions, [&session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
 		if (!reason.empty()) {
