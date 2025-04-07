@@ -149,6 +149,7 @@ void CSession::run() {
 		for (const auto &chat : g_pChatManager->getChat())
 			writeChat(chat);
 		recvLoop();
+
 	} else
 		log(LOG, "Client {} exited without even registering", m_ip);
 
@@ -256,6 +257,10 @@ void CSession::writeChat(const CChatManager::SMessage &msg) {
 
 		write(g_pChatManager->fmtBroadcastMessage(msg));
 	}
+}
+
+bool CSession::clearBuffer() {
+	return write("\33[2K");
 }
 
 const std::string &CSession::getName() const {
