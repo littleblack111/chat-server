@@ -17,12 +17,16 @@ CSession::CSession()
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
-	m_ip.resize(INET_ADDRSTRLEN);
-	inet_ntop(AF_INET, &m_addr.sin_addr, &m_ip[0], INET_ADDRSTRLEN);
-	m_ip.resize(strlen(m_ip.c_str()));
-	m_port	  = ntohs(m_addr.sin_port);
-	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
-	log(LOG, "Client {} connected on port {}", m_ip, m_port);
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_ip.resize(INET_ADDRSTRLEN);
+		inet_ntop(AF_INET, &m_addr.sin_addr, &m_ip[0], INET_ADDRSTRLEN);
+		m_ip.resize(strlen(m_ip.c_str()));
+		m_port	  = ntohs(m_addr.sin_port);
+		m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
+	}
+
+	log(LOG, "Client {} connected on port {}", getIp(), m_port);
 
 	log(TRACE, "session: initialized");
 }
@@ -33,18 +37,18 @@ CSession::~CSession() {
 #endif
 	m_sockfd.reset();
 
-	log(LOG, "Client {}@{} disconnected", m_name, m_ip);
+	log(LOG, "Client {}@{} disconnected", getName(), getIp());
 
-	log(TRACE, "session({}@{}): bye", m_name, m_ip);
+	log(TRACE, "session({}@{}): bye", getName(), getIp());
 }
 
 #ifdef DEBUG
 void CSession::onConnect() {
-	log(TRACE, "Client {}@{} connected", m_name, m_ip);
+	log(TRACE, "Client {}@{} connected", getName(), getIp());
 }
 
 void CSession::onDisconnect() {
-	log(TRACE, "Client {}@{} disconnected", m_name, m_ip);
+	log(TRACE, "Client {}@{} disconnected", getName(), getIp());
 }
 #endif
 
@@ -74,21 +78,21 @@ void CSession::onSend(const std::string &msg) {
 
 void CSession::recvLoop() {
 	while (true) {
-		auto recvData = read(NFormatter::fmt(NONEWLINE, "{}: ", m_name));
+		auto recvData = read(NFormatter::fmt(NONEWLINE, "{}: ", getName()));
 		if (!recvData->good)
 			break;
 
 		recvData->sanitize();
 		if (recvData->isEmpty()) {
-			log(TRACE, "Empty message from {}", m_name);
+			log(TRACE, "Empty message from {}", getName());
 			continue;
 		}
 
 		const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
 		if (m_isAdmin && isCommand)
-			g_pCommandHandler->handleCommand(recvData->data, m_ip);
+			g_pCommandHandler->handleCommand(recvData->data, getIp());
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .admin = isCommand});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = getName(), .admin = isCommand});
 	}
 }
 
@@ -150,7 +154,7 @@ void CSession::run() {
 			writeChat(chat);
 		recvLoop();
 	} else
-		log(LOG, "Client {} exited without even registering", m_ip);
+		log(LOG, "Client {} exited without even registering", getIp());
 
 	g_pSessionManager->kick(self);
 }
@@ -191,17 +195,26 @@ bool CSession::registerSession() {
 		return registerSession();
 	}
 
-	this->m_name = recvData->data;
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		this->m_name = recvData->data;
+	}
 
-	log(LOG, "Client {} registered as: {}", m_ip, m_name);
+	log(LOG, "Client {} registered as: {}", getIp(), getName());
 
 	setDeaf(false);
 	return true;
 }
 
 bool CSession::isValid() {
-	if (!m_sockfd.isValid() || m_name.empty())
+	if (!m_sockfd.isValid())
 		return false;
+
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		if (m_name.empty())
+			return false;
+	}
 
 	int		  err  = 0;
 	socklen_t size = sizeof(err);
@@ -250,7 +263,7 @@ bool CSession::write(const std::string &msg) {
 }
 
 void CSession::writeChat(const CChatManager::SMessage &msg) {
-	if (m_name != msg.username) {
+	if (getName() != msg.username) {
 		if (msg.admin && !m_isAdmin)
 			return;
 
@@ -259,10 +272,12 @@ void CSession::writeChat(const CChatManager::SMessage &msg) {
 }
 
 const std::string &CSession::getName() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_name;
 }
 
 const std::string &CSession::getIp() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_ip;
 }
 

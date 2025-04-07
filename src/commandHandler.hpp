@@ -3,6 +3,7 @@
 #include <any>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <netinet/in.h>
 #include <string>
 #include <vector>
@@ -64,6 +65,7 @@ class CCommandHandler {
 	const SCommand *getCommand(const std::string &command) const;
 	SResult			exeCommand(const SCommand &command, const std::string &args) const;
 
+	mutable std::mutex	  m_mutex;
 	std::vector<SCommand> m_vCommands;
 };
 inline std::unique_ptr<CCommandHandler> g_pCommandHandler;

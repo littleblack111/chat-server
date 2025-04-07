@@ -2,6 +2,7 @@
 
 #include "chatManager.hpp"
 #include "format.hpp"
+#include <mutex>
 #include <optional>
 
 class CIOManager {
@@ -19,11 +20,12 @@ class CIOManager {
 		std::optional<SLog>					  log;
 	};
 
-	const std::vector<SIO> &getIO() const;
-	void					addLog(const SLog &log);
+	const std::vector<SIO> getIO() const;
+	void				   addLog(const SLog &log);
 
   private:
-	std::vector<SIO> m_vIO;
+	mutable std::mutex m_mutex;
+	std::vector<SIO>   m_vIO;
 
 	friend class CChatManager;
 };

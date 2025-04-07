@@ -7,16 +7,23 @@ CIOManager::CIOManager() {
 }
 
 CIOManager::~CIOManager() {
-	m_vIO.clear();
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_vIO.clear();
+	}
 	log(SYS, "IOManager: bye");
 }
 
-const std::vector<CIOManager::SIO> &CIOManager::getIO() const {
+const std::vector<CIOManager::SIO> CIOManager::getIO() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_vIO;
 }
 
 void CIOManager::addLog(const SLog &log) {
-	m_vIO.push_back({.msg = std::nullopt, .log = log});
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_vIO.push_back({.msg = std::nullopt, .log = log});
+	}
 	if (g_pInputManager)
 		g_pInputManager->updateIO();
 }

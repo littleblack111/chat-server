@@ -8,6 +8,7 @@ CCommandHandler::CCommandHandler() {
 }
 
 CCommandHandler::~CCommandHandler() {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	log(SYS, "CommandHandler: bye");
 	m_vCommands.clear();
 }
@@ -17,6 +18,7 @@ bool CCommandHandler::isCommand(const std::string &str) const {
 };
 
 bool CCommandHandler::validCommand(const std::string &command) const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return std::ranges::any_of(m_vCommands, [&command](const SCommand &cmd) {
 		return cmd.name == command;
 	});
@@ -26,6 +28,7 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 	if (command.name.empty() || !command.exe || !command.parser)
 		return false;
 
+	std::lock_guard<std::mutex> lock(m_mutex);
 	m_vCommands.push_back(command);
 
 	log(TRACE, "CommandHandler: registered command: {}", command.name);
@@ -33,7 +36,8 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 }
 
 const CCommandHandler::SCommand *CCommandHandler::getCommand(const std::string &command) const {
-	auto it = std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) { return cmd.name == command; });
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto						it = std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) { return cmd.name == command; });
 
 	if (it != m_vCommands.end())
 		return &*it;

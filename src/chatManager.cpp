@@ -20,7 +20,12 @@ void CChatManager::newMessage(const SMessage &msg) {
 		return;
 	}
 	g_pSessionManager->broadcastChat(msg);
-	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
+
+	{
+		std::lock_guard<std::mutex> lock(g_pIOManager->m_mutex);
+		g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
+	}
+
 	g_pInputManager->updateIO();
 }
 
@@ -30,6 +35,8 @@ std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 
 std::vector<CChatManager::SMessage> CChatManager::getChat() const {
 	std::vector<SMessage> chat;
+
+	std::lock_guard<std::mutex> lock(m_mutex);
 
 	for (const auto &[msg, log] : g_pIOManager->getIO())
 		if (msg)

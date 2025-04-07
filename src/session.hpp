@@ -3,7 +3,9 @@
 #include "FileDescriptor.hpp"
 #include "chatManager.hpp"
 #include "format.hpp"
+#include <atomic>
 #include <memory>
+#include <mutex>
 #include <netinet/in.h>
 #include <string>
 #include <thread>
@@ -56,14 +58,16 @@ class CSession {
 	Hyprutils::OS::CFileDescriptor						m_sockfd;
 	sockaddr_in											m_addr;
 	socklen_t											m_addrLen = sizeof(m_addr);
-	std::string											m_name;
-	std::string											m_ip;
-	int													m_port;
-	bool												m_isAdmin = false;
 
-	bool m_isReading = false;
-	bool m_bMuted	 = false;
-	bool m_bDeaf	 = true; // init as true as we don't want anything during registerSession
+	mutable std::mutex m_mutex;
+	std::string		   m_name;
+	std::string		   m_ip;
+	int				   m_port;
+
+	bool			  m_isAdmin	  = false;
+	std::atomic<bool> m_isReading = false;
+	std::atomic<bool> m_bMuted	  = false;
+	std::atomic<bool> m_bDeaf	  = true; // init as true as we don't want anything during registerSession
 
 	void recvLoop();
 	bool registerSession();
