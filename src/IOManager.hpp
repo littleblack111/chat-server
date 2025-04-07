@@ -21,7 +21,7 @@ class CIOManager {
 	};
 
 	const std::vector<SIO> &getIO() const;
-	void				   addLog(const SLog &log);
+	void					addLog(const SLog &log);
 
   private:
 	mutable std::mutex m_mutex;
