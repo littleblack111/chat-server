@@ -8,6 +8,7 @@
 #include <utility>
 
 void CSessionManager::shutdownSessions() {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	if (m_vSessions.empty())
 		return;
 
@@ -26,6 +27,7 @@ CSessionManager::CSessionManager() {
 };
 
 CSessionManager::~CSessionManager() {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	for (auto &[thread, session] : m_vSessions) {
 		if (thread.joinable())
 			thread.detach();
@@ -36,8 +38,10 @@ CSessionManager::~CSessionManager() {
 }
 
 std::pair<std::jthread, std::shared_ptr<CSession>> *CSessionManager::newSession() {
-	std::shared_ptr session	 = std::make_shared<CSession>();
-	const auto		instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session.get()), session);
+	std::shared_ptr session = std::make_shared<CSession>();
+
+	std::lock_guard<std::mutex> lock(m_mutex);
+	const auto					instance = &m_vSessions.emplace_back(std::jthread(&CSession::run, session.get()), session);
 	instance->second->setSelf(instance);
 	return instance;
 }
@@ -48,11 +52,13 @@ void CSessionManager::run() {
 }
 
 void CSessionManager::broadcast(const std::string &msg) const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	for (const auto &[thread, session] : m_vSessions)
 		session->write(msg);
 }
 
 void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	for (const auto &[thread, session] : m_vSessions) {
 		if (!session)
 			continue;
@@ -62,7 +68,8 @@ void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
 }
 
 bool CSessionManager::nameExists(const std::string &name) {
-	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto						it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
 
 	if (it != m_vSessions.end()) {
 		if (!it->second->isValid()) {
@@ -75,27 +82,32 @@ bool CSessionManager::nameExists(const std::string &name) {
 }
 
 CSession *CSessionManager::getByName(const std::string &name) const {
-	auto it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto						it = std::ranges::find_if(m_vSessions, [&name](const auto &s) { return s.second->getName() == name; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
 CSession *CSessionManager::getByIp(const std::string &ip) const {
-	auto it = std::ranges::find_if(m_vSessions, [&ip](const auto &s) { log(LOG, s.second->m_ip); return s.second->m_ip == ip; });
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto						it = std::ranges::find_if(m_vSessions, [&ip](const auto &s) { return s.second->m_ip == ip; });
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
 std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
 
 void CSessionManager::kick(CSession *session, const bool kill, const std::string &reason) {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	for (auto &_session : m_vSessions)
 		if (_session.second.get() == session)
 			kick(&_session, kill, reason);
 }
 
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
-	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto						it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
 		if (!reason.empty()) {

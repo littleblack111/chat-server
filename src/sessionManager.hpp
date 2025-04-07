@@ -4,6 +4,7 @@
 #include "format.hpp"
 #include "session.hpp"
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -30,6 +31,7 @@ class CSessionManager {
   private:
 	void broadcastChat(const CChatManager::SMessage &msg) const;
 
+	mutable std::mutex												m_mutex;
 	std::vector<std::pair<std::jthread, std::shared_ptr<CSession>>> m_vSessions;
 
 	friend class CChatManager;

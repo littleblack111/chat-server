@@ -2,6 +2,7 @@
 
 #include <ftxui/component/screen_interactive.hpp>
 #include <memory>
+#include <mutex>
 
 class CRenderManager {
   public:
@@ -15,6 +16,7 @@ class CRenderManager {
   private:
 	void exitLoop();
 
+	std::mutex				 m_mutex;
 	ftxui::ScreenInteractive screen;
 	ftxui::Component		 renderer;
 
