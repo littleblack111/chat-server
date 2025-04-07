@@ -33,7 +33,7 @@ class CSession {
 	bool write(std::format_string<Args...> fmt, Args &&...args);
 	template <typename... Args>
 	bool write(eFormatType type, std::format_string<Args...> fmt, Args &&...args);
-	void writeChat(const CChatManager::SMessage &msg);
+	bool writeChat(const CChatManager::SMessage &msg);
 
 	bool isMuted() const;
 	void setMuted(bool mute);
