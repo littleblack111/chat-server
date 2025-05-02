@@ -1,0 +1,15 @@
+name: "Setup base"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm base-devel git make ninja clang llvm cmake
+        git clone https://github.com/ArthurSonzogni/FTXUI.git
+        cd FTXUI
+        cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+        cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+        cmake --install build
