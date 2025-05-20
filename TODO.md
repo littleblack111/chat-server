@@ -2,6 +2,7 @@
 - [ ] ci unit testing
 - [ ] multiline buffer input/output
 - [ ] file upload/download
+- [ ] user identifier, UUID or something, IP can duplicate, username can be .empty()
 
 ## FTXUI
 
