@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -11,6 +12,7 @@ class CChatManager {
 	struct SMessage {
 		std::string msg;
 		std::string username;
+		std::optional<uintptr_t> sender = std::nullopt;
 		bool		admin = false;
 	};
 	void		newMessage(const SMessage &msg);
