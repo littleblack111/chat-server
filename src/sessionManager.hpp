@@ -12,19 +12,19 @@ class CSessionManager {
 	CSessionManager();
 	~CSessionManager();
 
-	void newSession();
+	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession();
 
 	void run();
 	void broadcast(const std::string &msg) const;
-	void kick(std::shared_ptr<CSession> session, const bool kill = false, const std::string &reason = "");
-	void kick(std::unique_ptr<std::pair<std::jthread, std::shared_ptr<CSession>>> session, const bool kill = false, const std::string &reason = "");
+	void kick(CSession *session, const bool kill = false, const std::string &reason = "");
+	void kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill = false, const std::string &reason = "");
 	void addSession(const CSession &session);
 
 	bool nameExists(const std::string &name);
 	void shutdownSessions();
 
-	std::shared_ptr<CSession>			   getByName(const std::string &name) const;
-	std::shared_ptr<CSession>			   getByIp(const std::string &ip) const;
+	CSession							  *getByName(const std::string &name) const;
+	CSession							  *getByIp(const std::string &ip) const;
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:
