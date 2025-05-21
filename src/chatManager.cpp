@@ -14,15 +14,12 @@ CChatManager::~CChatManager() {
 
 void CChatManager::newMessage(const SMessage &msg) {
 	log(LOG, "{}: {}", msg.username, msg.msg);
-	const auto session = g_pSessionManager->getByName(msg.username);
+	const auto session = msg.sender ? g_pSessionManager->getByPtr(*msg.sender) : g_pSessionManager->getByName(msg.username);
 	if (session && session->isMuted()) {
 		session->write("You are muted");
 		return;
 	}
-	g_pSessionManager->broadcastChat(msg);
-
-	g_pIOManager->m_vIO.push_back({.msg = msg, .log = std::nullopt});
-	g_pInputManager->updateIO();
+	g_pSessionManager->broadcast(msg);
 }
 
 std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
@@ -32,7 +29,7 @@ std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 std::vector<CChatManager::SMessage> CChatManager::getChat() const {
 	std::vector<SMessage> chat;
 
-	for (const auto &[msg, log] : g_pIOManager->getIO())
+	for (const auto &[msg, _, _] : g_pIOManager->getIO())
 		if (msg)
 			chat.push_back(*msg);
 	return chat;

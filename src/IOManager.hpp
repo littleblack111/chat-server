@@ -14,13 +14,16 @@ class CIOManager {
 		std::string log;
 	};
 	struct SIO {
-		// cannot have both at once
-		std::optional<CChatManager::SMessage> msg;
-		std::optional<SLog>					  log;
+		// once a time
+		std::optional<CChatManager::SMessage> msg = std::nullopt;
+		std::optional<SLog>					  log = std::nullopt;
+		std::optional<std::pair<std::string, std::string>> custom = std::nullopt;
 	};
 
 	const std::vector<SIO> &getIO() const;
 	void					addLog(const SLog &log);
+	void 					addMessage(const CChatManager::SMessage &msg);
+	void					addCustom(const std::pair<std::string, std::string> &custom);
 
   private:
 	std::vector<SIO> m_vIO;

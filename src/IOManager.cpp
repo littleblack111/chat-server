@@ -16,7 +16,19 @@ const std::vector<CIOManager::SIO> &CIOManager::getIO() const {
 }
 
 void CIOManager::addLog(const SLog &log) {
-	m_vIO.push_back({.msg = std::nullopt, .log = log});
+	m_vIO.push_back({.log = log});
+	if (g_pInputManager)
+		g_pInputManager->updateIO();
+}
+
+void CIOManager::addMessage(const CChatManager::SMessage &msg) {
+	m_vIO.push_back({.msg = msg});
+	if (g_pInputManager)
+		g_pInputManager->updateIO();
+}
+
+void CIOManager::addCustom(const std::pair<std::string, std::string> &custom) {
+	m_vIO.push_back({.custom = custom});
 	if (g_pInputManager)
 		g_pInputManager->updateIO();
 }
