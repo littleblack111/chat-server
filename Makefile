@@ -13,8 +13,8 @@ CXXFLAGS += -std=c++26 -Oz -s -Wall -flto -fPIC
 LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 # Debug flags
-DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
-DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs
+DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG,-ffu -pthread
+DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs -lpthread
 
 CXXFLAGS += $(shell pkg-config --cflags ftxui)
 LDFLAGS += $(shell pkg-config --libs ftxui)
@@ -76,8 +76,8 @@ clang-tidy:
 
 debug: CXXFLAGS = $(DEBUG_CXXFLAGS)
 debug: LDFLAGS = $(DEBUG_LDFLAGS)
-debug: CC = afl-g++
-debug: CXX = afl-g++
+# debug: CC = afl-g++
+# debug: CXX = afl-g++
 # debug: export AFL_USE_ASAN = 1
 debug: $(BIN)
 	@echo "Debug build complete"
