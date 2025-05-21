@@ -196,7 +196,7 @@ bool CSession::registerSession() {
 
 	log(LOG, "Client {} registered as: {}", m_ip, m_name);
 
-	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), (uintptr_t)this);
+	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), this);
 
 	setDeaf(false);
 	return true;
