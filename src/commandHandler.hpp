@@ -1,5 +1,6 @@
 #pragma once
 
+#include "session.hpp"
 #include <any>
 #include <functional>
 #include <memory>
@@ -23,6 +24,7 @@ class CCommandHandler {
 	};
 
 	struct SCommand {
+		bool												 requireAdmin = true;
 		std::string											 name;
 		std::function<SParseResult(const std::string &args)> parser;
 		std::function<SResult(const std::any &parsed)>		 exe;
@@ -32,8 +34,8 @@ class CCommandHandler {
 	bool validCommand(const std::string &command) const;
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
-	SResult newCommand(const std::string &command, const std::string &args) const;
-	void	handleCommand(std::string input, const std::string &ip = {}) const;
+	SResult newCommand(const std::string &command, const std::string &args, CSession* const user) const;
+	void	handleCommand(std::string input, CSession* const user = nullptr) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {

@@ -1,5 +1,6 @@
 #include "commandHandler.hpp"
 #include "log.hpp"
+#include "session.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>
 
@@ -29,6 +30,7 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 	m_vCommands.push_back(command);
 
 	log(TRACE, "CommandHandler: registered command: {}", command.name);
+
 	return true;
 }
 
@@ -54,14 +56,18 @@ CCommandHandler::SResult CCommandHandler::exeCommand(const SCommand &command, co
 	return command.exe(parsed);
 }
 
-CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args) const {
+CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args, CSession* const user) const {
 	if (!validCommand(command))
 		return {.result = "Invalid command", .good = false};
 
-	return exeCommand(*getCommand(command), args);
+	const auto cmd = getCommand(command);
+	if (cmd->requireAdmin && !user->isAdmin())
+		return {.result = "Permission denied", .good = false};
+
+	return exeCommand(*cmd, args);
 }
 
-void CCommandHandler::handleCommand(std::string input, const std::string &ip) const {
+void CCommandHandler::handleCommand(std::string input, CSession* const user) const {
 	input = input.substr(1);
 
 	std::string command;
@@ -80,13 +86,12 @@ void CCommandHandler::handleCommand(std::string input, const std::string &ip) co
 	}
 
 	args.empty() ? log(LOG, "Spawning Command: {}", command) : log(LOG, "Spawning Command: {}, Args: {}", command, args);
-	const auto exe = newCommand(command, args);
+	const auto exe = newCommand(command, args, user);
 
 	std::function<void(eFormatType, const std::string &)> outputter = [](eFormatType type, const std::string &msg) { log(type, "{}", msg); };
 
-	if (!ip.empty())
-		if (auto session = g_pSessionManager->getByIp(ip))
-			outputter = [session](eFormatType, const std::string &msg) { session->write(msg); };
+	if (!user->getIp().empty())
+		outputter = [user](eFormatType, const std::string &msg) { user->write(msg); };
 
 	exe.good ? exe.result.empty() ? outputter(LOG, "Command succeeded") : outputter(LOG, exe.result) : exe.result.empty() ? outputter(ERR, "Command failed")
 																														  : outputter(ERR, exe.result);

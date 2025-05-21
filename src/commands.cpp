@@ -43,7 +43,7 @@ void registerCommands() {
         g_pSessionManager->kick(session, true, data.reason);
         return {.result = "Kicked '" + data.target + "': " + data.reason, .good = true}; }}));
 
-	g_pCommandHandler->registerCommand({.name = "list", .parser = [](const std::string &args) -> CCommandHandler::SParseResult {
+	g_pCommandHandler->registerCommand({.requireAdmin = false, .name = "list", .parser = [](const std::string &args) -> CCommandHandler::SParseResult {
         (void)args;
         return {.data = std::any(), .good = true}; }, .exe = [](const std::any &parsed) -> CCommandHandler::SResult {
         (void)parsed;
