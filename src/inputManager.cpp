@@ -25,7 +25,7 @@ CInputManager::CInputManager()
 	}))
 	, logComponent(ftxui::Renderer([] {
 		std::vector<ftxui::Element> messages;
-		for (const auto &[chat, log] : g_pIOManager->getIO()) {
+		for (const auto &[chat, log, custom] : g_pIOManager->getIO()) {
 			if (chat && !chat->msg.empty()) {
 				std::string username = chat->username;
 				if (username.back() == '\n')
@@ -33,6 +33,8 @@ CInputManager::CInputManager()
 				messages.push_back(ftxui::window(ftxui::text(username), ftxui::paragraph(chat->msg)));
 			} else if (log && !log->log.empty())
 				messages.push_back(ftxui::window(ftxui::text(NFormatter::fmt(log->type, "")), ftxui::paragraph(log->log)));
+			else if (custom)
+				messages.push_back(ftxui::window(ftxui::text(custom->first), ftxui::paragraph(custom->second)));
 		}
 
 		return ftxui::vbox(messages);

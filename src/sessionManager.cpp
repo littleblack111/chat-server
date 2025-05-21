@@ -1,11 +1,12 @@
 #include "sessionManager.hpp"
+#include "IOManager.hpp"
 #include "log.hpp"
 #include "session.hpp"
 #include <algorithm>
-#include <cstring>
 #include <ranges>
 #include <unistd.h>
 #include <utility>
+#include "chatServer.hpp"
 
 void CSessionManager::shutdownSessions() {
 	if (m_vSessions.empty())
@@ -47,18 +48,23 @@ void CSessionManager::run() {
 		newSession();
 }
 
-void CSessionManager::broadcast(const std::string &msg) const {
+void CSessionManager::broadcast(const std::string &msg, std::optional<uintptr_t> self) const {
 	for (const auto &[thread, session] : m_vSessions)
-		session->write(msg);
+		if (!self || (self && (uintptr_t)session.get() != *self))
+			session->write(msg);
+
+	g_pIOManager->addCustom({"", msg});
 }
 
-void CSessionManager::broadcastChat(const CChatManager::SMessage &msg) const {
+void CSessionManager::broadcast(const CChatManager::SMessage &msg) const {
 	for (const auto &[thread, session] : m_vSessions) {
 		if (!session)
 			continue;
 
 		session->writeChat(msg);
 	}
+
+	g_pIOManager->addMessage(msg);
 }
 
 bool CSessionManager::nameExists(const std::string &name) {
@@ -84,6 +90,11 @@ CSession *CSessionManager::getByIp(const std::string &ip) const {
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
+CSession *CSessionManager::getByPtr(const uintptr_t &p) const {
+	auto it = std::ranges::find_if(m_vSessions, [&p](const auto &s) { return (uintptr_t)s.second.get() == p; });
+	return it != m_vSessions.end() ? it->second.get() : nullptr;
+}
+
 std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
 	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
@@ -96,6 +107,8 @@ void CSessionManager::kick(CSession *session, const bool kill, const std::string
 
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
+
+	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has left the chat", session->second->m_name), (uintptr_t)session->second.get());
 
 	if (it != m_vSessions.end()) {
 		if (!reason.empty()) {

@@ -1,6 +1,7 @@
 #include "session.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
+#include "format.hpp"
 #include "log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
@@ -21,6 +22,7 @@ CSession::CSession() {
 	m_ip.resize(strlen(m_ip.c_str()));
 	m_port	  = ntohs(m_addr.sin_port);
 	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
+
 	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
 	log(TRACE, "session: initialized");
@@ -194,6 +196,8 @@ bool CSession::registerSession() {
 
 	log(LOG, "Client {} registered as: {}", m_ip, m_name);
 
+	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), (uintptr_t)this);
+
 	setDeaf(false);
 	return true;
 }
@@ -249,7 +253,7 @@ bool CSession::write(const std::string &msg) {
 }
 
 bool CSession::writeChat(const CChatManager::SMessage &msg) {
-	if ((uintptr_t)this != *msg.sender) {
+	if (msg.sender ? (uintptr_t)this != *msg.sender : msg.msg != m_name) {
 		if (msg.admin && !m_isAdmin)
 			return false;
 
