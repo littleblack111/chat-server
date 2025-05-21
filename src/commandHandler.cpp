@@ -56,7 +56,7 @@ CCommandHandler::SResult CCommandHandler::exeCommand(const SCommand &command, co
 	return command.exe(parsed);
 }
 
-CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args, CSession* const user) const {
+CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args, CSession *const user) const {
 	if (!validCommand(command))
 		return {.result = "Invalid command", .good = false};
 
@@ -67,7 +67,7 @@ CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command,
 	return exeCommand(*cmd, args);
 }
 
-void CCommandHandler::handleCommand(std::string input, CSession* const user) const {
+void CCommandHandler::handleCommand(std::string input, CSession *const user) const {
 	input = input.substr(1);
 
 	std::string command;

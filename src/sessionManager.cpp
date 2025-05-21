@@ -1,12 +1,12 @@
 #include "sessionManager.hpp"
 #include "IOManager.hpp"
+#include "chatServer.hpp"
 #include "log.hpp"
 #include "session.hpp"
 #include <algorithm>
 #include <ranges>
 #include <unistd.h>
 #include <utility>
-#include "chatServer.hpp"
 
 void CSessionManager::shutdownSessions() {
 	if (m_vSessions.empty())
@@ -48,7 +48,7 @@ void CSessionManager::run() {
 		newSession();
 }
 
-void CSessionManager::broadcast(const std::string &msg, std::optional<const CSession* const> self) const {
+void CSessionManager::broadcast(const std::string &msg, std::optional<const CSession *const> self) const {
 	for (const auto &[thread, session] : m_vSessions)
 		if (!self || (self && session.get() != *self))
 			session->write(msg);

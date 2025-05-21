@@ -34,8 +34,8 @@ class CCommandHandler {
 	bool validCommand(const std::string &command) const;
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
-	SResult newCommand(const std::string &command, const std::string &args, CSession* const user) const;
-	void	handleCommand(std::string input, CSession* const user = nullptr) const;
+	SResult newCommand(const std::string &command, const std::string &args, CSession *const user) const;
+	void	handleCommand(std::string input, CSession *const user = nullptr) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {
