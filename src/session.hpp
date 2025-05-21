@@ -24,7 +24,7 @@ class CSession {
 
 	const std::string &getName() const;
 	const std::string &getIp() const;
-	bool isAdmin() const;
+	bool			   isAdmin() const;
 	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
