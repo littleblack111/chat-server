@@ -12,7 +12,7 @@ class CChatManager {
 	struct SMessage {
 		std::string				 msg;
 		std::string				 username;
-		std::optional<uintptr_t> sender = std::nullopt;
+		std::optional<uintptr_t> sender = std::nullopt; // cant include session to use CSession* cause circular dependency
 		bool					 admin	= false;
 	};
 	void		newMessage(const SMessage &msg);

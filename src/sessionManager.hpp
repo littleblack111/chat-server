@@ -15,7 +15,7 @@ class CSessionManager {
 	std::pair<std::jthread, std::shared_ptr<CSession>> *newSession();
 
 	void run();
-	void broadcast(const std::string &msg, std::optional<uintptr_t> self = std::nullopt) const; // second param only specified when we want to exclude the sender
+	void broadcast(const std::string &msg, std::optional<const CSession* const> self = std::nullopt) const; // second param only specified when we want to exclude the sender
 	void kick(CSession *session, const bool kill = false, const std::string &reason = "");
 	void kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill = false, const std::string &reason = "");
 	void addSession(const CSession &session);

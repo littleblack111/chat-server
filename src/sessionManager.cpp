@@ -48,9 +48,9 @@ void CSessionManager::run() {
 		newSession();
 }
 
-void CSessionManager::broadcast(const std::string &msg, std::optional<uintptr_t> self) const {
+void CSessionManager::broadcast(const std::string &msg, std::optional<const CSession* const> self) const {
 	for (const auto &[thread, session] : m_vSessions)
-		if (!self || (self && (uintptr_t)session.get() != *self))
+		if (!self || (self && session.get() != *self))
 			session->write(msg);
 
 	g_pIOManager->addCustom({"", msg});
@@ -108,7 +108,7 @@ void CSessionManager::kick(CSession *session, const bool kill, const std::string
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
-	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has left the chat", session->second->m_name), (uintptr_t)session->second.get());
+	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has left the chat", session->second->m_name), session->second.get());
 
 	if (it != m_vSessions.end()) {
 		if (!reason.empty()) {
