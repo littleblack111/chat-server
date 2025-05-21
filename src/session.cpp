@@ -86,8 +86,8 @@ void CSession::recvLoop() {
 		}
 
 		const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
-		if (m_isAdmin && isCommand)
-			g_pCommandHandler->handleCommand(recvData->data, m_ip);
+		if (isCommand)
+			g_pCommandHandler->handleCommand(recvData->data, this);
 
 		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .admin = isCommand});
 	}
@@ -268,6 +268,10 @@ const std::string &CSession::getName() const {
 
 const std::string &CSession::getIp() const {
 	return m_ip;
+}
+
+bool CSession::isAdmin() const {
+	return m_isAdmin;
 }
 
 void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
