@@ -1,15 +1,13 @@
 [
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/chatManager.o",
       "src/chatManager.cpp"
@@ -20,15 +18,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/chatServer.o",
       "src/chatServer.cpp"
@@ -39,15 +35,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/commandHandler.o",
       "src/commandHandler.cpp"
@@ -58,15 +52,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/commands.o",
       "src/commands.cpp"
@@ -77,15 +69,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/FileDescriptor.o",
       "src/FileDescriptor.cpp"
@@ -96,15 +86,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/inputManager.o",
       "src/inputManager.cpp"
@@ -115,15 +103,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/IOManager.o",
       "src/IOManager.cpp"
@@ -134,15 +120,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/main.o",
       "src/main.cpp"
@@ -153,15 +137,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/renderManager.o",
       "src/renderManager.cpp"
@@ -172,15 +154,30 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
+      "-o",
+      "build/scroller.o",
+      "src/scroller.cpp"
+    ],
+    "directory": "/mnt/DATA/personal/Code/projects/chat-server",
+    "file": "/mnt/DATA/personal/Code/projects/chat-server/src/scroller.cpp",
+    "output": "/mnt/DATA/personal/Code/projects/chat-server/build/scroller.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++26",
+      "-Oz",
+      "-Wall",
+      "-flto",
+      "-fPIC",
       "-o",
       "build/server.o",
       "src/server.cpp"
@@ -191,15 +188,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/session.o",
       "src/session.cpp"
@@ -210,15 +205,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/afl-g++",
+      "/usr/bin/g++",
       "-c",
       "-std=c++26",
-      "-g3",
-      "-O0",
+      "-Oz",
       "-Wall",
-      "-fno-lto",
+      "-flto",
       "-fPIC",
-      "-DDEBUG",
       "-o",
       "build/sessionManager.o",
       "src/sessionManager.cpp"
