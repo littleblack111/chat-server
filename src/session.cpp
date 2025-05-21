@@ -127,7 +127,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 #ifdef DEBUG
 	onRecv(*recvData);
 #endif
-	m_isReading = false;
+	m_szReading.reset();
 	return recvData;
 }
 
@@ -138,7 +138,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg, bool
 	write(NONEWLINE, "{}", msg, false);
 	if (bypassDeaf && deaf)
 		setDeaf(true);
-	m_isReading = true;
+	m_szReading = msg;
 	return read();
 }
 
@@ -224,8 +224,10 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 		return false;
 
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
-	if (m_isReading)
-		msg.insert(0, "\n");
+	if (m_szReading) {
+		msg.insert(0, "\r");
+		msg.append(*m_szReading);
+	}
 
 	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
 		onErrno(WRITE);

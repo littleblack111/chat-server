@@ -5,6 +5,7 @@
 #include "format.hpp"
 #include <memory>
 #include <netinet/in.h>
+#include <optional>
 #include <string>
 #include <thread>
 
@@ -62,7 +63,7 @@ class CSession {
 	int													m_port;
 	bool												m_isAdmin = false;
 
-	bool m_isReading = false;
+	std::optional<std::string> m_szReading = std::nullopt;
 	bool m_bMuted	 = false;
 	bool m_bDeaf	 = true; // init as true as we don't want anything during registerSession
 
