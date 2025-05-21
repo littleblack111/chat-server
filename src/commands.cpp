@@ -1,5 +1,6 @@
 #include "commands.hpp"
 #include "commandHandler.hpp"
+#include "format.hpp"
 #include "sessionManager.hpp"
 
 struct SKickArgs {
@@ -46,9 +47,10 @@ void registerCommands() {
         (void)args;
         return {.data = std::any(), .good = true}; }, .exe = [](const std::any &parsed) -> CCommandHandler::SResult {
         (void)parsed;
-        std::string result = "Clients:\n";
+        std::string result = "ID \t Name \t IP \t Muted\n";
         for (const auto &session : g_pSessionManager->getSessions())
-            result += session->getName() + "\t" + session->getIp() + "\t" + (session->isMuted() ? "[MUTED]" : "[UNMUTED]") + "\n";
+			result += NFormatter::fmt(NONEWLINE, "{} \t {} \t {} \t {}\n", (uintptr_t)session.get(), session->getName(), session->getIp(), (session->isMuted() ? "[MUTED]" : "[UNMUTED]"));
+
 
         return {.result = result, .good = true}; }});
 
