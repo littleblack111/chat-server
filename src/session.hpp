@@ -64,8 +64,8 @@ class CSession {
 	bool												m_isAdmin = false;
 
 	std::optional<std::string> m_szReading = std::nullopt;
-	bool m_bMuted	 = false;
-	bool m_bDeaf	 = true; // init as true as we don't want anything during registerSession
+	bool					   m_bMuted	   = false;
+	bool					   m_bDeaf	   = true; // init as true as we don't want anything during registerSession
 
 	void recvLoop();
 	bool registerSession();
