@@ -1,6 +1,7 @@
 #include "sessionManager.hpp"
 #include "IOManager.hpp"
 #include "chatServer.hpp"
+#include "format.hpp"
 #include "log.hpp"
 #include "session.hpp"
 #include <algorithm>
@@ -108,7 +109,11 @@ void CSessionManager::kick(CSession *session, const bool kill, const std::string
 void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *session, const bool kill, const std::string &reason) {
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
-	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has left the chat", session->second->m_name), session->second.get());
+	if (session->second)
+		// this only exist when the session is registered
+		// not sure why the second is null, but m_name definately is since it's setted during register
+		// but we don't need to notify people if the session didn't even "join"/register anyways
+		g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has left the chat", session->second->m_name), session->second.get());
 
 	if (it != m_vSessions.end()) {
 		if (!reason.empty()) {
