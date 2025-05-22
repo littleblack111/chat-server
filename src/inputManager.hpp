@@ -13,12 +13,19 @@ class CInputManager {
 	void updateIO();
 
   private:
+	enum ePages : uint8_t {
+		ALL,
+		CHAT,
+		LOG,
+	};
 	std::string m_szInput;
 
 	ftxui::Component m_input;
 	ftxui::Component inputComponent;
 	ftxui::Component logComponent;
 	ftxui::Component container;
+
+	ePages currentPage = ALL;
 
 	int bottomSize = 1;
 };

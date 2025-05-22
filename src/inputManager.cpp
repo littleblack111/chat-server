@@ -23,7 +23,7 @@ CInputManager::CInputManager()
 			m_input->Render(),
 		});
 	}))
-	, logComponent(ftxui::Renderer([] {
+	, logComponent(ftxui::Renderer([this] {
 		std::vector<ftxui::Element> messages;
 		for (const auto &[chat, log, custom] : g_pIOManager->getIO()) {
 			if (chat && !chat->msg.empty()) {
@@ -37,10 +37,22 @@ CInputManager::CInputManager()
 				messages.push_back(ftxui::window(ftxui::text(custom->first), ftxui::paragraph(custom->second)));
 		}
 
-		return ftxui::vbox(messages);
+		auto tabs = ftxui::Container::Horizontal({
+			ftxui::Button(
+				"All", [&] { currentPage = ALL; }
+			),
+			ftxui::Button(
+				"Chats", [&] { currentPage = CHAT; }
+			),
+			ftxui::Button(
+				"Logs", [&] { currentPage = LOG; }
+			),
+		});
+
+		return ftxui::window(tabs->Render(), ftxui::vbox(messages));
 	})) {
 
-	log(LOG, "InputManager: initialized");
+	log(eFormatType::LOG, "InputManager: initialized");
 }
 
 CInputManager::~CInputManager() {
