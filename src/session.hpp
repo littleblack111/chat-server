@@ -2,6 +2,7 @@
 
 #include "FileDescriptor.hpp"
 #include "format.hpp"
+#include <atomic>
 #include <memory>
 #include <netinet/in.h>
 #include <string>
@@ -49,8 +50,9 @@ class CSession {
 	std::string											m_name;
 	char												m_ip[INET_ADDRSTRLEN];
 	int													m_port;
+	std::mutex											m_mMutex;
 
-	bool m_isReading = false;
+	std::atomic<bool> m_isReading = false;
 
 	void recvLoop();
 	bool registerSession();

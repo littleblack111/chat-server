@@ -8,6 +8,7 @@
 #include <cerrno>
 #include <cstring>
 #include <sys/socket.h>
+#include <mutex>
 
 CSession::CSession()
 	: m_addrLen(sizeof(m_addr)) {
@@ -24,6 +25,8 @@ CSession::CSession()
 }
 
 CSession::~CSession() {
+	m_mMutex.unlock();
+
 #ifdef DEBUG
 	onDisconnect();
 #endif
@@ -90,6 +93,8 @@ void CSession::SRecvData::sanitize() {
 }
 
 std::unique_ptr<CSession::SRecvData> CSession::read() {
+	std::lock_guard<std::mutex> lk(m_mMutex);
+
 	auto recvData = std::make_unique<SRecvData>();
 
 	recvData->data.resize(recvData->size);
@@ -164,6 +169,8 @@ bool CSession::isValid() {
 
 template <typename... Args>
 bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
+	std::lock_guard<std::mutex> lk(m_mMutex);
+
 	std::string msg = NFormatter::fmt(NONE, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");
@@ -180,6 +187,8 @@ bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
 
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+	std::lock_guard<std::mutex> lk(m_mMutex);
+
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
 	if (m_isReading)
 		msg.insert(0, "\n");

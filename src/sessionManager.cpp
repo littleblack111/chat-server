@@ -79,6 +79,9 @@ void CSessionManager::removeSession(std::pair<std::jthread, std::shared_ptr<CSes
 	auto it = std::ranges::find_if(m_vSessions, [session](const auto &s) { return s.second.get() == session->second.get(); });
 
 	if (it != m_vSessions.end()) {
+    if (!reason.empty())
+      it->second->write(reason);
+    it->second->m_mMutex.unlock();
 		const auto native_handle = it->first.native_handle();
 		if (it->first.joinable())
 			it->first.detach(); // .detach the thread since it's removing itself
