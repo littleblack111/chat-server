@@ -2,6 +2,11 @@ BIN = chat-server
 SRCS = $(wildcard src/*.cpp)
 HEADERS = $(wildcard src/*.hpp)
 
+ifeq ($(NOUI),1)
+    # Exclude UI-specific files in NO_UI mode
+    SRCS := $(filter-out src/scroller.cpp, $(SRCS))
+endif
+
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 DATADIR ?= $(PREFIX)/share
@@ -9,17 +14,27 @@ BUILDDIR ?= build
 
 OBJS = $(patsubst src/%, $(BUILDDIR)/%, $(SRCS:.cpp=.o))
 
+# Base flags
 CXXFLAGS += -std=c++26 -Oz -s -Wall -flto -fPIC
-LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
+LDFLAGS += -lstdc++
 
 # Debug flags
 DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -fno-lto -fPIC -DDEBUG
-DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs
+DEBUG_LDFLAGS = -lstdc++
 
+# UI flags - only apply when not building noui
+ifeq ($(NOUI),)
 CXXFLAGS += $(shell pkg-config --cflags ftxui)
 LDFLAGS += $(shell pkg-config --libs ftxui)
 DEBUG_CXXFLAGS += $(shell pkg-config --cflags ftxui)
 DEBUG_LDFLAGS += $(shell pkg-config --libs ftxui)
+else
+CXXFLAGS += -DNO_UI
+DEBUG_CXXFLAGS += -DNO_UI
+endif
+
+CXX=/opt/homebrew/bin/g++-14
+CC=/opt/homebrew/bin/g++-14
 
 $(shell mkdir -p $(BUILDDIR))
 JOB_COUNT := $(BIN) $(OBJS)
@@ -34,6 +49,9 @@ define progress
 endef
 
 all: $(BIN) 
+
+noui:
+	@$(MAKE) NOUI=1
 
 install: $(all)
 	@echo "Installing..."
@@ -57,8 +75,6 @@ $(BUILDDIR)/$(BIN): $(OBJS)
 # Create phony target that depends on the actual binary
 $(BIN): $(BUILDDIR)/$(BIN)
 
-
-
 $(BUILDDIR)/%.o: src/%.cpp
 	$(call progress, Compiling $@)
 	@$(CXX) -c $< -o $@ \
@@ -72,7 +88,7 @@ clang-tidy:
 	@echo "Running clang-tidy..."
 	@clang-tidy -fix-errors $(SRCS) -- $(CXXFLAGS)
 
-.PHONY: all install clean clean-all $(BIN)
+.PHONY: all install clean clean-all $(BIN) noui
 
 debug: CXXFLAGS = $(DEBUG_CXXFLAGS)
 debug: LDFLAGS = $(DEBUG_LDFLAGS)
@@ -81,3 +97,11 @@ debug: CXX = afl-g++
 # debug: export AFL_USE_ASAN = 1
 debug: $(BIN)
 	@echo "Debug build complete"
+
+debug-noui: CXXFLAGS = $(DEBUG_CXXFLAGS)
+debug-noui: LDFLAGS = $(DEBUG_LDFLAGS)
+debug-noui: CC = afl-g++
+debug-noui: CXX = afl-g++
+debug-noui: NOUI = 1
+debug-noui: $(BIN)
+	@echo "Debug no-UI build complete"

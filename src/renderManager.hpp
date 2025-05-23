@@ -1,23 +1,30 @@
 #pragma once
 
-#include <ftxui/component/screen_interactive.hpp>
 #include <memory>
 
+#ifndef NO_UI
+#include <ftxui/component/screen_interactive.hpp>
+#endif
+
 class CRenderManager {
-  public:
-	CRenderManager();
-	~CRenderManager();
+public:
+    CRenderManager();
+    ~CRenderManager();
 
-	void enterLoop();
+    void enterLoop();
+    void exitLoop();
+    
+#ifndef NO_UI
+    void setRenderer(ftxui::Component component);
+    
+private:
+    ftxui::ScreenInteractive screen;
+    ftxui::Component renderer;
+#else
+private:
+    bool running = false;
+#endif
 
-	void setRenderer(ftxui::Component component);
-
-  private:
-	void exitLoop();
-
-	ftxui::ScreenInteractive screen;
-	ftxui::Component		 renderer;
-
-	friend class CInputManager;
+    friend class CInputManager;
 };
 inline std::unique_ptr<CRenderManager> g_pRenderManager;

@@ -49,17 +49,22 @@ void CSession::onDisconnect() {
 #endif
 
 void CSession::onErrno(eEventType eventType) {
-	char		errbuf[256];
-	const char *err = strerror_r(errno, errbuf, sizeof(errbuf));
+  char errbuf[256];
+#ifdef _GNU_SOURCE
+  char *err = strerror_r(errno, errbuf, sizeof(errbuf));
+#else
+  int result = strerror_r(errno, errbuf, sizeof(errbuf));
+  const char *err = (result == 0) ? errbuf : "Unknown error";
+#endif
 
-	switch (eventType) {
-	case READ:
-		log(WARN, "Error while reading: {}", err);
-		break;
-	case WRITE:
-		log(WARN, "Error while writing: {}", err);
-		break;
-	}
+  switch (eventType) {
+    case READ:
+      log(WARN, "Error while reading: {}", err);
+      break;
+    case WRITE:
+      log(WARN, "Error while writing: {}", err);
+      break;
+  }
 }
 
 #ifdef DEBUG
