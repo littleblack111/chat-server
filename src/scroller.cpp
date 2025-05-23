@@ -1,4 +1,4 @@
-#ifndef NO_UI  // Add this guard
+#ifndef NO_UI // Add this guard
 
 #include "scroller.hpp"
 
@@ -82,7 +82,7 @@ Component Scroller(Component child) { // NOLINT
 }
 } // namespace ftxui
 
-#endif  // NO_UI
+#endif // NO_UI
 
 // Copyright 2021 Arthur Sonzogni. All rights reserved.
 // Use of this source code is governed by the MIT license that can be found in

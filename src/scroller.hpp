@@ -1,14 +1,14 @@
 #ifndef SCROLLER_H
 #define SCROLLER_H
 
-#ifndef NO_UI  // Add this guard
-#include <ftxui/component/component.hpp>
+#ifndef NO_UI								  // Add this guard
 #include "ftxui/component/component_base.hpp" // for Component
+#include <ftxui/component/component.hpp>
 
 namespace ftxui {
 Component Scroller(Component child);
 }
-#endif  // NO_UI
+#endif // NO_UI
 
 #endif /* end of include guard: SCROLLER_H */
 
