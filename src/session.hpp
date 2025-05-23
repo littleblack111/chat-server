@@ -12,6 +12,9 @@
 class CSession {
   public:
 	CSession();
+#ifdef NTESTS
+    explicit CSession(std::in_place_t) noexcept;
+#endif
 	~CSession();
 
 	struct SRecvData {
