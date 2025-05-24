@@ -126,6 +126,9 @@ void CSessionManager::kick(std::pair<std::jthread, std::shared_ptr<CSession>> *s
 		it->second.reset();
 		m_vSessions.erase(it);
 		if (kill && native_handle != 0)
+			// cancel(terminal/kill) the thread if it doesn't exit on its own
+			// pthread_cancel cuz it's the safest https://stackoverflow.com/a/3438576
+			// need a condition because it might crash if the thread is already dead
 			pthread_cancel(native_handle);
 	}
 }
