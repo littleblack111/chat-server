@@ -18,6 +18,8 @@ class CRenderManager {
 	ftxui::ScreenInteractive screen;
 	ftxui::Component		 renderer;
 
+	std::mutex m_mutex;
+
 	friend class CInputManager;
 };
 inline std::unique_ptr<CRenderManager> g_pRenderManager;

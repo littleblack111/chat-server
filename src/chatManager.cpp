@@ -27,6 +27,8 @@ std::string CChatManager::fmtBroadcastMessage(const SMessage &msg) {
 }
 
 std::vector<CChatManager::SMessage> CChatManager::getChat() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
+
 	std::vector<SMessage> chat;
 
 	for (const auto &[msg, _, _] : g_pIOManager->getIO())

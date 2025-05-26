@@ -2,6 +2,7 @@
 
 #include "FileDescriptor.hpp"
 #include <memory>
+#include <mutex>
 #include <netinet/in.h>
 
 class CServer {

@@ -1,17 +1,22 @@
 #include "IOManager.hpp"
 #include "inputManager.hpp"
 #include "log.hpp"
+#include <mutex>
 
 CIOManager::CIOManager() {
 	log(LOG, "IOManager: initialized");
 }
 
 CIOManager::~CIOManager() {
-	m_vIO.clear();
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_vIO.clear();
+	}
 	log(SYS, "IOManager: bye");
 }
 
 const std::vector<CIOManager::SIO> &CIOManager::getIO() const {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	return m_vIO;
 }
 

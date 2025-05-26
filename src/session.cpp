@@ -10,6 +10,7 @@
 #include <cerrno>
 #include <cstring>
 #include <memory>
+#include <mutex>
 #include <sys/socket.h>
 
 CSession::CSession() {
@@ -18,11 +19,14 @@ CSession::CSession() {
 	if (!m_sockfd->isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
-	m_ip.resize(INET_ADDRSTRLEN);
-	inet_ntop(AF_INET, &m_addr.sin_addr, &m_ip[0], INET_ADDRSTRLEN);
-	m_ip.resize(strlen(m_ip.c_str()));
-	m_port	  = ntohs(m_addr.sin_port);
-	m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_ip.resize(INET_ADDRSTRLEN);
+		inet_ntop(AF_INET, &m_addr.sin_addr, &m_ip[0], INET_ADDRSTRLEN);
+		m_ip.resize(strlen(m_ip.c_str()));
+		m_port	  = ntohs(m_addr.sin_port);
+		m_isAdmin = std::ranges::any_of(m_adminIps, [this](const char *ip) { return m_ip == ip; });
+	}
 
 	log(LOG, "Client {} connected on port {}", m_ip, m_port);
 
@@ -115,7 +119,12 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 	auto recvData = std::make_unique<SRecvData>();
 
 	recvData->data.resize(recvData->size);
-	ssize_t size = recv(m_sockfd->get(), &recvData->data[0], recvData->size, 0);
+
+	size_t size;
+	{
+		std::lock_guard<std::mutex> lock(m_readMutex);
+		size = recv(m_sockfd->get(), &recvData->data[0], recvData->size, 0);
+	}
 
 	if (size < 0) {
 		recvData->good = false;
@@ -130,7 +139,10 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 #ifdef DEBUG
 	onRecv(*recvData);
 #endif
-	m_szReading.reset();
+	{
+		std::lock_guard<std::mutex> lock(m_readingMutex);
+		m_szReading.reset();
+	}
 	return recvData;
 }
 
@@ -210,7 +222,10 @@ bool CSession::isValid() {
 
 	int		  err  = 0;
 	socklen_t size = sizeof(err);
-	return getsockopt(m_sockfd->get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		return getsockopt(m_sockfd->get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
+	}
 }
 
 template <typename... Args>
@@ -226,14 +241,21 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 		return false;
 
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
-	if (m_szReading) {
-		msg.insert(0, "\r");
-		msg.append(*m_szReading);
+	{
+		std::lock_guard<std::mutex> lock(m_readingMutex);
+
+		if (m_szReading) {
+			msg.insert(0, "\r");
+			msg.append(*m_szReading);
+		}
 	}
 
-	if (send(m_sockfd->get(), msg.c_str(), msg.size(), 0) < 0) {
-		onErrno(WRITE);
-		return false;
+	{
+		std::lock_guard<std::mutex> lock(m_writeMutex);
+		if (send(m_sockfd->get(), msg.c_str(), msg.size(), MSG_NOSIGNAL) < 0) {
+			onErrno(WRITE);
+			return false;
+		}
 	}
 #ifdef DEBUG
 	onSend(msg);

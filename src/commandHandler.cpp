@@ -1,7 +1,6 @@
 #include "commandHandler.hpp"
 #include "log.hpp"
 #include "session.hpp"
-#include "sessionManager.hpp"
 #include <algorithm>
 
 CCommandHandler::CCommandHandler() {
@@ -10,6 +9,8 @@ CCommandHandler::CCommandHandler() {
 
 CCommandHandler::~CCommandHandler() {
 	log(SYS, "CommandHandler: bye");
+
+	std::lock_guard<std::mutex> lock(m_mutex);
 	m_vCommands.clear();
 }
 
@@ -27,7 +28,10 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 	if (command.name.empty() || !command.exe || !command.parser)
 		return false;
 
-	m_vCommands.push_back(command);
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_vCommands.push_back(command);
+	}
 
 	log(TRACE, "CommandHandler: registered command: {}", command.name);
 

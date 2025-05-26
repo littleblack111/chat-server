@@ -34,5 +34,6 @@ void CRenderManager::enterLoop() {
 }
 
 void CRenderManager::setRenderer(ftxui::Component component) {
+	std::lock_guard<std::mutex> lock(m_mutex);
 	renderer = std::move(component);
 }

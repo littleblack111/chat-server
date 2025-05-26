@@ -53,7 +53,7 @@ install: $(all)
 
 clean:
 	@echo "Cleaning up"
-	-@rm $(OBJS)
+	-@rm -rf $(OBJS)
 
 clean-all: clean
 	@echo "Cleaning up all"
