@@ -2,7 +2,9 @@
 
 #include "chatManager.hpp"
 #include "format.hpp"
+#include <mutex>
 #include <optional>
+#include <vector>
 
 class CIOManager {
   public:
@@ -27,6 +29,8 @@ class CIOManager {
 
   private:
 	std::vector<SIO> m_vIO;
+
+	mutable std::mutex m_mutex;
 
 	friend class CChatManager;
 };

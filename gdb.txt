@@ -1,0 +1,86 @@
+Starting program: /mnt/DATA/personal/Code/projects/chat-server/build/chat-server 8080
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+Function(s) ^std::(move|forward|as_const|(__)?addressof) will be skipped when stepping.
+Function(s) ^std::(shared|unique)_ptr<.*>::(get|operator) will be skipped when stepping.
+Function(s) ^std::(basic_string|vector|array|deque|(forward_)?list|(unordered_|flat_)?(multi)?(map|set)|span)<.*>::(c?r?(begin|end)|front|back|data|size|empty) will be skipped when stepping.
+Function(s) ^std::(basic_string|vector|array|deque|span)<.*>::operator.] will be skipped when stepping.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/libthread_db.so.1".
+[New Thread 0x7ffff37ff6c0 (LWP 193117)]
+[New Thread 0x7ffff2ffe6c0 (LWP 193118)]
+[New Thread 0x7ffff27fd6c0 (LWP 193119)]
+[New Thread 0x7ffff1ffc6c0 (LWP 193120)]
+[New Thread 0x7ffff13ff6c0 (LWP 193192)]
+[New Thread 0x7fffec7ff6c0 (LWP 193218)]
+[Thread 0x7ffff13ff6c0 (LWP 193192) exited]
+
+Thread 7 "chat-server" received signal SIGPIPE, Broken pipe.
+[Switching to Thread 0x7fffec7ff6c0 (LWP 193218)]
+__syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+56		ret
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+No locals.
+#1  0x00007ffff68a1fda in __internal_syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=a5@entry=0, a6=a6@entry=0, nr=44) at cancellation.c:49
+        result = <optimized out>
+        pd = <optimized out>
+        ch = <optimized out>
+#2  0x00007ffff68a2024 in __syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=a5@entry=0, a6=a6@entry=0, nr=44) at cancellation.c:75
+        r = <optimized out>
+#3  0x00007ffff692acaf in __libc_send (fd=<optimized out>, buf=<optimized out>, len=<optimized out>, flags=<optimized out>) at ../sysdeps/unix/sysv/linux/send.c:28
+No locals.
+#4  0x00007ffff6e80ce2 in ___interceptor_send (fd=4, buf=0x7208000050a0, len=23, flags=<optimized out>) at /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:6826
+        ctx = <synthetic pointer>
+        thr = <optimized out>
+        si = {thr_ = 0x7fffec7fef40, in_ignored_lib_ = false, in_blocking_func_ = false, ignoring_ = false}
+        pc = 140737335790634
+        _ctx = {thr = <optimized out>, pc = 140737335790634}
+        res = <optimized out>
+#5  0x00005555555b407c in CSession::write<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&> (this=this@entry=0x72480000c010, type=type@entry=NONE, fmt=...) at src/session.cpp:253
+        lock = {_M_device = @0x72480000c0a8}
+        msg = "dfsg has left the chat\n"
+#6  0x00005555555b255f in CSession::write<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&> (this=0x72480000c010, fmt=...) at src/session.cpp:233
+No locals.
+#7  CSession::write (this=0x72480000c010, msg="dfsg has left the chat") at src/session.cpp:265
+No locals.
+#8  0x00005555555b4649 in CSessionManager::broadcast (this=this@entry=0x7214000047a0, msg="dfsg has left the chat", self=std::optional = {...}) at src/sessionManager.cpp:66
+        thread = @0x721000002000: {_M_stop_source = {_M_state = {_M_ptr = 0x720800001000}}, _M_thread = {_M_id = {_M_thread = 140737240889024}}}
+        __for_range = std::vector of length 2, capacity 2 = {{first = {_M_stop_source = {_M_state = {_M_ptr = 0x720800001000}}, _M_thread = {_M_id = {_M_thread = 140737240889024}}}, second = std::shared_ptr<CSession> (use count 1, weak count 0) = {get() = 0x72480000c010}}, {first = {_M_stop_source = {_M_state = {_M_ptr = 0x7208000010c0}}, _M_thread = {_M_id = {_M_thread = 140737161197248}}}, second = std::shared_ptr<CSession> (use count 1, weak count 0) = {get() = 0x72480000c190}}}
+        __for_begin = <optimized out>
+        __for_end = <optimized out>
+        session = std::shared_ptr<CSession> (use count 1, weak count 0) = {get() = 0x72480000c010}
+        lock = {_M_device = 0x7214000047b8, _M_owns = false}
+#9  0x00005555555b4d23 in CSessionManager::kick (this=this@entry=0x7214000047a0, session=<optimized out>, kill=kill@entry=false, reason="") at /usr/include/c++/15.1.1/bits/allocator.h:189
+        lock = {_M_device = 0x7214000047b8, _M_owns = false}
+        it = {first = {_M_stop_source = {_M_state = {_M_ptr = 0x7208000010c0}}, _M_thread = {_M_id = {_M_thread = 140737161197248}}}, second = std::shared_ptr<CSession> (use count 1, weak count 0) = {get() = 0x72480000c190}}
+#10 0x00005555555b2ed3 in CSession::run (this=0x72480000c190) at /usr/include/c++/15.1.1/bits/basic_string.tcc:248
+No locals.
+#11 0x00005555555b748b in std::__invoke_impl<void, void (CSession::*)(), CSession*> (__f=<optimized out>, __t=<optimized out>) at /usr/include/c++/15.1.1/bits/invoke.h:76
+No locals.
+#12 std::__invoke<void (CSession::*)(), CSession*> (__fn=<optimized out>) at /usr/include/c++/15.1.1/bits/invoke.h:98
+No locals.
+#13 std::thread::_Invoker<std::tuple<void (CSession::*)(), CSession*> >::_M_invoke<0ul, 1ul> (this=<optimized out>) at /usr/include/c++/15.1.1/bits/std_thread.h:303
+No locals.
+#14 std::thread::_Invoker<std::tuple<void (CSession::*)(), CSession*> >::operator() (this=<optimized out>) at /usr/include/c++/15.1.1/bits/std_thread.h:310
+No locals.
+#15 std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (CSession::*)(), CSession*> > >::_M_run (this=<optimized out>) at /usr/include/c++/15.1.1/bits/std_thread.h:255
+No locals.
+#16 0x00007ffff6ae51a4 in std::execute_native_thread_routine (__p=0x7208000010e0) at /usr/src/debug/gcc/gcc/libstdc++-v3/src/c++11/thread.cc:104
+        __t = <optimized out>
+#17 0x00007ffff6e5433a in __tsan_thread_start_func (arg=0x7ffff2ffd470) at /usr/src/debug/gcc/gcc/libsanitizer/tsan/tsan_interceptors_posix.cpp:1031
+        p = 0x7ffff2ffd470
+        callback = 0x7ffff6ae5190 <std::execute_native_thread_routine(void*)>
+        param = 0x7208000010e0
+        res = <optimized out>
+        foo = 543449445
+#18 0x00007ffff68a57eb in start_thread (arg=<optimized out>) at pthread_create.c:448
+        ret = <optimized out>
+        pd = <optimized out>
+        out = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140737161197248, -1622313507526851745, 140737161197248, 140737270239808, 0, 140737270240071, -1622313507501685921, -1622325426672942241}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = <optimized out>
+#19 0x00007ffff692918c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+No locals.

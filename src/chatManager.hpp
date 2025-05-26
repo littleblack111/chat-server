@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string>
 #include <vector>
@@ -19,5 +20,8 @@ class CChatManager {
 	std::string fmtBroadcastMessage(const SMessage &msg);
 
 	std::vector<SMessage> getChat() const;
+
+  private:
+	mutable std::mutex m_mutex;
 };
 inline std::unique_ptr<CChatManager> g_pChatManager;

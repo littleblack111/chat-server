@@ -3,7 +3,9 @@
 #include "FileDescriptor.hpp"
 #include "chatManager.hpp"
 #include "format.hpp"
+#include <atomic>
 #include <memory>
+#include <mutex>
 #include <netinet/in.h>
 #include <optional>
 #include <string>
@@ -56,18 +58,19 @@ class CSession {
 		WRITE
 	};
 
+	// no need atomic since they don't change after first set
 	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
 	std::shared_ptr<CFileDescriptor>					m_sockfd;
 	sockaddr_in											m_addr;
 	socklen_t											m_addrLen = sizeof(m_addr);
-	std::string											m_name;
+	std::string											m_name; // need thread safety if we impl rename later
 	std::string											m_ip;
 	int													m_port;
 	bool												m_isAdmin = false;
 
 	std::optional<std::string> m_szReading = std::nullopt;
-	bool					   m_bMuted	   = false;
-	bool					   m_bDeaf	   = true; // init as true as we don't want anything during registerSession
+	std::atomic<bool>		   m_bMuted	   = false;
+	std::atomic<bool>		   m_bDeaf	   = true; // init as true as we don't want anything during registerSession
 
 	void recvLoop();
 	bool registerSession();
@@ -81,6 +84,11 @@ class CSession {
 	void onRecv(const SRecvData &data);
 	void onSend(const std::string &msg);
 #endif
+
+	mutable std::mutex m_writeMutex;
+	mutable std::mutex m_readMutex;
+	mutable std::mutex m_readingMutex;
+	mutable std::mutex m_mutex;
 
 	friend class CSessionManager;
 };
