@@ -1,16 +1,19 @@
-#include "commands.hpp"
 #include "commandHandler.hpp"
+#include "commands.hpp"
 #include "format.hpp"
+#include "log.hpp"
 #include "sessionManager.hpp"
 
+#define NOREASON "No reason specified";
+
 struct SKickArgs {
-	std::string target;
-	std::string reason;
+	std::string				   target;
+	std::optional<std::string> reason;
 };
 
 struct SMuteArgs {
-	std::string target;
-	std::string reason;
+	std::string				   target;
+	std::optional<std::string> reason;
 };
 
 void registerCommands() {
@@ -22,13 +25,11 @@ void registerCommands() {
 	g_pCommandHandler->registerCommand(CCommandHandler::makeCommand<SKickArgs>({.name = "kick", .parser = [](const std::string &args) -> std::pair<SKickArgs, bool> {
         size_t pos = args.find(' ');
         std::string target = args;
-        std::string reason = "Kicked: No reason specified";
+		std::optional<std::string> reason = std::nullopt;
 
         if (pos != std::string::npos) {
             target = args.substr(0, pos);
             reason = args.substr(pos + 1);
-            if (reason.empty())
-                reason = "Kicked: No reason specified";
         }
 
         if (target.empty())
@@ -40,8 +41,9 @@ void registerCommands() {
         if (!session)
             return {.result = "User '" + data.target + "' not found", .good = false};
 
-        g_pSessionManager->kick(session, true, data.reason);
-        return {.result = "Kicked '" + data.target + "': " + data.reason, .good = true}; }}));
+			const auto reason = data.reason ? *data.reason : NOREASON;
+        g_pSessionManager->kick(session, true, reason);
+        return {.result = "Kicked '" + data.target + "': " + reason, .good = true}; }}));
 
 	g_pCommandHandler->registerCommand({.requireAdmin = false, .name = "list", .parser = [](const std::string &args) -> CCommandHandler::SParseResult {
         (void)args;
@@ -57,13 +59,11 @@ void registerCommands() {
 	g_pCommandHandler->registerCommand(CCommandHandler::makeCommand<SMuteArgs>({.name = "mute", .parser = [](const std::string &args) -> std::pair<SMuteArgs, bool> {
         size_t pos = args.find(' ');
         std::string target = args;
-        std::string reason = "Muted: No reason specified";
+		std::optional<std::string> reason;
 
         if (pos != std::string::npos) {
             target = args.substr(0, pos);
-            reason = args.substr(pos + 1);
-            if (reason.empty())
-                reason = "Muted: No reason specified";
+			reason = args.substr(pos + 1);
         }
 
         if (target.empty())
@@ -74,9 +74,11 @@ void registerCommands() {
         if (!session)
             return {.result = "User '" + data.target + "' not found", .good = false};
 
+		const auto reason = data.reason ? *data.reason : NOREASON;
+
         session->setMuted(true);
-        session->write("You have been muted");
-        return {.result = "Muted '" + data.target + "': " + data.reason, .good = true}; }}));
+        session->write("You have been muted for: {}", reason);
+        return {.result = "Muted '" + data.target + "': " + reason, .good = true}; }})); // TODO: use fmt
 
 	g_pCommandHandler->registerCommand(CCommandHandler::makeCommand<SMuteArgs>({.name = "unmute", .parser = [](const std::string &args) -> std::pair<SMuteArgs, bool> {
         if (args.empty())
