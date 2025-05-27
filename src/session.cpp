@@ -244,7 +244,7 @@ bool CSession::write(const std::string &msg) {
 }
 
 bool CSession::writeChat(const CChatManager::SMessage &msg) {
-	if (msg.sender ? (uintptr_t)this != *msg.sender : msg.msg != m_name) {
+	if (msg.sender ? (uintptr_t)this != *msg.sender : msg.username != m_name) {
 		if (msg.admin && !m_isAdmin)
 			return false;
 
