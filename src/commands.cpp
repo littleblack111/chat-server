@@ -1,5 +1,5 @@
-#include "commandHandler.hpp"
 #include "commands.hpp"
+#include "commandHandler.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "sessionManager.hpp"
