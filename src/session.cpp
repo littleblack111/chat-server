@@ -1,9 +1,9 @@
+#include "session.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "server.hpp"
-#include "session.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>
 #include <arpa/inet.h>
