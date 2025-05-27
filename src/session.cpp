@@ -89,7 +89,7 @@ void CSession::recvLoop() {
 		if (isCommand)
 			g_pCommandHandler->handleCommand(recvData->data, this);
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .admin = isCommand});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .sender = (uintptr_t)this, .admin = isCommand});
 	}
 }
 
