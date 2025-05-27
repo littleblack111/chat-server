@@ -21,6 +21,8 @@ class CSession {
 
 		bool isEmpty() const;
 		void sanitize();
+
+		static constexpr char asciiEscape = 0x1B; // 
 	};
 
 	const std::string &getName() const;

@@ -1,9 +1,9 @@
-#include "session.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "server.hpp"
+#include "session.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>
 #include <arpa/inet.h>
@@ -100,6 +100,8 @@ bool CSession::SRecvData::isEmpty() const {
 void CSession::SRecvData::sanitize() {
 	if (!data.empty() && data.back() == '\n')
 		data.pop_back();
+
+	data.erase(std::remove(data.begin(), data.end(), asciiEscape), data.end()); // don't accept ASCII code, might mess up terminal
 
 	if (const auto start = data.find_first_not_of(" \t\r\n"); start != std::string::npos) {
 		const auto end = data.find_last_not_of(" \t\r\n");
