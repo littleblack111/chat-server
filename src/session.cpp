@@ -1,9 +1,9 @@
-#include "session.hpp"
 #include "chatManager.hpp"
 #include "commandHandler.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "server.hpp"
+#include "session.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>
 #include <arpa/inet.h>
@@ -134,12 +134,11 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 }
 
 std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg, bool bypassDeaf) {
-	const auto deaf = isDeaf();
-	if (bypassDeaf && deaf)
-		setDeaf(false);
-	write(NONEWLINE, "{}", msg, false);
-	if (bypassDeaf && deaf)
-		setDeaf(true);
+	if (bypassDeaf && m_bDeaf)
+		m_bDeaf = false;
+	write(NONEWLINE, "{}", msg);
+	if (bypassDeaf && m_bDeaf)
+		m_bDeaf = true;
 	m_szReading = msg;
 	return read();
 }
@@ -181,16 +180,16 @@ bool CSession::registerSession() {
 
 	recvData->sanitize();
 	if (recvData->isEmpty()) {
-		setDeaf(false);
+		m_bDeaf = false;
 		write("Name cannot be empty");
-		setDeaf(true);
+		m_bDeaf = true;
 		return registerSession();
 	}
 
 	if (g_pSessionManager->nameExists(recvData->data)) {
-		setDeaf(false);
+		m_bDeaf = false;
 		write("Name already exists");
-		setDeaf(true);
+		m_bDeaf = true;
 		return registerSession();
 	}
 
@@ -200,7 +199,7 @@ bool CSession::registerSession() {
 
 	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), this);
 
-	setDeaf(false);
+	m_bDeaf = false;
 	return true;
 }
 
@@ -215,14 +214,14 @@ bool CSession::isValid() {
 
 template <typename... Args>
 bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
-	if (isDeaf())
+	if (m_bDeaf)
 		return false;
 	return write(NONE, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
-	if (isDeaf())
+	if (m_bDeaf)
 		return false;
 
 	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
