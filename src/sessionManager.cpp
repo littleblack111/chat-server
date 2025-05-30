@@ -1,9 +1,9 @@
+#include "sessionManager.hpp"
 #include "IOManager.hpp"
 #include "chatServer.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "session.hpp"
-#include "sessionManager.hpp"
 #include <algorithm>
 #include <ranges>
 #include <unistd.h>
