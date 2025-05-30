@@ -1,9 +1,9 @@
-#include "sessionManager.hpp"
 #include "IOManager.hpp"
 #include "chatServer.hpp"
 #include "format.hpp"
 #include "log.hpp"
 #include "session.hpp"
+#include "sessionManager.hpp"
 #include <algorithm>
 #include <ranges>
 #include <unistd.h>
@@ -31,7 +31,7 @@ CSessionManager::~CSessionManager() {
 	for (auto &[thread, session] : m_vSessions) {
 		if (thread.joinable())
 			thread.detach();
-		session.reset();
+		kick(session.get());
 	}
 
 	log(SYS, "SessionManager: bye");
