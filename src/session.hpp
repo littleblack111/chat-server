@@ -57,7 +57,7 @@ class CSession {
 	};
 
 	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
-	CFileDescriptor										m_sockfd;
+	std::shared_ptr<CFileDescriptor>					m_sockfd;
 	sockaddr_in											m_addr;
 	socklen_t											m_addrLen = sizeof(m_addr);
 	std::string											m_name;
