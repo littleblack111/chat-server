@@ -8,10 +8,12 @@ class CServer {
   public:
 	CServer(uint16_t port);
 	~CServer();
-	const Hyprutils::OS::CFileDescriptor *getSocket() const;
+	const CFileDescriptor *getSocket() const;
 
   private:
-	Hyprutils::OS::CFileDescriptor m_sockfd;
-	sockaddr_in					   m_addr;
+	CFileDescriptor m_sockfd;
+	sockaddr_in		m_addr;
+
+	mutable std::mutex m_mutex;
 };
 inline std::unique_ptr<CServer> g_pServer;

@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 
 CServer::CServer(uint16_t port)
-	: m_sockfd(Hyprutils::OS::CFileDescriptor{socket(AF_INET, SOCK_STREAM, 0)}) {
+	: m_sockfd(CFileDescriptor{socket(AF_INET, SOCK_STREAM, 0)}) {
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("Failed to create socket");
 
@@ -33,6 +33,6 @@ CServer::~CServer() {
 	log(SYS, "Server: bye");
 }
 
-const Hyprutils::OS::CFileDescriptor *CServer::getSocket() const {
+const CFileDescriptor *CServer::getSocket() const {
 	return &m_sockfd;
 }
