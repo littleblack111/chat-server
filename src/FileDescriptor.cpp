@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <utility>
 
-using namespace Hyprutils::OS;
-
 CFileDescriptor::CFileDescriptor(int const fd)
 	: m_fd(fd) {}
 

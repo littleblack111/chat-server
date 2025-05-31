@@ -12,7 +12,7 @@
 #include <sys/socket.h>
 
 CSession::CSession() {
-	m_sockfd = Hyprutils::OS::CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
+	m_sockfd = CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
 
 	if (!m_sockfd.isValid())
 		throw std::runtime_error("session: Failed to create socket");
