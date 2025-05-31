@@ -9,12 +9,13 @@
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
+#include <memory>
 #include <sys/socket.h>
 
 CSession::CSession() {
-	m_sockfd = CFileDescriptor{accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)}; // if this is in the init list, it will run before m_addrLen, so it won't work :/
+	m_sockfd = std::make_shared<CFileDescriptor>(accept(g_pServer->getSocket()->get(), reinterpret_cast<sockaddr *>(&m_addr), &m_addrLen)); // if this is in the init list, it will run before m_addrLen, so it won't work :/
 
-	if (!m_sockfd.isValid())
+	if (!m_sockfd->isValid())
 		throw std::runtime_error("session: Failed to create socket");
 
 	m_ip.resize(INET_ADDRSTRLEN);
@@ -114,7 +115,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read() {
 	auto recvData = std::make_unique<SRecvData>();
 
 	recvData->data.resize(recvData->size);
-	ssize_t size = recv(m_sockfd.get(), &recvData->data[0], recvData->size, 0);
+	ssize_t size = recv(m_sockfd->get(), &recvData->data[0], recvData->size, 0);
 
 	if (size < 0) {
 		recvData->good = false;
@@ -204,12 +205,12 @@ bool CSession::registerSession() {
 }
 
 bool CSession::isValid() {
-	if (!m_sockfd.isValid() || m_name.empty())
+	if (!m_sockfd->isValid() || m_name.empty())
 		return false;
 
 	int		  err  = 0;
 	socklen_t size = sizeof(err);
-	return getsockopt(m_sockfd.get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
+	return getsockopt(m_sockfd->get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
 }
 
 template <typename... Args>
@@ -230,7 +231,7 @@ bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&.
 		msg.append(*m_szReading);
 	}
 
-	if (send(m_sockfd.get(), msg.c_str(), msg.size(), 0) < 0) {
+	if (send(m_sockfd->get(), msg.c_str(), msg.size(), 0) < 0) {
 		onErrno(WRITE);
 		return false;
 	}

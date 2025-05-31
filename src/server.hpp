@@ -8,11 +8,11 @@ class CServer {
   public:
 	CServer(uint16_t port);
 	~CServer();
-	const CFileDescriptor *getSocket() const;
+	std::shared_ptr<CFileDescriptor> getSocket() const;
 
   private:
-	CFileDescriptor m_sockfd;
-	sockaddr_in		m_addr;
+	std::shared_ptr<CFileDescriptor> m_sockfd;
+	sockaddr_in						 m_addr;
 
 	mutable std::mutex m_mutex;
 };
