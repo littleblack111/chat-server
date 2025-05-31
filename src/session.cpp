@@ -102,7 +102,7 @@ void CSession::SRecvData::sanitize() {
 	if (!data.empty() && data.back() == '\n')
 		data.pop_back();
 
-	data.erase(std::ranges::remove(data, asciiEscape), data.end()); // don't accept ASCII code, might mess up terminal
+	data.erase(std::remove(data.begin(), data.end(), asciiEscape), data.end()); // don't accept ASCII code, might mess up terminal // NOLINT
 
 	if (const auto start = data.find_first_not_of(" \t\r\n"); start != std::string::npos) {
 		const auto end = data.find_last_not_of(" \t\r\n");
