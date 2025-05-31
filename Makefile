@@ -9,7 +9,7 @@ BUILDDIR ?= build
 
 OBJS = $(patsubst src/%, $(BUILDDIR)/%, $(SRCS:.cpp=.o))
 
-CXXFLAGS += -std=c++26 -Oz -s -Wall -Wextra -flto -fPIC -Wpedantic
+CXXFLAGS += -std=c++26 -O3 -s -Wall -Wextra -flto -fPIC -Wpedantic
 LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 # Debug flags
