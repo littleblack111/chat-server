@@ -138,7 +138,7 @@ std::unique_ptr<CSession::SRecvData> CSession::read(const std::string &msg, bool
 	if (bypassDeaf && m_bDeaf)
 		m_bDeaf = false;
 	write(NONEWLINE, "{}", msg);
-	if (bypassDeaf && m_bDeaf)
+	if (bypassDeaf && !m_bDeaf)
 		m_bDeaf = true;
 	m_szReading = msg;
 	return read();
