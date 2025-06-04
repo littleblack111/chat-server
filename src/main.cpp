@@ -47,12 +47,8 @@ int main(int argc, char *argv[]) try {
 			return EXIT_SUCCESS;
 		} else if (std::ranges::all_of(arg, ::isdigit)) {
 			port = std::stoi(arg);
-			if (port < 0) {
-				log(ERR, "Port number must be greater than 0");
-
-				return EXIT_FAILURE;
-			} else if (port > 65535) {
-				log(ERR, "Port number must be less than 65536");
+			if (port < 0 || port > 65535) {
+				log(ERR, "Port number must be between 0 and 65535");
 
 				return EXIT_FAILURE;
 			}
