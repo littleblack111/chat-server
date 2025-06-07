@@ -1,12 +1,12 @@
 #include "../src/session.hpp"
 
 namespace NTests {
-  struct CSession {
-    CSession();
-    ~CSession();
-    namespace SRecvData {
-      bool sanitize();
-      bool isEmpty();
-    }
-  }
-}
+struct CSession { // NOLINT
+	CSession();
+	~CSession();
+	struct SRecvData {
+		bool sanitize();
+		bool isEmpty();
+	};
+};
+} // namespace NTests
