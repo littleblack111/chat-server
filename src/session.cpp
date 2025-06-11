@@ -10,6 +10,7 @@
 #include <cerrno>
 #include <cstring>
 #include <memory>
+#include <optional>
 #include <sys/socket.h>
 
 CSession::CSession() {
@@ -90,7 +91,7 @@ void CSession::recvLoop() {
 		if (isCommand)
 			g_pCommandHandler->handleCommand(recvData->data, this);
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .sender = (uintptr_t)this, .admin = isCommand});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .sender = self->second, .admin = isCommand});
 	}
 }
 
@@ -246,7 +247,7 @@ bool CSession::write(const std::string &msg) {
 }
 
 bool CSession::writeChat(const CChatManager::SMessage &msg) {
-	if (msg.sender ? (uintptr_t)this != *msg.sender : msg.username != m_name) {
+	if (msg.sender ? this != msg.sender->get() : msg.username != m_name) {
 		if (msg.admin && !m_isAdmin)
 			return false;
 

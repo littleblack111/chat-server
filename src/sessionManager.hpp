@@ -25,7 +25,6 @@ class CSessionManager {
 
 	CSession							  *getByName(const std::string &name) const;
 	CSession							  *getByIp(const std::string &ip) const;
-	CSession							  *getByPtr(const uintptr_t &p) const;
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
   private:

@@ -91,11 +91,6 @@ CSession *CSessionManager::getByIp(const std::string &ip) const {
 	return it != m_vSessions.end() ? it->second.get() : nullptr;
 }
 
-CSession *CSessionManager::getByPtr(const uintptr_t &p) const {
-	auto it = std::ranges::find_if(m_vSessions, [&p](const auto &s) { return (uintptr_t)s.second.get() == p; });
-	return it != m_vSessions.end() ? it->second.get() : nullptr;
-}
-
 std::vector<std::shared_ptr<CSession>> CSessionManager::getSessions() const {
 	return m_vSessions | std::views::transform([](const auto &s) { return s.second; }) | std::ranges::to<std::vector>();
 }
