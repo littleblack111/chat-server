@@ -38,7 +38,7 @@ inline std::string fmt(eFormatType type, std::string str) {
 		break;
 	}
 
-	if (str.back() != '\n' && type != NONEWLINE)
+	if (!str.empty() && str.back() != '\n' && type != NONEWLINE)
 		str += '\n';
 
 	return prefix + str;
