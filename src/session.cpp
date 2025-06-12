@@ -214,34 +214,6 @@ bool CSession::isValid() {
 	return getsockopt(m_sockfd->get(), SOL_SOCKET, SO_ERROR, &err, &size) >= 0 && err == 0;
 }
 
-template <typename... Args>
-bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
-	if (m_bDeaf)
-		return false;
-	return write(NONE, fmt, std::forward<Args>(args)...);
-}
-
-template <typename... Args>
-bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
-	if (m_bDeaf)
-		return false;
-
-	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
-	if (m_szReading) {
-		msg.insert(0, "\r");
-		msg.append(*m_szReading);
-	}
-
-	if (send(m_sockfd->get(), msg.c_str(), msg.size(), 0) < 0) {
-		onErrno(WRITE);
-		return false;
-	}
-#ifdef DEBUG
-	onSend(msg);
-#endif
-	return true;
-}
-
 bool CSession::write(const std::string &msg) {
 	return write("{}", msg);
 }
@@ -271,3 +243,34 @@ bool CSession::isAdmin() const {
 void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
 	this->self = self;
 }
+
+template <typename... Args>
+bool CSession::write(std::format_string<Args...> fmt, Args &&...args) {
+	if (m_bDeaf)
+		return false;
+	return write(NONE, fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+bool CSession::write(eFormatType type, std::format_string<Args...> fmt, Args &&...args) {
+	if (m_bDeaf)
+		return false;
+
+	std::string msg = NFormatter::fmt(type, fmt, std::forward<Args>(args)...);
+	if (m_szReading) {
+		msg.insert(0, "\r");
+		msg.append(*m_szReading);
+	}
+
+	if (send(m_sockfd->get(), msg.c_str(), msg.size(), 0) < 0) {
+		onErrno(WRITE);
+		return false;
+	}
+#ifdef DEBUG
+	onSend(msg);
+#endif
+	return true;
+}
+
+template bool CSession::write<const std::string &>(std::format_string<const std::string &>, const std::string &);
+template bool CSession::write<const std::string &>(eFormatType, std::format_string<const std::string &>, const std::string &);

@@ -13,7 +13,7 @@ CXXFLAGS += -std=c++26 -Oz -s -Wall -Wextra -flto -fPIC -Wpedantic
 LDFLAGS += -Wl,--as-needed,-z,now,-z,pack-relative-relocs
 
 # Debug flags
-DEBUG_CXXFLAGS = -std=c++26 -g3 -O1 -Wall -Wextra -fno-lto -fPIC -DDEBUG -fsanitize=thread -fno-omit-frame-pointer -pthread
+DEBUG_CXXFLAGS = -std=c++26 -g3 -O0 -Wall -Wextra -fno-lto -fPIC -DDEBUG -fsanitize=thread -fno-omit-frame-pointer -pthread
 DEBUG_LDFLAGS = -Wl,--no-as-needed,-z,now,-z,pack-relative-relocs -fsanitize=thread -lpthread
 
 # Address Sanitizer Debug flags (run with make asan)

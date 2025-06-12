@@ -3,11 +3,13 @@
 #include "FileDescriptor.hpp"
 #include "chatManager.hpp"
 #include "format.hpp"
+#include <format>
 #include <memory>
 #include <netinet/in.h>
 #include <optional>
 #include <string>
 #include <thread>
+#include <sys/socket.h>
 
 class CSession {
   public:
