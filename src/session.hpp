@@ -8,8 +8,8 @@
 #include <netinet/in.h>
 #include <optional>
 #include <string>
-#include <thread>
 #include <sys/socket.h>
+#include <thread>
 
 class CSession {
   public:
