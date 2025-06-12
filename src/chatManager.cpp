@@ -14,7 +14,7 @@ CChatManager::~CChatManager() {
 
 void CChatManager::newMessage(const SMessage &msg) {
 	log(LOG, "{}: {}", msg.username, msg.msg);
-	const auto session = msg.sender ? msg.sender->get() : g_pSessionManager->getByName(msg.username);
+	const auto session = msg.sender ? msg.sender->lock() : g_pSessionManager->getByName(msg.username);
 	if (session && session->isMuted()) {
 		session->write("You are muted");
 		return;

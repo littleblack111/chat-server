@@ -1,8 +1,8 @@
 #include "commandHandler.hpp"
 #include "log.hpp"
 #include "session.hpp"
-#include "sessionManager.hpp"
 #include <algorithm>
+#include <memory>
 
 CCommandHandler::CCommandHandler() {
 	log(LOG, "CommandHandler: initialized");
@@ -18,8 +18,8 @@ bool CCommandHandler::isCommand(const std::string &str) const {
 };
 
 bool CCommandHandler::validCommand(const std::string &command) const {
-	return std::ranges::any_of(m_vCommands, [&command](const SCommand &cmd) {
-		return cmd.name == command;
+	return std::ranges::any_of(m_vCommands, [&command](const std::shared_ptr<SCommand> &cmd) {
+		return cmd->name == command;
 	});
 }
 
@@ -27,24 +27,24 @@ bool CCommandHandler::registerCommand(const SCommand &command) {
 	if (command.name.empty() || !command.exe || !command.parser)
 		return false;
 
-	m_vCommands.push_back(command);
+	m_vCommands.push_back(std::make_shared<SCommand>(command));
 
 	log(TRACE, "CommandHandler: registered command: {}", command.name);
 
 	return true;
 }
 
-const CCommandHandler::SCommand *CCommandHandler::getCommand(const std::string &command) const {
-	auto it = std::ranges::find_if(m_vCommands, [&command](const SCommand &cmd) { return cmd.name == command; });
+std::shared_ptr<CCommandHandler::SCommand> CCommandHandler::getCommand(const std::string &command) const {
+	auto it = std::ranges::find_if(m_vCommands, [&command](const std::shared_ptr<SCommand> &cmd) { return cmd->name == command; });
 
 	if (it != m_vCommands.end())
-		return &*it;
+		return *it;
 
 	return nullptr;
 }
 
-CCommandHandler::SResult CCommandHandler::exeCommand(const SCommand &command, const std::string &args) const {
-	const auto [parsed, good] = command.parser(args);
+CCommandHandler::SResult CCommandHandler::exeCommand(const std::shared_ptr<SCommand> command, const std::string &args) const {
+	const auto [parsed, good] = command->parser(args);
 	if (!good)
 		try {
 			return {.result = std::any_cast<std::string>(parsed), .good = false};
@@ -52,22 +52,25 @@ CCommandHandler::SResult CCommandHandler::exeCommand(const SCommand &command, co
 			return {.result = "", .good = false};
 		}
 
-	log(TRACE, "CommandHandler: executing command: {}", command.name);
-	return command.exe(parsed);
+	log(TRACE, "CommandHandler: executing command: {}", command->name);
+	return command->exe(parsed);
 }
 
-CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args, CSession *const user) const {
+CCommandHandler::SResult CCommandHandler::newCommand(const std::string &command, const std::string &args, std::shared_ptr<CSession> session) const {
 	if (!validCommand(command))
 		return {.result = "Invalid command", .good = false};
 
-	const auto cmd = getCommand(command);
-	if (cmd->requireAdmin && !user->isAdmin())
+	auto cmd = getCommand(command);
+	if (!cmd)
+		return {.result = "Command not found", .good = false};
+
+	if (cmd->requireAdmin && !session->isAdmin())
 		return {.result = "Permission denied", .good = false};
 
-	return exeCommand(*cmd, args);
+	return exeCommand(cmd, args);
 }
 
-void CCommandHandler::handleCommand(std::string input, CSession *const user) const {
+void CCommandHandler::handleCommand(std::string input, std::shared_ptr<CSession> user) const {
 	input = input.substr(1);
 
 	std::string command;

@@ -41,8 +41,8 @@ void registerCommands() {
         if (!session)
             return {.result = "User '" + data.target + "' not found", .good = false};
 
-			const auto reason = data.reason ? *data.reason : NOREASON;
-        g_pSessionManager->kick(session, true, reason);
+        const auto reason = data.reason ? *data.reason : NOREASON;
+        g_pSessionManager->kick(session->self, true, reason);
         return {.result = "Kicked '" + data.target + "': " + reason, .good = true}; }}));
 
 	g_pCommandHandler->registerCommand({.requireAdmin = false, .name = "list", .parser = [](const std::string &args) -> CCommandHandler::SParseResult {
