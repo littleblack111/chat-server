@@ -1,6 +1,6 @@
 #include "IOManager.hpp"
 #include "inputManager.hpp"
-#include "log.hpp"
+#include "../debug/log.hpp"
 
 CIOManager::CIOManager() {
 	log(LOG, "IOManager: initialized");

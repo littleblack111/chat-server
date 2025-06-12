@@ -1,5 +1,5 @@
-#include "chatServer.hpp"
-#include "log.hpp"
+#include "core/chatServer.hpp"
+#include "debug/log.hpp"
 #include <algorithm>
 #include <csignal>
 #include <unistd.h>

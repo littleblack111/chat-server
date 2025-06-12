@@ -1,6 +1,6 @@
 #pragma once
 
-#include "session.hpp"
+#include "../core/session.hpp"
 #include <any>
 #include <functional>
 #include <memory>

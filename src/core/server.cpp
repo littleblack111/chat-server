@@ -1,5 +1,5 @@
 #include "server.hpp"
-#include "log.hpp"
+#include "../debug/log.hpp"
 #include <cstring>
 #include <memory>
 #include <sys/socket.h>

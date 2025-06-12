@@ -1,8 +1,8 @@
 #pragma once
 
-#include "FileDescriptor.hpp"
+#include "../misc/FileDescriptor.hpp"
 #include "chatManager.hpp"
-#include "format.hpp"
+#include "../debug/format.hpp"
 #include <format>
 #include <memory>
 #include <netinet/in.h>

@@ -1,6 +1,6 @@
 #include "commandHandler.hpp"
-#include "log.hpp"
-#include "session.hpp"
+#include "../debug/log.hpp"
+#include "../core/session.hpp"
 #include <algorithm>
 #include <memory>
 

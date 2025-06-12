@@ -1,8 +1,8 @@
 #include "session.hpp"
 #include "chatManager.hpp"
-#include "commandHandler.hpp"
-#include "format.hpp"
-#include "log.hpp"
+#include "../command/commandHandler.hpp"
+#include "../debug/format.hpp"
+#include "../debug/log.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "chatManager.hpp"
-#include "format.hpp"
+#include "../core/chatManager.hpp"
+#include "../debug/format.hpp"
 #include <optional>
 
 class CIOManager {

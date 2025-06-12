@@ -1,8 +1,8 @@
 #include "sessionManager.hpp"
-#include "IOManager.hpp"
+#include "../io/IOManager.hpp"
 #include "chatServer.hpp"
-#include "format.hpp"
-#include "log.hpp"
+#include "../debug/format.hpp"
+#include "../debug/log.hpp"
 #include "session.hpp"
 #include <algorithm>
 #include <ranges>

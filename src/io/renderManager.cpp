@@ -1,5 +1,5 @@
 #include "renderManager.hpp"
-#include "log.hpp"
+#include "../debug/log.hpp"
 
 CRenderManager::CRenderManager()
 	: screen(ftxui::ScreenInteractive::TerminalOutput()) {
