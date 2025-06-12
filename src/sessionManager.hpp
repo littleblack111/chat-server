@@ -22,13 +22,13 @@ class CSessionManager {
 	bool nameExists(const std::string &name);
 	void shutdownSessions();
 
-	std::shared_ptr<CSession>				   getByName(const std::string &name) const;
-	std::shared_ptr<CSession>				   getByIp(const std::string &ip) const;
+	std::shared_ptr<CSession>			   getByName(const std::string &name) const;
+	std::shared_ptr<CSession>			   getByIp(const std::string &ip) const;
 	std::vector<std::shared_ptr<CSession>> getSessions() const;
 
 	// Safer weak_ptr versions - recommended for most use cases to avoid accidental lifetime extension
-	std::weak_ptr<CSession>				       getByNameWeak(const std::string &name) const;
-	std::weak_ptr<CSession>				       getByIpWeak(const std::string &ip) const;
+	std::weak_ptr<CSession> getByNameWeak(const std::string &name) const;
+	std::weak_ptr<CSession> getByIpWeak(const std::string &ip) const;
 
   private:
 	void broadcast(const CChatManager::SMessage &msg) const;

@@ -15,7 +15,7 @@ class CChatManager {
 		std::string							   msg;
 		std::string							   username;
 		std::optional<std::weak_ptr<CSession>> sender = std::nullopt;
-		bool								   admin	= false;
+		bool								   admin  = false;
 	};
 	void		newMessage(const SMessage &msg);
 	std::string fmtBroadcastMessage(const SMessage &msg);
