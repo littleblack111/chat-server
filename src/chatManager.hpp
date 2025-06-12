@@ -12,10 +12,10 @@ class CChatManager {
 	CChatManager();
 	~CChatManager();
 	struct SMessage {
-		std::string								 msg;
-		std::string								 username;
-		std::optional<std::shared_ptr<CSession>> sender = std::nullopt;
-		bool									 admin	= false;
+		std::string							   msg;
+		std::string							   username;
+		std::optional<std::weak_ptr<CSession>> sender = std::nullopt;
+		bool								   admin	= false;
 	};
 	void		newMessage(const SMessage &msg);
 	std::string fmtBroadcastMessage(const SMessage &msg);

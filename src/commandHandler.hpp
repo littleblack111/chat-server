@@ -34,8 +34,8 @@ class CCommandHandler {
 	bool validCommand(const std::string &command) const;
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
-	SResult newCommand(const std::string &command, const std::string &args, CSession *const user) const;
-	void	handleCommand(std::string input, CSession *const user = nullptr) const;
+	SResult newCommand(const std::string &command, const std::string &args, std::shared_ptr<CSession> session) const;
+	void	handleCommand(std::string input, std::shared_ptr<CSession> user = nullptr) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {
@@ -63,9 +63,9 @@ class CCommandHandler {
 	}
 
   private:
-	const SCommand *getCommand(const std::string &command) const;
-	SResult			exeCommand(const SCommand &command, const std::string &args) const;
+	std::shared_ptr<CCommandHandler::SCommand> getCommand(const std::string &command) const;
+	SResult									   exeCommand(const std::shared_ptr<SCommand> command, const std::string &args) const;
 
-	std::vector<SCommand> m_vCommands;
+	std::vector<std::shared_ptr<SCommand>> m_vCommands;
 };
 inline std::unique_ptr<CCommandHandler> g_pCommandHandler;

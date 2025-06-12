@@ -30,7 +30,6 @@ class CSession {
 	const std::string &getName() const;
 	const std::string &getIp() const;
 	bool			   isAdmin() const;
-	void			   setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self);
 
 	std::unique_ptr<SRecvData> read();
 	std::unique_ptr<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
@@ -58,14 +57,14 @@ class CSession {
 		WRITE
 	};
 
-	std::pair<std::jthread, std::shared_ptr<CSession>> *self;
-	std::shared_ptr<CFileDescriptor>					m_sockfd;
-	sockaddr_in											m_addr;
-	socklen_t											m_addrLen = sizeof(m_addr);
-	std::string											m_name;
-	std::string											m_ip;
-	int													m_port;
-	bool												m_isAdmin = false;
+	std::weak_ptr<CSession>			 self;
+	std::shared_ptr<CFileDescriptor> m_sockfd;
+	sockaddr_in						 m_addr;
+	socklen_t						 m_addrLen = sizeof(m_addr);
+	std::string						 m_name;
+	std::string						 m_ip;
+	int								 m_port;
+	bool							 m_isAdmin = false;
 
 	std::optional<std::string> m_szReading = std::nullopt;
 	bool					   m_bMuted	   = false;
@@ -85,4 +84,5 @@ class CSession {
 #endif
 
 	friend class CSessionManager;
+	friend void registerCommands();
 };

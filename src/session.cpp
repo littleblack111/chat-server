@@ -89,9 +89,9 @@ void CSession::recvLoop() {
 
 		const auto isCommand = g_pCommandHandler->isCommand(recvData->data);
 		if (isCommand)
-			g_pCommandHandler->handleCommand(recvData->data, this);
+			g_pCommandHandler->handleCommand(recvData->data, self.lock());
 
-		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .sender = self->second, .admin = isCommand});
+		g_pChatManager->newMessage({.msg = recvData->data, .username = m_name, .sender = self, .admin = isCommand});
 	}
 }
 
@@ -199,7 +199,7 @@ bool CSession::registerSession() {
 
 	log(LOG, "Client {} registered as: {}", m_ip, m_name);
 
-	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), this);
+	g_pSessionManager->broadcast(NFormatter::fmt(NONEWLINE, "{} has joined the chat", m_name), self);
 
 	m_bDeaf = false;
 	return true;
@@ -219,7 +219,8 @@ bool CSession::write(const std::string &msg) {
 }
 
 bool CSession::writeChat(const CChatManager::SMessage &msg) {
-	if (msg.sender ? this != msg.sender->get() : msg.username != m_name) {
+	const auto sender = msg.sender ? msg.sender->lock() : nullptr;
+	if (sender ? sender != self.lock() : msg.username != m_name) {
 		if (msg.admin && !m_isAdmin)
 			return false;
 
@@ -238,10 +239,6 @@ const std::string &CSession::getIp() const {
 
 bool CSession::isAdmin() const {
 	return m_isAdmin;
-}
-
-void CSession::setSelf(std::pair<std::jthread, std::shared_ptr<CSession>> *self) {
-	this->self = self;
 }
 
 template <typename... Args>

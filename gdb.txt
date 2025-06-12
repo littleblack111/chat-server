@@ -1,0 +1,277 @@
+#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+        tid = <optimized out>
+        ret = 0
+        pd = <optimized out>
+        old_mask = {__val = {140737488338160}}
+        ret = <optimized out>
+#1  0x00007ffff6aa7813 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:89
+No locals.
+#2  0x00007ffff6a4ddc0 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+        ret = <optimized out>
+#3  0x00007ffff6a3557a in __GI_abort () at abort.c:73
+        act = {__sigaction_handler = {sa_handler = 0x7fffffffbe00, sa_sigaction = 0x7fffffffbe00}, sa_mask = {__val = {140737488338088, 140737488338160, 93824992426177, 140737488338080, 93824993119967, 93824993119967, 140737488338432, 0, 0, 93824993119967, 93824993119967, 93824993119967, 140737488338432, 140737488338160, 12145864995241784576, 140737488338432}}, sa_flags = -16560, sa_restorer = 0x7fffffffbd10}
+#4  0x00007ffff749a421 in std::__glibcxx_assert_fail (file=<optimized out>, line=<optimized out>, function=<optimized out>, condition=<optimized out>) at /usr/src/debug/gcc/gcc/libstdc++-v3/src/c++11/assert_fail.cc:41
+No locals.
+#5  0x00005555555bf236 in std::optional<CIOManager::SLog>::operator-> (this=0x7dfff5be00e8) at /usr/include/c++/15.1.1/optional:1165
+        __PRETTY_FUNCTION__ = "constexpr const _Tp* std::optional<_Tp>::operator->() const [with _Tp = CIOManager::SLog]"
+#6  0x00005555555bbd75 in operator() (__closure=0x7c7ff5be1260) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:35
+        chat = std::optional [no contained value]
+        __for_range = std::vector of length 19, capacity 32 = {{msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating SessionManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "SessionManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating ChatManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "ChatManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating CommandHandler"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "CommandHandler: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: raw"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: kick"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: list"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: mute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: unmute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 connected on port 56570"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client @127.0.0.1 connected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Name: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: dfa\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 registered as: dfa"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional containing None = {first = "", second = "dfa has joined the chat"}}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: dfa: "}}, custom = std::optional [no contained value]}}
+        __for_begin = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        __for_end = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        log = std::optional [no contained value]
+        custom = std::optional [no contained value]
+        messages = std::vector of length 0, capacity 0
+#7  0x00005555555be27e in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#8  0x00005555555bdbe1 in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#9  0x00005555555bd3f3 in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::CInputManager()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#10 0x00005555555db9d4 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#11 0x00005555555cb003 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#12 0x00005555555cb366 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#13 0x00005555555cb259 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#14 0x00005555555c4d16 in ftxui::CScrollerBase::OnRender (this=0x7c7ff5be12b0) at /home/system/Code/projects/chat-server/src/io/scroller.cpp:29
+        focused = 0x5555556016c0 <ftxui::select(std::shared_ptr<ftxui::Node>)>
+        style = 0x55555560d3c0 <ftxui::nothing(std::shared_ptr<ftxui::Node>)>
+        background = std::shared_ptr<ftxui::Node> (use count 1207959552, weak count 361840012) = {get() = 0x7ffff6a37769 <__libc_start_main_impl+137>}
+#15 0x00005555555cb003 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#16 0x00005555555dd8fa in ftxui::(anonymous namespace)::ResizableSplitBase::OnRender() ()
+No symbol table info available.
+#17 0x00005555555cb003 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#18 0x00005555555cb366 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#19 0x00005555555cb003 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#20 0x00005555555bc960 in operator() (__closure=0x7c7ff5be1460) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:67
+        this = 0x7caff5be0040
+#21 0x00005555555be44a in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#22 0x00005555555bdef4 in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#23 0x00005555555bd5f4 in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::inputLoop()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#24 0x00005555555db9d4 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#25 0x00005555555cb003 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#26 0x00005555555e6b23 in ftxui::ScreenInteractive::Draw(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#27 0x00005555555e9d5d in ftxui::ScreenInteractive::RunOnce(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#28 0x00005555555eaac3 in ftxui::ScreenInteractive::RunOnceBlocking(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#29 0x00005555555f967f in ftxui::Loop::RunOnceBlocking() ()
+No symbol table info available.
+#30 0x00005555555f9751 in ftxui::Loop::Run() ()
+No symbol table info available.
+#31 0x00005555555e3496 in ftxui::ScreenInteractive::Loop(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#32 0x00005555555c2759 in CRenderManager::enterLoop (this=0x7d2ff5be0040) at /home/system/Code/projects/chat-server/src/io/renderManager.cpp:33
+No locals.
+#33 0x00005555555bcc36 in CInputManager::inputLoop (this=0x7caff5be0040) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:70
+No locals.
+#34 0x00005555555aa3fe in CChatServer::start (this=0x7c2ff5be0100) at /home/system/Code/projects/chat-server/src/core/chatServer.cpp:67
+No locals.
+#35 0x00005555555c73b7 in main (argc=2, argv=0x7fffffffd088) at /home/system/Code/projects/chat-server/src/main.cpp:70
+        args = std::vector of length 1, capacity 1 = {"8080"}
+        port = 8080
+#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+        tid = <optimized out>
+        ret = 0
+        pd = <optimized out>
+        old_mask = {__val = {140737488338160}}
+        ret = <optimized out>
+#1  0x00007ffff6aa7813 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:89
+No locals.
+#2  0x00007ffff6a4ddc0 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+        ret = <optimized out>
+#3  0x00007ffff6a3557a in __GI_abort () at abort.c:73
+        act = {__sigaction_handler = {sa_handler = 0x7fffffffbe00, sa_sigaction = 0x7fffffffbe00}, sa_mask = {__val = {140737488338088, 140737488338160, 93824992426177, 140737488338112, 93824993119967, 93824993119967, 140737488338432, 0, 0, 93824993119967, 93824993119967, 93824993119967, 140737488338432, 140737488338160, 910566293388473600, 140737488338432}}, sa_flags = -16560, sa_restorer = 0x7fffffffbd10}
+#4  0x00007ffff749a421 in std::__glibcxx_assert_fail (file=<optimized out>, line=<optimized out>, function=<optimized out>, condition=<optimized out>) at /usr/src/debug/gcc/gcc/libstdc++-v3/src/c++11/assert_fail.cc:41
+No locals.
+#5  0x00005555555bf1c8 in std::optional<CIOManager::SLog>::operator-> (this=0x7dfff5be0628) at /usr/include/c++/15.1.1/optional:1165
+        __PRETTY_FUNCTION__ = "constexpr const _Tp* std::optional<_Tp>::operator->() const [with _Tp = CIOManager::SLog]"
+#6  0x00005555555bbd4b in operator() (__closure=0x7c7ff5be1260) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:35
+        chat = std::optional [no contained value]
+        __for_range = std::vector of length 19, capacity 32 = {{msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating SessionManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "SessionManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating ChatManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "ChatManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating CommandHandler"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "CommandHandler: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: raw"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: kick"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: list"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: mute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: unmute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 connected on port 51028"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client @127.0.0.1 connected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Name: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: asdf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 registered as: asdf"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional containing None = {first = "", second = "asdf has joined the chat"}}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: asdf: "}}, custom = std::optional [no contained value]}}
+        __for_begin = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        __for_end = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        log = std::optional [no contained value]
+        custom = std::optional [no contained value]
+        messages = std::vector of length 6, capacity 8 = {warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be7070}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be7140}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be7210}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be72e0}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be73b0}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5be7480}}
+#7  0x00005555555be22a in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#8  0x00005555555bdb8d in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#9  0x00005555555bd39f in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::CInputManager()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#10 0x00005555555db954 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#11 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#12 0x00005555555cb2e6 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#13 0x00005555555cb1d9 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#14 0x00005555555c4c8e in ftxui::CScrollerBase::OnRender (this=0x7c7ff5be12b0) at /home/system/Code/projects/chat-server/src/io/scroller.cpp:29
+        focused = 0x555555601640 <ftxui::select(std::shared_ptr<ftxui::Node>)>
+        style = 0x55555560d340 <ftxui::nothing(std::shared_ptr<ftxui::Node>)>
+        background = std::shared_ptr<ftxui::Node> (use count 1207959552, weak count 361840012) = {get() = 0x7ffff6a37769 <__libc_start_main_impl+137>}
+#15 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#16 0x00005555555dd87a in ftxui::(anonymous namespace)::ResizableSplitBase::OnRender() ()
+No symbol table info available.
+#17 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#18 0x00005555555cb2e6 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#19 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#20 0x00005555555bc90c in operator() (__closure=0x7c7ff5be1460) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:67
+        this = 0x7caff5be0040
+#21 0x00005555555be3f6 in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#22 0x00005555555bdea0 in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#23 0x00005555555bd5a0 in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::inputLoop()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#24 0x00005555555db954 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#25 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#26 0x00005555555e6aa3 in ftxui::ScreenInteractive::Draw(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#27 0x00005555555e9cdd in ftxui::ScreenInteractive::RunOnce(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#28 0x00005555555eaa43 in ftxui::ScreenInteractive::RunOnceBlocking(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#29 0x00005555555f95ff in ftxui::Loop::RunOnceBlocking() ()
+No symbol table info available.
+#30 0x00005555555f96d1 in ftxui::Loop::Run() ()
+No symbol table info available.
+#31 0x00005555555e3416 in ftxui::ScreenInteractive::Loop(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#32 0x00005555555c26d1 in CRenderManager::enterLoop (this=0x7d2ff5be0040) at /home/system/Code/projects/chat-server/src/io/renderManager.cpp:33
+No locals.
+#33 0x00005555555bcbe2 in CInputManager::inputLoop (this=0x7caff5be0040) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:70
+No locals.
+#34 0x00005555555aa3fe in CChatServer::start (this=0x7c2ff5be0100) at /home/system/Code/projects/chat-server/src/core/chatServer.cpp:67
+No locals.
+#35 0x00005555555c732f in main (argc=2, argv=0x7fffffffd088) at /home/system/Code/projects/chat-server/src/main.cpp:70
+        args = std::vector of length 1, capacity 1 = {"8080"}
+        port = 8080
+#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+        tid = <optimized out>
+        ret = 0
+        pd = <optimized out>
+        old_mask = {__val = {140737488338160}}
+        ret = <optimized out>
+#1  0x00007ffff6aa7813 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:89
+No locals.
+#2  0x00007ffff6a4ddc0 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+        ret = <optimized out>
+#3  0x00007ffff6a3557a in __GI_abort () at abort.c:73
+        act = {__sigaction_handler = {sa_handler = 0x7fffffffbe00, sa_sigaction = 0x7fffffffbe00}, sa_mask = {__val = {140737488338088, 140737488338160, 93824992426177, 137163904475072, 93824993119967, 93824993119967, 140737488338432, 0, 0, 93824993119967, 93824993119967, 93824993119967, 140737488338432, 140737488338160, 1928843476034763008, 140737488338432}}, sa_flags = -16560, sa_restorer = 0x7fffffffbd10}
+#4  0x00007ffff749a421 in std::__glibcxx_assert_fail (file=<optimized out>, line=<optimized out>, function=<optimized out>, condition=<optimized out>) at /usr/src/debug/gcc/gcc/libstdc++-v3/src/c++11/assert_fail.cc:41
+No locals.
+#5  0x00005555555bf1c6 in std::optional<CIOManager::SLog>::operator-> (this=0x7e7ff5f705c8) at /usr/include/c++/15.1.1/optional:1165
+        __PRETTY_FUNCTION__ = "constexpr const _Tp* std::optional<_Tp>::operator->() const [with _Tp = CIOManager::SLog]"
+#6  0x00005555555bbd7d in operator() (__closure=0x7c7ff5be1260) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:35
+        chat = std::optional [no contained value]
+        __for_range = std::vector of length 65, capacity 128 = {{msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating SessionManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "SessionManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating ChatManager"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "ChatManager: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Creating CommandHandler"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "CommandHandler: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: raw"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: kick"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: list"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: mute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "CommandHandler: registered command: unmute"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Server: fdsa"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "fdsa", username = "Server", sender = std::optional [no contained value], admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Server: fads"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "fads", username = "Server", sender = std::optional [no contained value], admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Server: f"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "f", username = "Server", sender = std::optional [no contained value], admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 connected on port 34678"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client @127.0.0.1 connected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Name: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: adsf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 registered as: adsf"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional containing None = {first = "", second = "adsf has joined the chat"}}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Server: fdsa\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Server: fads\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Server: f\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: asdf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "adsf: asdf"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "asdf", username = "adsf", sender = std::optional containing std::weak_ptr<CSession> (expired, weak count 5) = {get() = 0x7cfff5be0050}, admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: adsf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "adsf: adsf"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "adsf", username = "adsf", sender = std::optional containing std::weak_ptr<CSession> (expired, weak count 5) = {get() = 0x7cfff5be0050}, admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: \n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Empty message from adsf"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: adsf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "adsf: adsf"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "adsf", username = "adsf", sender = std::optional containing std::weak_ptr<CSession> (expired, weak count 5) = {get() = 0x7cfff5be0050}, admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: fads\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "adsf: fads"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "fads", username = "adsf", sender = std::optional containing std::weak_ptr<CSession> (expired, weak count 5) = {get() = 0x7cfff5be0050}, admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: asdf\n"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "adsf: asdf"}}, custom = std::optional [no contained value]}, {msg = std::optional = {[contained value] = {msg = "asdf", username = "adsf", sender = std::optional containing std::weak_ptr<CSession> (expired, weak count 5) = {get() = 0x7cfff5be0050}, admin = false}}, log = std::optional [no contained value], custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: adsf: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: ", '\000' <repeats 190 times>...}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional containing None = {first = "", second = "adsf has left the chat"}}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client adsf@127.0.0.1 disconnected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client adsf@127.0.0.1 disconnected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session(adsf@127.0.0.1): bye"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 connected on port 56272"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session: initialized"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client @127.0.0.1 connected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Sent: Name: "}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Received: ", '\000' <repeats 190 times>...}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client 127.0.0.1 exited without even registering"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "Client @127.0.0.1 disconnected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = LOG, log = "Client @127.0.0.1 disconnected"}}, custom = std::optional [no contained value]}, {msg = std::optional [no contained value], log = std::optional = {[contained value] = {type = TRACE, log = "session(@127.0.0.1): bye"}}, custom = std::optional [no contained value]}}
+        __for_begin = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        __for_end = {msg = std::optional [no contained value], log = std::optional [no contained value], custom = std::optional [no contained value]}
+        log = std::optional [no contained value]
+        custom = std::optional [no contained value]
+        messages = std::vector of length 5, capacity 8 = {warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5d23c00}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5d23cd0}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5d23da0}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5d23e70}, warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<ftxui::(anonymous namespace)::Border, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<ftxui::Node> (use count 1, weak count 0) = {get() = 0x7ccff5d23f40}}
+#7  0x00005555555be25c in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#8  0x00005555555bdbbf in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::CInputManager()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#9  0x00005555555bd3d1 in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::CInputManager()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#10 0x00005555555db954 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#11 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#12 0x00005555555cb2e6 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#13 0x00005555555cb1d9 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#14 0x00005555555c4ca6 in ftxui::CScrollerBase::OnRender (this=0x7c7ff5be12b0) at /home/system/Code/projects/chat-server/src/io/scroller.cpp:29
+        focused = 0x555555601640 <ftxui::select(std::shared_ptr<ftxui::Node>)>
+        style = 0x55555560d340 <ftxui::nothing(std::shared_ptr<ftxui::Node>)>
+        background = std::shared_ptr<ftxui::Node> (use count 1207959552, weak count 361840012) = {get() = 0x7ffff6a37769 <__libc_start_main_impl+137>}
+#15 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#16 0x00005555555dd87a in ftxui::(anonymous namespace)::ResizableSplitBase::OnRender() ()
+No symbol table info available.
+#17 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#18 0x00005555555cb2e6 in ftxui::ComponentBase::OnRender() ()
+No symbol table info available.
+#19 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#20 0x00005555555bc93e in operator() (__closure=0x7c7ff5be1460) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:66
+        this = 0x7caff5be0040
+#21 0x00005555555be428 in std::__invoke_impl<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(std::__invoke_other, struct {...} &) (__f=...) at /usr/include/c++/15.1.1/bits/invoke.h:63
+No locals.
+#22 0x00005555555bded2 in std::__invoke_r<std::shared_ptr<ftxui::Node>, CInputManager::inputLoop()::<lambda()>&>(struct {...} &) (__fn=...) at /usr/include/c++/15.1.1/bits/invoke.h:118
+No locals.
+#23 0x00005555555bd5d2 in std::_Function_handler<std::shared_ptr<ftxui::Node>(), CInputManager::inputLoop()::<lambda()> >::_M_invoke(const std::_Any_data &) (__functor=...) at /usr/include/c++/15.1.1/bits/std_function.h:293
+No locals.
+#24 0x00005555555db954 in ftxui::Renderer(std::function<std::shared_ptr<ftxui::Node> ()>)::Impl::OnRender() ()
+No symbol table info available.
+#25 0x00005555555caf83 in ftxui::ComponentBase::Render() ()
+No symbol table info available.
+#26 0x00005555555e6aa3 in ftxui::ScreenInteractive::Draw(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#27 0x00005555555e9cdd in ftxui::ScreenInteractive::RunOnce(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#28 0x00005555555eaa43 in ftxui::ScreenInteractive::RunOnceBlocking(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#29 0x00005555555f95ff in ftxui::Loop::RunOnceBlocking() ()
+No symbol table info available.
+#30 0x00005555555f96d1 in ftxui::Loop::Run() ()
+No symbol table info available.
+#31 0x00005555555e3416 in ftxui::ScreenInteractive::Loop(std::shared_ptr<ftxui::ComponentBase>) ()
+No symbol table info available.
+#32 0x00005555555c26e9 in CRenderManager::enterLoop (this=0x7d2ff5be0040) at /home/system/Code/projects/chat-server/src/io/renderManager.cpp:33
+No locals.
+#33 0x00005555555bcc14 in CInputManager::inputLoop (this=0x7caff5be0040) at /home/system/Code/projects/chat-server/src/io/inputManager.cpp:69
+No locals.
+#34 0x00005555555aa3fe in CChatServer::start (this=0x7c2ff5be0100) at /home/system/Code/projects/chat-server/src/core/chatServer.cpp:67
+No locals.
+#35 0x00005555555c7347 in main (argc=2, argv=0x7fffffffd088) at /home/system/Code/projects/chat-server/src/main.cpp:70
+        args = std::vector of length 1, capacity 1 = {"8080"}
+        port = 8080
