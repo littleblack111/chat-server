@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ftxui/component/component.hpp>
-#include <memory>
+#include "../misc/memory.hpp"
 
 class CInputManager {
   public:
@@ -22,4 +22,4 @@ class CInputManager {
 
 	int bottomSize = 1;
 };
-inline std::unique_ptr<CInputManager> g_pInputManager;
+inline UP<CInputManager> g_pInputManager;

@@ -30,4 +30,4 @@ class CIOManager {
 
 	friend class CChatManager;
 };
-inline std::unique_ptr<CIOManager> g_pIOManager;
+inline UP<CIOManager> g_pIOManager;

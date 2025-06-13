@@ -4,7 +4,7 @@
 #include "chatManager.hpp"
 #include "../debug/format.hpp"
 #include <format>
-#include <memory>
+#include "../misc/memory.hpp"
 #include <netinet/in.h>
 #include <optional>
 #include <string>
@@ -31,8 +31,8 @@ class CSession {
 	const std::string &getIp() const;
 	bool			   isAdmin() const;
 
-	std::unique_ptr<SRecvData> read();
-	std::unique_ptr<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
+	UP<SRecvData> read();
+	UP<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
 	bool					   write(const std::string &msg);
 	template <typename... Args>
 	bool write(std::format_string<Args...> fmt, Args &&...args);
@@ -57,8 +57,8 @@ class CSession {
 		WRITE
 	};
 
-	std::weak_ptr<CSession>			 self;
-	std::shared_ptr<CFileDescriptor> m_sockfd;
+	WP<CSession>			 self;
+	SP<CFileDescriptor> m_sockfd;
 	sockaddr_in						 m_addr;
 	socklen_t						 m_addrLen = sizeof(m_addr);
 	std::string						 m_name;

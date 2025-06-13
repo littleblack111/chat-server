@@ -2,7 +2,7 @@
 #include "../debug/log.hpp"
 #include "../core/session.hpp"
 #include <algorithm>
-#include <memory>
+#include "../misc/memory.hpp"
 
 CCommandHandler::CCommandHandler() {
 	log(LOG, "CommandHandler: initialized");

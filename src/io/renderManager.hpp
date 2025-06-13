@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ftxui/component/screen_interactive.hpp>
-#include <memory>
+#include "../misc/memory.hpp"
 
 class CRenderManager {
   public:
@@ -20,4 +20,4 @@ class CRenderManager {
 
 	friend class CInputManager;
 };
-inline std::unique_ptr<CRenderManager> g_pRenderManager;
+inline UP<CRenderManager> g_pRenderManager;

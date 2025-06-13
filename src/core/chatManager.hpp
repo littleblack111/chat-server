@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include "../misc/memory.hpp"
 #include <optional>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ class CChatManager {
 	struct SMessage {
 		std::string							   msg;
 		std::string							   username;
-		std::optional<std::weak_ptr<CSession>> sender = std::nullopt;
+		std::optional<WP<CSession>> sender = std::nullopt;
 		bool								   admin	= false;
 	};
 	void		newMessage(const SMessage &msg);
@@ -22,4 +22,4 @@ class CChatManager {
 
 	std::vector<SMessage> getChat() const;
 };
-inline std::unique_ptr<CChatManager> g_pChatManager;
+inline UP<CChatManager> g_pChatManager;

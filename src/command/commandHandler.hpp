@@ -3,7 +3,7 @@
 #include "../core/session.hpp"
 #include <any>
 #include <functional>
-#include <memory>
+#include "../misc/memory.hpp"
 #include <netinet/in.h>
 #include <string>
 #include <vector>
@@ -34,8 +34,8 @@ class CCommandHandler {
 	bool validCommand(const std::string &command) const;
 	// return false if command struct is invalid
 	bool	registerCommand(const SCommand &command);
-	SResult newCommand(const std::string &command, const std::string &args, std::shared_ptr<CSession> session) const;
-	void	handleCommand(std::string input, std::shared_ptr<CSession> user = nullptr) const;
+	SResult newCommand(const std::string &command, const std::string &args, SP<CSession> session) const;
+	void	handleCommand(std::string input, SP<CSession> user = nullptr) const;
 
 	template <typename T>
 	struct SMakeCommandArgs {
@@ -63,9 +63,9 @@ class CCommandHandler {
 	}
 
   private:
-	std::shared_ptr<CCommandHandler::SCommand> getCommand(const std::string &command) const;
-	SResult									   exeCommand(const std::shared_ptr<SCommand> command, const std::string &args) const;
+	SP<CCommandHandler::SCommand> getCommand(const std::string &command) const;
+	SResult									   exeCommand(const SP<SCommand> command, const std::string &args) const;
 
-	std::vector<std::shared_ptr<SCommand>> m_vCommands;
+	std::vector<SP<SCommand>> m_vCommands;
 };
-inline std::unique_ptr<CCommandHandler> g_pCommandHandler;
+inline UP<CCommandHandler> g_pCommandHandler;

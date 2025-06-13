@@ -1,4 +1,4 @@
-#include <memory>
+#include "../misc/memory.hpp"
 #include <thread>
 
 class CChatServer {
@@ -17,4 +17,4 @@ class CChatServer {
 	std::jthread m_sessionManagerThread;
 };
 
-inline std::unique_ptr<CChatServer> g_pChatServer;
+inline UP<CChatServer> g_pChatServer;

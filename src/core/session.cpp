@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
-#include <memory>
+#include "../misc/memory.hpp"
 #include <optional>
 #include <sys/socket.h>
 
