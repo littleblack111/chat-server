@@ -17,13 +17,6 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES DEBUG)
-  message(STATUS "Configuring chat-server in Debug with CMake")
-  add_compile_definitions(DEBUG)
-else()
-  message(STATUS "Configuring chat-server in Release with CMake")
-endif()
-
 message(STATUS "Checking dependencies...")
 
 find_package(PkgConfig REQUIRED)
@@ -39,12 +32,14 @@ add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion
                     -Wno-unused-parameter)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES DEBUG)
-  message(STATUS "Setting debug flags")
+  message(STATUS "Configuring ${PROJECT_NAME} in Debug with CMake")
+  add_compile_definitions(DEBUG)
   add_compile_options(-g3 -O0 -fno-omit-frame-pointer)
   add_compile_options(-fsanitize=address,undefined)
   target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined)
 else()
-  add_compile_options(-O3 -flto -DNDEBUG)
+  message(STATUS "Configuring ${PROJECT_NAME} in Release with CMake")
+  add_compile_options(-O3 -flto)
   target_link_options(${PROJECT_NAME} PRIVATE -flto -Wl,--gc-sections)
 endif()
 
