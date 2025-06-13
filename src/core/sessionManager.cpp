@@ -115,7 +115,7 @@ void CSessionManager::kick(std::weak_ptr<CSession> session_weak, const bool kill
 
 	for (auto it = m_vSessions.begin(); it != m_vSessions.end(); ++it) {
 		if (it->second == session) {
-			if (session)
+			if (session && !session->getName().empty())
 				// this only exist when the session is registered
 				// not sure why the second is null, but m_name definately is since it's setted during register
 				// but we don't need to notify people if the session didn't even "join"/register anyways
