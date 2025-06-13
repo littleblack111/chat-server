@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../misc/FileDescriptor.hpp"
-#include "chatManager.hpp"
 #include "../debug/format.hpp"
-#include <format>
+#include "../misc/FileDescriptor.hpp"
 #include "../misc/memory.hpp"
+#include "chatManager.hpp"
+#include <format>
 #include <netinet/in.h>
 #include <optional>
 #include <string>
@@ -33,7 +33,7 @@ class CSession {
 
 	UP<SRecvData> read();
 	UP<SRecvData> read(const std::string &msg, bool bypassDeaf = false);
-	bool					   write(const std::string &msg);
+	bool		  write(const std::string &msg);
 	template <typename... Args>
 	bool write(std::format_string<Args...> fmt, Args &&...args);
 	template <typename... Args>
@@ -57,14 +57,14 @@ class CSession {
 		WRITE
 	};
 
-	WP<CSession>			 self;
+	WP<CSession>		self;
 	SP<CFileDescriptor> m_sockfd;
-	sockaddr_in						 m_addr;
-	socklen_t						 m_addrLen = sizeof(m_addr);
-	std::string						 m_name;
-	std::string						 m_ip;
-	int								 m_port;
-	bool							 m_isAdmin = false;
+	sockaddr_in			m_addr;
+	socklen_t			m_addrLen = sizeof(m_addr);
+	std::string			m_name;
+	std::string			m_ip;
+	int					m_port;
+	bool				m_isAdmin = false;
 
 	std::optional<std::string> m_szReading = std::nullopt;
 	bool					   m_bMuted	   = false;

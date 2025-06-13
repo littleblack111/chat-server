@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ftxui/component/component.hpp>
 #include "../misc/memory.hpp"
+#include <ftxui/component/component.hpp>
 
 class CInputManager {
   public:

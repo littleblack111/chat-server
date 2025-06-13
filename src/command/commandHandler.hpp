@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../core/session.hpp"
+#include "../misc/memory.hpp"
 #include <any>
 #include <functional>
-#include "../misc/memory.hpp"
 #include <netinet/in.h>
 #include <string>
 #include <vector>
@@ -64,7 +64,7 @@ class CCommandHandler {
 
   private:
 	SP<CCommandHandler::SCommand> getCommand(const std::string &command) const;
-	SResult									   exeCommand(const SP<SCommand> command, const std::string &args) const;
+	SResult						  exeCommand(const SP<SCommand> command, const std::string &args) const;
 
 	std::vector<SP<SCommand>> m_vCommands;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ftxui/component/screen_interactive.hpp>
 #include "../misc/memory.hpp"
+#include <ftxui/component/screen_interactive.hpp>
 
 class CRenderManager {
   public:

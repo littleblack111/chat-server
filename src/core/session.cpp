@@ -1,15 +1,15 @@
 #include "session.hpp"
-#include "chatManager.hpp"
 #include "../command/commandHandler.hpp"
 #include "../debug/format.hpp"
 #include "../debug/log.hpp"
+#include "../misc/memory.hpp"
+#include "chatManager.hpp"
 #include "server.hpp"
 #include "sessionManager.hpp"
 #include <algorithm>
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
-#include "../misc/memory.hpp"
 #include <optional>
 #include <sys/socket.h>
 

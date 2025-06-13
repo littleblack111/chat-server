@@ -1,8 +1,8 @@
 #include "inputManager.hpp"
-#include "IOManager.hpp"
-#include "../core/chatManager.hpp"
 #include "../command/commandHandler.hpp"
+#include "../core/chatManager.hpp"
 #include "../debug/log.hpp"
+#include "IOManager.hpp"
 #include "renderManager.hpp"
 #include "scroller.hpp"
 

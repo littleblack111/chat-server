@@ -1,7 +1,7 @@
 #include "server.hpp"
 #include "../debug/log.hpp"
-#include <cstring>
 #include "../misc/memory.hpp"
+#include <cstring>
 #include <sys/socket.h>
 
 CServer::CServer(uint16_t port)

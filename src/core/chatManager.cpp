@@ -1,7 +1,7 @@
 #include "chatManager.hpp"
+#include "../debug/log.hpp"
 #include "../io/IOManager.hpp"
 #include "../io/inputManager.hpp"
-#include "../debug/log.hpp"
 #include "sessionManager.hpp"
 
 CChatManager::CChatManager() {

@@ -1,8 +1,8 @@
 #include "commandHandler.hpp"
-#include "../debug/log.hpp"
 #include "../core/session.hpp"
-#include <algorithm>
+#include "../debug/log.hpp"
 #include "../misc/memory.hpp"
+#include <algorithm>
 
 CCommandHandler::CCommandHandler() {
 	log(LOG, "CommandHandler: initialized");

@@ -1,8 +1,8 @@
 #include "commands.hpp"
-#include "commandHandler.hpp"
+#include "../core/sessionManager.hpp"
 #include "../debug/format.hpp"
 #include "../debug/log.hpp"
-#include "../core/sessionManager.hpp"
+#include "commandHandler.hpp"
 
 #define NOREASON "No reason specified";
 

@@ -12,7 +12,7 @@ class CServer {
 
   private:
 	SP<CFileDescriptor> m_sockfd;
-	sockaddr_in						 m_addr;
+	sockaddr_in			m_addr;
 
 	mutable std::mutex m_mutex;
 };
