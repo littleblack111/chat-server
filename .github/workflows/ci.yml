@@ -122,7 +122,7 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -Syu --noconfirm
-          pacman -S --noconfirm make clang git
+          pacman -S --noconfirm cmake make clang git
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -155,7 +155,7 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -Syu --noconfirm
-          pacman -S --noconfirm make clang git
+          pacman -S --noconfirm cmake make clang git
 
       - name: Checkout repository
         uses: actions/checkout@v4
