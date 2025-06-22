@@ -24,7 +24,10 @@ install:
 uninstall:
 	xargs rm < ./build/install_manifest.txt
 
-format:
-	find src -name "*.cpp" -o -name "*.hpp" | xargs clang-format -i
+clang-format:
+	cmake --build ./build --target clang-format
+
+clang-tidy:
+	cmake --build ./build --target clang-tidy
 
 .PHONY: stub release debug clean all install uninstall format

@@ -23,8 +23,21 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(FTXUI REQUIRED IMPORTED_TARGET ftxui)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS "src/*.hpp" "include/*.hpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_custom_target(
+  clang-format
+  COMMAND clang-format -i ${SOURCES} ${HEADERS}
+  COMMENT "clang-format"
+  VERBATIM)
+
+add_custom_target(
+  clang-tidy
+  COMMAND clang-tidy -fix-errors ${SOURCES} -- ${CMAKE_CXX_FLAGS}
+  COMMENT "clang-tidy"
+  VERBATIM)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_26)
 
